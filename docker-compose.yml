@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # BACKEND
+  backend:
+    build: ./backend
+    container_name: autoflow_backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - MONGO_URI=mongodb://mongo_db:27017/n8n_consultoria_db
+      - FLASK_DEBUG=1
+    depends_on:
+      - mongo_db
+
+  # FRONTEND
+  frontend:
+    build: ./frontend
+    container_name: autoflow_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:5000
+    depends_on:
+      - backend
+    stdin_open: true
+    tty: true
+
+  # MONGO DB
+  mongo_db:
+    image: mongo:latest
+    container_name: autoflow_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

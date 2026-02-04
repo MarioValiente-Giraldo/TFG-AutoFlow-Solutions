@@ -1,0 +1,21 @@
+# Dependencias de Frontend
+node_modules/
+dist/
+npm-debug.log
+
+# Dependencias de Backend y Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Archivos de Sistema
+.DS_Store
+Thumbs.db
+
+# Docker y Base de Datos (¡CRÍTICO NO SUBIR ESTO!)
+mongo_data/
+
+# IDEs
+.vscode/
+.idea/
