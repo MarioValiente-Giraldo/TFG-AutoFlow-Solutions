@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom';
 import { styles } from './NavbarStyles';
 
 const Navbar = () => {
+ 
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
@@ -22,7 +24,9 @@ const Navbar = () => {
           {/* Menú de escritorio */}
           <div className={styles.menuWrapper}>
             <div className={styles.menuList}>
-              <a className={styles.menuLink} href="#">Inicio</a>
+               <Link className={styles.menuLink} to="/">
+                Inicio
+              </Link>
               <a className={styles.menuLink} href="#">Nosotros</a>
               <a className={styles.menuLink} href="#">Recursos</a>
               <a className={styles.menuLink} href="#">Contacto</a>
@@ -36,10 +40,10 @@ const Navbar = () => {
                 Agenda una consultoría
             </a>
 
-            {/* 2. Botón Login (Ahora a la DERECHA) */}
-            <a className={styles.ctaLoginBtn} href="#">
+            {/* 2. Botón Login  */}
+           <Link className={styles.ctaLoginBtn} to="/login">
                 Identifíquese
-            </a>
+            </Link>
           </div>
           
           {/* Botón del menú móvil */}
