@@ -1,9 +1,8 @@
 export const styles = {
-    // Footer container styling
+    // Footer container styling (Solo Dark: Fondo Slate-900, Borde Slate-800)
     footer: `
-        bg-white border-t border-slate-200 
+        bg-slate-900 border-t border-slate-800 
         py-8 md:py-12
-        dark:bg-slate-900 dark:border-slate-800
         transition-colors duration-300
     `,
 
@@ -17,20 +16,19 @@ export const styles = {
     logoWrapper: `
         flex items-center gap-3
     `,
-    // NUEVO: Clase específica para la imagen del logo pequeña
+    
     logoImage: `
         h-8 w-auto object-contain
     `,
+    
     logoText: `
-        font-bold text-lg text-slate-800 
-        dark:text-slate-100
+        font-bold text-lg text-slate-100
         transition-colors duration-300
     `,
 
     // --- COPYRIGHT ---
     copyright: `
-        text-sm text-slate-500 
-        dark:text-slate-400
+        text-sm text-slate-400
         transition-colors duration-300 text-center md:text-left
     `,
 
@@ -38,16 +36,17 @@ export const styles = {
     socialWrapper: `
         flex gap-6
     `,
+    
     socialLink: `
-        text-slate-400 hover:text-slate-800
-        dark:text-slate-500 dark:hover:text-slate-100
+        text-slate-500 hover:text-slate-100
         transition-colors duration-300
     `,
+    
     socialIcon: `
         h-5 w-5
     `,
     
-    // Utilidad para accesibilidad (Screen Reader Only)
+    // Utilidad para accesibilidad
     srOnly: `
         sr-only
     `

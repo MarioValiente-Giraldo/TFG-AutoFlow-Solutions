@@ -1,31 +1,31 @@
 export const styles = {
-    // Contenedor de la tarjeta
-    // Usamos #1e293b (Slate-800) para el fondo de la tarjeta en modo oscuro
-    // Esto coincide con el estilo de tus "Features Cards" en la Home
+    // Contenedor de la tarjeta (Solo Dark: Fondo Slate-800 #1e293b)
     loginContainer: `
         w-full max-w-[400px]
-        bg-white dark:bg-[#1e293b]
+        bg-[#1e293b]
         p-8 sm:p-10
         rounded-2xl
-        shadow-2xl shadow-black/10 dark:shadow-black/50
+        shadow-2xl shadow-black/50
         transition-all duration-300
-        border border-slate-200 dark:border-[#334155]
+        border border-[#334155]
     `,
 
     // --- HEADER ---
     headerContent: `
         flex flex-col items-center mb-8
     `,
-    // Estilo para la IMAGEN del logo (ya no SVG)
+    
     logo: `
         h-14 w-auto object-contain mb-6
     `,
+    
     title: `
-        text-[#0f172a] dark:text-[#f1f5f9]
+        text-[#f1f5f9]
         text-2xl font-bold text-center leading-tight mb-3
     `,
+    
     subtitle: `
-        text-[#64748b] dark:text-[#94a3b8]
+        text-[#94a3b8]
         text-sm text-center
     `,
 
@@ -40,7 +40,7 @@ export const styles = {
         flex justify-between items-center
     `,
     label: `
-        text-[#334155] dark:text-[#cbd5e1]
+        text-[#cbd5e1]
         text-sm font-medium
     `,
     forgotPasswordLink: `
@@ -49,31 +49,24 @@ export const styles = {
         transition-colors duration-300
     `,
     
-    // Inputs
-    // Fondo oscuro (#0f172a) para input en modo oscuro
-    // Borde gris oscuro (#334155)
+    // Inputs (Solo Dark: Fondo Slate-900 #0f172a, Borde Slate-700 #334155)
     input: `
         w-full h-11 px-4
-        rounded-lg border bg-white
-        text-[#0f172a] placeholder:text-[#94a3b8]
-        border-[#cbd5e1]
-        
-        /* Modo Oscuro */
-        dark:bg-[#0f172a] 
-        dark:border-[#334155] 
-        dark:text-[#f1f5f9] 
-        dark:placeholder:text-[#64748b]
+        rounded-lg border
+        bg-[#0f172a] 
+        border-[#334155] 
+        text-[#f1f5f9] 
+        placeholder:text-[#64748b]
         
         /* Focus */
         focus:outline-none 
         focus:border-[#22d3ee] 
         focus:ring-2 focus:ring-[#22d3ee]/20
-        dark:focus:border-[#22d3ee]
         
         transition-all duration-300
     `,
 
-    // Botón Submit (Cyan brillante #22d3ee)
+    // Botón Submit (Cyan brillante #22d3ee con texto oscuro)
     submitButton: `
         w-full h-11 mt-4
         flex items-center justify-center
@@ -89,10 +82,10 @@ export const styles = {
 
     // --- FOOTER SIGNUP ---
     signupWrapper: `
-        mt-8 text-center pt-6 border-t border-slate-200 dark:border-[#334155]
+        mt-8 text-center pt-6 border-t border-[#334155]
     `,
     signupText: `
-        text-[#64748b] dark:text-[#94a3b8] text-sm
+        text-[#94a3b8] text-sm
     `,
     signupLink: `
         text-[#22d3ee] font-bold ml-1
