@@ -6,7 +6,7 @@ const Navbar = () => {
       <div className={styles.container}>
         <div className={styles.content}>
           
-          {/* Logo con imagen */}
+          {/* Logo */}
           <div className={styles.logoContainer}>
             <img 
               src="/logo.png" 
@@ -29,10 +29,16 @@ const Navbar = () => {
             </div>
           </div>
           
-          {/* Botón CTA (sin toggle) */}
+          {/* Botones CTA */}
           <div className={styles.ctaWrapper}>
+            {/* 1. Botón Principal (Ahora a la izquierda) */}
             <a className={styles.ctaButton} href="#">
-                  Agenda una consultoría
+                Agenda una consultoría
+            </a>
+
+            {/* 2. Botón Login (Ahora a la DERECHA) */}
+            <a className={styles.ctaLoginBtn} href="#">
+                Identifíquese
             </a>
           </div>
           
@@ -45,7 +51,6 @@ const Navbar = () => {
               aria-expanded="false"
             >
               <span className="sr-only">Abrir menú principal</span>
-              {/* Icono hamburguesa (SVG nativo para no depender de fuentes externas) */}
               <svg
                 className="h-6 w-6"
                 fill="none"

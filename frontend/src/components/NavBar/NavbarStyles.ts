@@ -17,11 +17,10 @@ export const styles = {
         flex items-center justify-between h-20
     `,
 
-    // --- LOGO (Actualizado para Imagen) ---
+    // --- LOGO ---
     logoContainer: `
         flex-shrink-0 flex items-center gap-3 cursor-pointer
     `,
-    // Ajustamos altura (h-10 = 40px) y ancho automático
     logoImage: `
         h-10 w-auto object-contain
     `,
@@ -50,10 +49,12 @@ export const styles = {
         dark:text-slate-300 dark:hover:text-cyan-400
     `,
 
-    // --- CTA (Sin Toggle) ---
+    // --- CTA WRAPPER (Ahora con gap para separar botones) ---
     ctaWrapper: `
-        hidden md:flex items-center gap-4
+        hidden md:flex items-center gap-3
     `,
+
+    // Botón Principal (Consultoría)
     ctaButton: `
         bg-cyan-400 text-slate-900 font-semibold 
         px-5 py-2.5 rounded-lg
@@ -61,6 +62,15 @@ export const styles = {
         transition-all duration-300 transform
         hover:bg-cyan-300 hover:-translate-y-0.5
         dark:text-slate-900 dark:hover:bg-cyan-500
+    `,
+
+    // === NUEVO === Botón Secundario (Identifíquese)
+    ctaLoginBtn: `
+        text-slate-600 font-medium
+        px-4 py-2.5 rounded-lg border border-transparent
+        transition-all duration-300
+        hover:text-cyan-500 hover:bg-slate-50
+        dark:text-slate-300 dark:hover:text-cyan-400 dark:hover:bg-slate-800
     `,
 
     // --- MENÚ MÓVIL ---
