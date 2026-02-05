@@ -22,7 +22,7 @@ const Main = () => {
                 Impulsado por n8n.
               </p>
               <p className={styles.heroDescription}>
-                Flujos de trabajo personalizados en n8n, integración de backend en Python y soluciones robustas con MongoDB. Transforma tus operaciones con una infraestructura de automatización escalable.
+                Flujos de trabajo personalizados en n8n, conecté sus herramientas y eliminé las tareas manuales para escalar su negocio. Transforma tus operaciones con una infraestructura de automatización escalable.
               </p>
               
               {/* Botones */}
@@ -30,36 +30,21 @@ const Main = () => {
                 <a className={styles.ctaPrimary} href="#">
                   Agenda una consultoría
                 </a>
-                <a className={styles.ctaSecondary} href="#">
-                  <span className={`material-symbols-outlined ${styles.ctaIcon}`}>play_circle</span>
-                  Ver demo
-                </a>
               </div>
             </div>
             
             {/* Columna de imagen */}
             <div className={styles.imageColumn}>
               <div className={styles.imageWrapper}>
+                {/* CAMBIO: Ruta correcta en /public y efecto zoom aplicado vía styles.heroImage */}
                 <img 
                   className={styles.heroImage}
-                  src="https://placehold.co/800x600/png?text=Panel+de+Automatización"
-                  alt="Visualización futurista de automatización de red"
+                  src="/heroBannerMainBody.png"
+                  alt="Visualización futurista de automatización"
                 />
                 <div className={styles.imageOverlay}></div>
                 
-                {/* Badges flotantes */}
-                <div className={`${styles.floatingBadge} ${styles.badge1}`}>
-                  <span className="material-symbols-outlined text-cyan-500 text-sm">api</span>
-                  <span className={styles.badgeText}>Pasarela API</span>
-                </div>
-                <div className={`${styles.floatingBadge} ${styles.badge2}`}>
-                  <span className="material-symbols-outlined text-green-500 text-sm">check_circle</span>
-                  <span className={styles.badgeText}>Flujo Activo</span>
-                </div>
-                <div className={`${styles.floatingBadge} ${styles.badge3}`}>
-                  <span className="material-symbols-outlined text-blue-500 text-sm">storage</span>
-                  <span className={styles.badgeText}>Sincronización MongoDB</span>
-                </div>
+                
               </div>
             </div>
             
@@ -72,10 +57,10 @@ const Main = () => {
         <div className={styles.featuresContainer}>
           <div className={styles.featuresGrid}>
             
-            {/* Tarjeta de característica 1 */}
+            {/* Tarjeta 1 (Standard Icon) */}
             <div className={styles.featureCard}>
               <div className={`${styles.iconWrapper} ${styles.iconCyan}`}>
-                <span className={styles.featureIcon}><img src='../public/acctreeMainBody.png' /></span>
+                <img className={styles.featureIcon} src='/acctreeMainBody.png' alt="Diseño de flujos" />
               </div>
               <h3 className={styles.featureTitle}>Diseño de Flujos Personalizados</h3>
               <p className={styles.featureDesc}>
@@ -83,10 +68,10 @@ const Main = () => {
               </p>
             </div>
             
-            {/* Tarjeta de característica 2 */}
+            {/* Tarjeta 2 (Standard Icon) */}
             <div className={styles.featureCard}>
               <div className={`${styles.iconWrapper} ${styles.iconBlue}`}>
-                <span className={styles.featureIcon}>< img src='../public/trendingUpMainBody.png' /></span>
+                <img className={styles.featureIcon} src='/trendingUpMainBody.png' alt="Infraestructura escalable" />
               </div>
               <h3 className={styles.featureTitle}>Infraestructura Escalable</h3>
               <p className={styles.featureDesc}>
@@ -94,10 +79,10 @@ const Main = () => {
               </p>
             </div>
             
-            {/* Tarjeta de característica 3 */}
+            {/* Tarjeta 3 (ESCUDO - Icono GRANDE) */}
             <div className={styles.featureCard}>
               <div className={`${styles.iconWrapper} ${styles.iconTeal}`}>
-                <span className={styles.featureIcon}>< img src='../public/shieldSecurityMainBody.png' /></span>
+                <img className={styles.featureIconLarge} src='/shieldSecurityMainBody.png' alt="Seguridad y mantenimiento" />
               </div>
               <h3 className={styles.featureTitle}>Mantenimiento Proactivo</h3>
               <p className={styles.featureDesc}>

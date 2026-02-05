@@ -66,51 +66,43 @@ export const styles = {
         hover:bg-cyan-300 hover:-translate-y-1
         dark:bg-cyan-400 dark:text-slate-900 dark:hover:bg-cyan-500
     `,
-    ctaSecondary: `
-        flex items-center justify-center gap-2
-        px-8 py-3.5 rounded-lg border border-slate-200 
-        text-slate-700 font-medium
-        transition-all duration-300
-        hover:bg-slate-50
-        dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800
-    `,
-    ctaIcon: `
-        text-sm
-    `,
 
     // --- COLUMNA DE IMAGEN ---
     imageColumn: `
         relative mt-12 lg:mt-0
     `,
+    // CAMBIO: Eliminado 'border border-white dark:border-slate-700'
     imageWrapper: `
         relative rounded-2xl overflow-hidden aspect-video
-        border border-white dark:border-slate-700
         bg-slate-100 dark:bg-slate-800
         shadow-2xl shadow-black/10 dark:shadow-black/50
         transition-colors duration-300
     `,
+    
+    // Zoom muy sutil (scale-[1.02])
     heroImage: `
-        w-full h-full object-cover transition-transform duration-700 hover:scale-105
+        w-full h-full object-cover 
+        transition-transform duration-700 ease-out 
+        hover:scale-[1.02]
     `,
+    
     imageOverlay: `
         absolute inset-0 pointer-events-none
         bg-gradient-to-tr from-white/40 to-transparent
         dark:from-black/40
     `,
 
-    // --- BADGES FLOTANTES (Etiquetas sobre la imagen) ---
+    // --- BADGES FLOTANTES ---
     floatingBadge: `
         absolute flex items-center gap-2 p-2.5 rounded-xl
         bg-white/90 backdrop-blur-sm shadow-xl
         border transition-colors duration-300
         dark:bg-slate-900/90 dark:shadow-black/30
     `,
-    // Posiciones específicas
     badge1: `top-1/4 right-1/4 border-cyan-200 dark:border-cyan-900`,
     badge2: `bottom-1/3 left-1/3 border-green-200 dark:border-green-900`,
     badge3: `top-1/2 left-2/3 border-blue-200 dark:border-blue-900`,
     
-    // Texto dentro del badge
     badgeText: `
         text-xs font-mono font-bold text-slate-800 dark:text-slate-100
     `,
@@ -129,25 +121,35 @@ export const styles = {
     `,
 
     // Feature Card
+    // CAMBIO: Eliminado 'border border-slate-100' y 'dark:border-slate-800'
+    // Se confía solo en shadow-sm para definir la tarjeta.
     featureCard: `
         flex flex-col items-center text-center p-8 rounded-2xl
-        bg-white border border-slate-100 shadow-sm
-        transition-all duration-300
+        bg-white shadow-sm
+        transition-all duration-300 h-full
         hover:shadow-md
-        dark:bg-slate-900 dark:border-slate-800 dark:hover:shadow-black/30
+        dark:bg-slate-900 dark:hover:shadow-black/30
     `,
     
-    // Icon Wrapper (Colores dinámicos)
+    // Icon Wrapper
     iconWrapper: `
-        w-16 h-16 rounded-2xl flex items-center justify-center mb-6
-        transition-transform duration-300 hover:scale-110
+        w-24 h-24 rounded-2xl flex items-center justify-center mb-6
+        transition-transform duration-300 hover:scale-110 flex-shrink-0
     `,
-    iconCyan: `bg-cyan-50 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400`,
-    iconBlue: `bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400`,
-    iconTeal: `bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400`,
+    iconCyan: `bg-cyan-50 dark:bg-cyan-500/10`,
+    iconBlue: `bg-blue-50 dark:bg-blue-500/10`,
+    iconTeal: `bg-teal-50 dark:bg-teal-500/10`,
 
+    // --- ICONOS DE CARACTERÍSTICAS (Imágenes) ---
+    
+    // Icono estándar
     featureIcon: `
-        text-3xl material-symbols-outlined
+        h-16 w-16 object-contain
+    `,
+
+    // Icono GRANDE (Escudo)
+    featureIconLarge: `
+        h-20 w-20 object-contain
     `,
 
     featureTitle: `
