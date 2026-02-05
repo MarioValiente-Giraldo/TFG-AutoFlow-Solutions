@@ -2,9 +2,12 @@ export const styles = {
     // ===========================
     // HERO SECTION
     // ===========================
+    // CAMBIO: En lugar de 'bg-white', usamos un degradado suave vertical.
+    // Va de blanco arriba a slate-50 abajo. Rompe la monotonía.
     heroSection: `
         relative pt-16 pb-20 overflow-hidden 
-        bg-white dark:bg-slate-900 
+        bg-gradient-to-b from-white to-slate-50
+        dark:from-slate-900 dark:to-slate-900 
         lg:pt-32 lg:pb-32 
         transition-colors duration-300
     `,
@@ -71,7 +74,7 @@ export const styles = {
     imageColumn: `
         relative mt-12 lg:mt-0
     `,
-    // CAMBIO: Eliminado 'border border-white dark:border-slate-700'
+    
     imageWrapper: `
         relative rounded-2xl overflow-hidden aspect-video
         bg-slate-100 dark:bg-slate-800
@@ -79,7 +82,6 @@ export const styles = {
         transition-colors duration-300
     `,
     
-    // Zoom muy sutil (scale-[1.02])
     heroImage: `
         w-full h-full object-cover 
         transition-transform duration-700 ease-out 
@@ -110,8 +112,10 @@ export const styles = {
     // ===========================
     // FEATURES SECTION
     // ===========================
+    // CAMBIO: Aumentado de 'bg-slate-50' a 'bg-slate-100'.
+    // Esto crea más contraste con las tarjetas blancas que están encima.
     featuresSection: `
-        py-24 bg-slate-50 dark:bg-slate-950 transition-colors duration-300
+        py-24 bg-slate-100 dark:bg-slate-950 transition-colors duration-300
     `,
     featuresContainer: `
         max-w-7xl mx-auto px-4 sm:px-6 lg:px-8
@@ -121,8 +125,7 @@ export const styles = {
     `,
 
     // Feature Card
-    // CAMBIO: Eliminado 'border border-slate-100' y 'dark:border-slate-800'
-    // Se confía solo en shadow-sm para definir la tarjeta.
+    // Se mantiene blanca (bg-white). Al estar sobre bg-slate-100, ahora resaltará más.
     featureCard: `
         flex flex-col items-center text-center p-8 rounded-2xl
         bg-white shadow-sm
@@ -141,13 +144,9 @@ export const styles = {
     iconTeal: `bg-teal-50 dark:bg-teal-500/10`,
 
     // --- ICONOS DE CARACTERÍSTICAS (Imágenes) ---
-    
-    // Icono estándar
     featureIcon: `
         h-16 w-16 object-contain
     `,
-
-    // Icono GRANDE (Escudo)
     featureIconLarge: `
         h-20 w-20 object-contain
     `,
