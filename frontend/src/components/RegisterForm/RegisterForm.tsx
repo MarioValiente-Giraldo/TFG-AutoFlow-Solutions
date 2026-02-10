@@ -2,7 +2,7 @@ import React, { useActionState, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { styles } from './RegisterFormStyles';
 
-const VITE_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const VITE_API_URL = import.meta.env.VITE_API_URL
 type FormState = {
   success: boolean;
   message: string;
@@ -60,7 +60,7 @@ const RegisterForm: React.FC = () => {
 
     try {
       // 3. Petición al Backend (Flask)
-      const response = await fetch('http://localhost:5000/api/register', {
+      const response = await fetch(`${VITE_API_URL}/register`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

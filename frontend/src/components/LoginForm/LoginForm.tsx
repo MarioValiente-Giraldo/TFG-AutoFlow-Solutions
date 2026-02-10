@@ -1,19 +1,23 @@
 import React, { useActionState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext'; // Asegúrate que la ruta sea correcta
 import { styles } from './LoginFormStyles';
 
 // 1. Definimos el tipo de estado del formulario
+// Añadimos 'user' opcional para pasar los datos del backend al useEffect
 type FormState = {
   success: boolean;
   message: string;
+  user?: any; 
 };
-const API_URL = import.meta.env.VITE_API_URL
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation(); 
+  const { login } = useAuth();    
 
- // 2. Acción de Login 
-const loginAction = async (_prevState: FormState, formData: FormData): Promise<FormState> => {
+  // 2. Acción de Login
+  const loginAction = async (_prevState: FormState, formData: FormData): Promise<FormState> => {
     const email = formData.get('email')?.toString().trim();
     const password = formData.get('password')?.toString();
 
@@ -23,6 +27,9 @@ const loginAction = async (_prevState: FormState, formData: FormData): Promise<F
     }
 
     try {
+      // Usamos fallback por seguridad
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
       const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: {
@@ -40,20 +47,21 @@ const loginAction = async (_prevState: FormState, formData: FormData): Promise<F
         };
       }
 
-      // AQUÍ ES DONDE GUARDARÍAMOS EL TOKEN (JWT) EN EL FUTURO
-      // localStorage.setItem('token', data.token);
+      // ÉXITO: Devolvemos el usuario junto con el success
+      // No hacemos login() aquí directamente porque estamos dentro de una acción pura
       console.log("Login exitoso:", data.user);
 
       return { 
         success: true, 
-        message: "¡Bienvenido de nuevo! Redirigiendo..." 
+        message: "¡Bienvenido de nuevo! Entrando...", 
+        user: data.user // <--- Pasamos el usuario al estado
       };
 
     } catch (error) {
       console.error("Error de login:", error);
       return { success: false, message: "Error de conexión con el servidor." };
     }
-};
+  };
 
   // 3. Hook para gestionar el estado y la acción
   const [state, submitAction, isPending] = useActionState<FormState, FormData>(loginAction, {
@@ -61,15 +69,22 @@ const loginAction = async (_prevState: FormState, formData: FormData): Promise<F
     message: ''
   });
 
-  // 4. Efecto para redirigir tras login exitoso
+ // 4. Efecto: Sincronizar Contexto y Redirigir a HOME
   useEffect(() => {
-    if (state.success) {
+    if (state.success && state.user) {
+      
+      // A) Actualizamos el contexto global
+      login(state.user);
+
+      // B) Redirigimos SIEMPRE a la Landing Page (Home)
+      // Quitamos la lógica de 'origin' para forzar que vaya al inicio
       const timer = setTimeout(() => {
-        navigate('/'); 
-      }, 1500);
+        navigate('/', { replace: true }); 
+      }, 1000); 
+
       return () => clearTimeout(timer);
     }
-  }, [state.success, navigate]);
+  }, [state.success, state.user, login, navigate]);
 
   return (
     <div className={styles.loginContainer}>

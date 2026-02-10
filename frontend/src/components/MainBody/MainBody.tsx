@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'; 
 import { styles } from './MainBodyStyles';
 
 const Main = () => {
@@ -27,24 +28,21 @@ const Main = () => {
               
               {/* Botones */}
               <div className={styles.buttonGroup}>
-                <a className={styles.ctaPrimary} href="#">
+                <Link className={styles.ctaPrimary} to="/agendar">
                   Agenda una consultoría
-                </a>
+                </Link>
               </div>
             </div>
             
             {/* Columna de imagen */}
             <div className={styles.imageColumn}>
               <div className={styles.imageWrapper}>
-                {/* CAMBIO: Ruta correcta en /public y efecto zoom aplicado vía styles.heroImage */}
                 <img 
                   className={styles.heroImage}
                   src="/heroBannerMainBody.png"
                   alt="Visualización futurista de automatización"
                 />
                 <div className={styles.imageOverlay}></div>
-                
-                
               </div>
             </div>
             
@@ -57,7 +55,7 @@ const Main = () => {
         <div className={styles.featuresContainer}>
           <div className={styles.featuresGrid}>
             
-            {/* Tarjeta 1 (Standard Icon) */}
+            {/* Tarjeta 1 */}
             <div className={styles.featureCard}>
               <div className={`${styles.iconWrapper} ${styles.iconCyan}`}>
                 <img className={styles.featureIcon} src='/acctreeMainBody.png' alt="Diseño de flujos" />
@@ -68,7 +66,7 @@ const Main = () => {
               </p>
             </div>
             
-            {/* Tarjeta 2 (Standard Icon) */}
+            {/* Tarjeta 2 */}
             <div className={styles.featureCard}>
               <div className={`${styles.iconWrapper} ${styles.iconBlue}`}>
                 <img className={styles.featureIcon} src='/trendingUpMainBody.png' alt="Infraestructura escalable" />
@@ -79,7 +77,7 @@ const Main = () => {
               </p>
             </div>
             
-            {/* Tarjeta 3 (ESCUDO - Icono GRANDE) */}
+            {/* Tarjeta 3 */}
             <div className={styles.featureCard}>
               <div className={`${styles.iconWrapper} ${styles.iconTeal}`}>
                 <img className={styles.featureIconLarge} src='/shieldSecurityMainBody.png' alt="Seguridad y mantenimiento" />
