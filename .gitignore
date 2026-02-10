@@ -1,21 +1,9 @@
-# Dependencias de Frontend
-node_modules/
-dist/
-npm-debug.log
-
-# Dependencias de Backend y Python
-__pycache__/
-*.pyc
-venv/
+# Ignorar archivos de entorno con claves reales
 .env
-
-# Archivos de Sistema
+backend/.env
+frontend/.env
+.venv
+venv/
+node_modules/
+__pycache__/
 .DS_Store
-Thumbs.db
-
-# Docker y Base de Datos (¡CRÍTICO NO SUBIR ESTO!)
-mongo_data/
-
-# IDEs
-.vscode/
-.idea/

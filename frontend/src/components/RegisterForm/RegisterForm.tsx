@@ -2,6 +2,7 @@ import React, { useActionState, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { styles } from './RegisterFormStyles';
 
+const VITE_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 type FormState = {
   success: boolean;
   message: string;
@@ -40,23 +41,64 @@ const RegisterForm: React.FC = () => {
     setProgress(currentProgress);
   };
 
-  const registerAction = async (_prevState: FormState, formData: FormData): Promise<FormState> => {
-    // ... (Tu lógica de validación y envío se mantiene IGUAL) ...
+ const registerAction = async (_prevState: FormState, formData: FormData): Promise<FormState> => {
+    // 1. Extraer los datos del FormData
     const fullName = formData.get('fullName')?.toString().trim();
     const email = formData.get('email')?.toString().trim();
+    const phone = formData.get('phone')?.toString().trim();
     const company = formData.get('company')?.toString().trim();
     const password = formData.get('password')?.toString();
     const acceptTerms = formData.get('acceptTerms');
-    
+
+    // 2. Validación Básica en Frontend
     if (!fullName || !email || !company || !password || !acceptTerms) {
-      return { success: false, message: "Faltan campos obligatorios." };
+      return { 
+        success: false, 
+        message: "Faltan campos obligatorios o no has aceptado los términos." 
+      };
     }
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      return { success: true, message: "¡Cuenta creada! Redirigiendo..." };
+      // 3. Petición al Backend (Flask)
+      const response = await fetch('http://localhost:5000/api/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        // Convertimos los datos a JSON para enviarlos
+        body: JSON.stringify({
+            fullName,
+            email,
+            phone,   
+            company,
+            password,
+            acceptTerms: acceptTerms === 'on' 
+        })
+      });
+
+      // 4. Leer la respuesta del servidor
+      const data = await response.json();
+
+      // 5. Verificar si el servidor devolvió un error (ej: 400, 409, 500)
+      if (!response.ok) {
+        return { 
+            success: false, 
+            message: data.message || "Error al registrar el usuario." 
+        };
+      }
+
+      // 6. Éxito total
+      return { 
+        success: true, 
+        message: "¡Cuenta creada con éxito! Redirigiendo..." 
+      };
+
     } catch (error) {
-      return { success: false, message: "Error al registrar." };
+      console.error("Error de red:", error);
+      return { 
+        success: false, 
+        message: "Error de conexión con el servidor. Inténtalo más tarde." 
+      };
     }
   };
 

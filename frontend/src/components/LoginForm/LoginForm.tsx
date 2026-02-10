@@ -7,12 +7,13 @@ type FormState = {
   success: boolean;
   message: string;
 };
+const API_URL = import.meta.env.VITE_API_URL
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
 
-  // 2. Acción de Login (Lógica de servidor simulada)
-  const loginAction = async (_prevState: FormState, formData: FormData): Promise<FormState> => {
+ // 2. Acción de Login 
+const loginAction = async (_prevState: FormState, formData: FormData): Promise<FormState> => {
     const email = formData.get('email')?.toString().trim();
     const password = formData.get('password')?.toString();
 
@@ -22,22 +23,37 @@ const LoginForm: React.FC = () => {
     }
 
     try {
-      console.log("Intentando iniciar sesión:", { email });
-      
-      // Simulamos llamada a API (Delay de 1.5s)
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await fetch(`${API_URL}/login`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
 
-      // Simulamos una validación (esto lo haría tu backend real)
-      // Por ahora, aceptamos cualquier login para probar
+      const data = await response.json();
+
+      if (!response.ok) {
+        return { 
+            success: false, 
+            message: data.message || "Credenciales incorrectas." 
+        };
+      }
+
+      // AQUÍ ES DONDE GUARDARÍAMOS EL TOKEN (JWT) EN EL FUTURO
+      // localStorage.setItem('token', data.token);
+      console.log("Login exitoso:", data.user);
+
       return { 
         success: true, 
         message: "¡Bienvenido de nuevo! Redirigiendo..." 
       };
 
     } catch (error) {
-      return { success: false, message: "Credenciales incorrectas. Inténtalo de nuevo." };
+      console.error("Error de login:", error);
+      return { success: false, message: "Error de conexión con el servidor." };
     }
-  };
+};
 
   // 3. Hook para gestionar el estado y la acción
   const [state, submitAction, isPending] = useActionState<FormState, FormData>(loginAction, {
