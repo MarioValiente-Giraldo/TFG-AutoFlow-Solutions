@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { styles } from './LoginFormStyles';
+import { Link } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -71,7 +72,7 @@ const LoginForm: React.FC = () => {
       <div className={styles.signupWrapper}>
         <p className={styles.signupText}>
           ¿No tienes una cuenta? {' '}
-          <a className={styles.signupLink} href="#">Regístrate</a>
+        <Link className={styles.signupLink} to="/register">Regístrate</Link>
         </p>
       </div>
       
