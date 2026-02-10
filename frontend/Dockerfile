@@ -1,5 +1,4 @@
 # frontend/Dockerfile
-# CAMBIO: Usamos la versión 22 en lugar de la 18
 FROM node:22-alpine
 
 WORKDIR /app
