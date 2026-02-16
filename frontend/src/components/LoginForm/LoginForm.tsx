@@ -1,6 +1,7 @@
 import React, { useActionState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; // Asegúrate que la ruta sea correcta
+import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { styles } from './LoginFormStyles';
 
 // 1. Definimos el tipo de estado del formulario
@@ -13,8 +14,9 @@ type FormState = {
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation(); 
-  const { login } = useAuth();    
+  const location = useLocation();
+  const { login } = useAuth();
+  const { theme } = useTheme();
 
   // 2. Acción de Login
   const loginAction = async (_prevState: FormState, formData: FormData): Promise<FormState> => {
@@ -87,27 +89,27 @@ const LoginForm: React.FC = () => {
   }, [state.success, state.user, login, navigate]);
 
   return (
-    <div className={styles.loginContainer}>
-      
+    <div className={styles.loginContainer(theme)}>
+
       {/* Login Header */}
       <div className={styles.headerContent}>
-        <img 
-            src="/logo.png" 
-            alt="AutoFlow Logo" 
+        <img
+            src="/logo.png"
+            alt="AutoFlow Logo"
             className={styles.logo}
         />
-        <h2 className={styles.title}>Inicia sesión en tu cuenta</h2>
-        <p className={styles.subtitle}>Bienvenido de nuevo a AutoFlow Solutions</p>
+        <h2 className={styles.title(theme)}>Inicia sesión en tu cuenta</h2>
+        <p className={styles.subtitle(theme)}>Bienvenido de nuevo a AutoFlow Solutions</p>
       </div>
 
       {/* Formulario conectado a la acción */}
       <form className={styles.form} action={submitAction}>
-        
+
         {/* Mensaje de Estado (Feedback) */}
         {state.message && (
             <div className={`p-3 rounded-lg text-sm text-center border transition-all duration-300 ${
-                state.success 
-                ? 'bg-green-500/10 border-green-500/20 text-green-400' 
+                state.success
+                ? 'bg-green-500/10 border-green-500/20 text-green-400'
                 : 'bg-red-500/10 border-red-500/20 text-red-400'
             }`}>
               {state.message}
@@ -117,12 +119,12 @@ const LoginForm: React.FC = () => {
         {/* Campo Email */}
         <div className={styles.formField}>
           <div className={styles.labelWrapper}>
-            <label className={styles.label}>Correo electrónico</label>
+            <label className={styles.label(theme)}>Correo electrónico</label>
           </div>
-          <input 
-            className={styles.input}
+          <input
+            className={styles.input(theme)}
             type="email"
-            name="email" 
+            name="email"
             placeholder="nombre@empresa.com"
             required
             disabled={isPending}
@@ -132,13 +134,13 @@ const LoginForm: React.FC = () => {
         {/* Campo Contraseña */}
         <div className={styles.formField}>
           <div className={styles.labelWrapper}>
-            <label className={styles.label}>Contraseña</label>
+            <label className={styles.label(theme)}>Contraseña</label>
             <a className={styles.forgotPasswordLink} href="#">¿Olvidaste tu contraseña?</a>
           </div>
-          <input 
-            className={styles.input}
+          <input
+            className={styles.input(theme)}
             type="password"
-            name="password" 
+            name="password"
             placeholder="••••••••"
             required
             disabled={isPending}
@@ -146,8 +148,8 @@ const LoginForm: React.FC = () => {
         </div>
 
         {/* Botón Submit Dinámico */}
-        <button 
-            className={`${styles.submitButton} ${isPending ? 'opacity-70 cursor-wait' : ''}`} 
+        <button
+            className={`${styles.submitButton} ${isPending ? 'opacity-70 cursor-wait' : ''}`}
             type="submit"
             disabled={isPending}
         >
@@ -156,13 +158,13 @@ const LoginForm: React.FC = () => {
       </form>
 
       {/* Enlace Registro */}
-      <div className={styles.signupWrapper}>
-        <p className={styles.signupText}>
+      <div className={styles.signupWrapper(theme)}>
+        <p className={styles.signupText(theme)}>
           ¿No tienes una cuenta? {' '}
-        <Link className={styles.signupLink} to="/register">Regístrate</Link>
+        <Link className={styles.signupLink(theme)} to="/register">Regístrate</Link>
         </p>
       </div>
-      
+
     </div>
   );
 };

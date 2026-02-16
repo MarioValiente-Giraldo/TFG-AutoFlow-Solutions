@@ -1,9 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; // Asegúrate que la ruta sea correcta
+import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { styles } from './NavbarStyles';
 
 const Navbar = () => {
   const { isAuthenticated, logout, user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -12,36 +14,36 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={styles.navbar}>
+    <nav className={styles.navbar(theme)}>
       <div className={styles.container}>
         <div className={styles.content}>
           
           {/* --- 1. LOGO --- */}
           <Link to="/" className={styles.logoContainer}>
-            <img 
-              src="/logo.png" 
-              alt="AutoFlow Logo" 
-              className={styles.logoImage} 
+            <img
+              src="/logo.png"
+              alt="AutoFlow Logo"
+              className={styles.logoImage}
             />
             <div className={styles.logoTextWrapper}>
-              <span className={styles.logoTitle}>AutoFlow</span>
-              <span className={styles.logoSubtitle}>Solutions</span>
+              <span className={styles.logoTitle(theme)}>AutoFlow</span>
+              <span className={styles.logoSubtitle(theme)}>Solutions</span>
             </div>
           </Link>
-          
+
           {/* --- 2. MENÚ CENTRAL --- */}
           <div className={styles.menuWrapper}>
             <div className={styles.menuList}>
-              <Link className={styles.menuLink} to="/">Inicio</Link>
-              <Link className={styles.menuLink} to="/servicios">Servicios</Link>
-              <Link className={styles.menuLink} to="/nosotros">Nosotros</Link>
-              <Link className={styles.menuLink} to="/recursos">Recursos</Link>
+              <Link className={styles.menuLink(theme)} to="/">Inicio</Link>
+              <Link className={styles.menuLink(theme)} to="/servicios">Servicios</Link>
+              <Link className={styles.menuLink(theme)} to="/nosotros">Nosotros</Link>
+              <Link className={styles.menuLink(theme)} to="/recursos">Recursos</Link>
             </div>
           </div>
           
           {/* --- 3. BOTONES DE ACCIÓN (Derecha) --- */}
           <div className={styles.ctaWrapper}>
-            
+
             {/* Botón Agendar (Siempre visible) */}
             <Link className={styles.ctaButton} to="/agendar">
                 <span>Agenda una consultoría</span>
@@ -51,11 +53,30 @@ const Navbar = () => {
                 </svg>
             </Link>
 
+            {/* Botón de Cambio de Tema (Sol/Luna) */}
+            <button
+              onClick={toggleTheme}
+              className={styles.themeBtn(theme)}
+              title={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+            >
+              {theme === 'dark' ? (
+                // Icono Sol (Modo Claro)
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              ) : (
+                // Icono Luna (Modo Oscuro)
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+              )}
+            </button>
+
             {isAuthenticated ? (
                 // === SI ESTÁ LOGUEADO ===
                 <>
                     {/* Botón Mi Espacio */}
-                    <Link className={styles.ctaLoginBtn} to="/dashboard">
+                    <Link className={styles.ctaLoginBtn(theme)} to="/dashboard">
                         <svg className="w-4 h-4 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
@@ -63,9 +84,9 @@ const Navbar = () => {
                     </Link>
 
                     {/* Botón Cerrar Sesión */}
-                    <button 
-                        onClick={handleLogout} 
-                        className={styles.logoutBtn}
+                    <button
+                        onClick={handleLogout}
+                        className={styles.logoutBtn(theme)}
                         title={`Cerrar sesión de ${user?.nombre || ''}`}
                     >
                         {/* Icono Puerta/Salida */}
@@ -76,7 +97,7 @@ const Navbar = () => {
                 </>
             ) : (
                 // === NO ESTÁ LOGUEADO ===
-                <Link className={styles.ctaLoginBtn} to="/login">
+                <Link className={styles.ctaLoginBtn(theme)} to="/login">
                     Identifíquese
                 </Link>
             )}
@@ -85,9 +106,26 @@ const Navbar = () => {
           
           {/* --- 4. BOTÓN MENÚ MÓVIL --- */}
           <div className={styles.mobileBtnWrapper}>
-            <button 
+            {/* Botón de Tema en Móvil */}
+            <button
+              onClick={toggleTheme}
+              className={styles.themeBtn(theme)}
+              title={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+            >
+              {theme === 'dark' ? (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+              )}
+            </button>
+
+            <button
               type="button"
-              className={styles.mobileBtn}
+              className={styles.mobileBtn(theme)}
               aria-controls="mobile-menu"
               aria-expanded="false"
             >

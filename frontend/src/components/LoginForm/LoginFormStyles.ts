@@ -1,31 +1,33 @@
+import type { Theme } from '../../context/ThemeContext';
+
 export const styles = {
-    // Contenedor de la tarjeta (Solo Dark: Fondo Slate-800 #1e293b)
-    loginContainer: `
+    // Contenedor de la tarjeta
+    loginContainer: (theme: Theme) => `
         w-full max-w-[400px]
-        bg-[#1e293b]
+        ${theme === 'dark' ? 'bg-[#1e293b] border-[#334155] shadow-black/50' : 'bg-white border-gray-200 shadow-gray-400/30'}
         p-8 sm:p-10
         rounded-2xl
-        shadow-2xl shadow-black/50
+        shadow-2xl
         transition-all duration-300
-        border border-[#334155]
+        border
     `,
 
     // --- HEADER ---
     headerContent: `
         flex flex-col items-center mb-8
     `,
-    
+
     logo: `
         h-14 w-auto object-contain mb-6
     `,
-    
-    title: `
-        text-[#f1f5f9]
+
+    title: (theme: Theme) => `
+        ${theme === 'dark' ? 'text-[#f1f5f9]' : 'text-gray-900'}
         text-2xl font-bold text-center leading-tight mb-3
     `,
-    
-    subtitle: `
-        text-[#94a3b8]
+
+    subtitle: (theme: Theme) => `
+        ${theme === 'dark' ? 'text-[#94a3b8]' : 'text-gray-600'}
         text-sm text-center
     `,
 
@@ -39,8 +41,8 @@ export const styles = {
     labelWrapper: `
         flex justify-between items-center
     `,
-    label: `
-        text-[#cbd5e1]
+    label: (theme: Theme) => `
+        ${theme === 'dark' ? 'text-[#cbd5e1]' : 'text-gray-700'}
         text-sm font-medium
     `,
     forgotPasswordLink: `
@@ -48,48 +50,48 @@ export const styles = {
         hover:text-[#06b6d4] hover:underline
         transition-colors duration-300
     `,
-    
-    // Inputs (Solo Dark: Fondo Slate-900 #0f172a, Borde Slate-700 #334155)
-    input: `
+
+    // Inputs
+    input: (theme: Theme) => `
         w-full h-11 px-4
         rounded-lg border
-        bg-[#0f172a] 
-        border-[#334155] 
-        text-[#f1f5f9] 
-        placeholder:text-[#64748b]
-        
+        ${theme === 'dark'
+            ? 'bg-[#0f172a] border-[#334155] text-[#f1f5f9] placeholder:text-[#64748b]'
+            : 'bg-gray-50 border-gray-300 text-gray-900 placeholder:text-gray-400'
+        }
+
         /* Focus */
-        focus:outline-none 
-        focus:border-[#22d3ee] 
+        focus:outline-none
+        focus:border-[#22d3ee]
         focus:ring-2 focus:ring-[#22d3ee]/20
-        
+
         transition-all duration-300
     `,
 
-    // Botón Submit (Cyan brillante #22d3ee con texto oscuro)
+    // Botón Submit
     submitButton: `
         w-full h-11 mt-4
         flex items-center justify-center
         bg-[#22d3ee] text-[#0f172a]
         text-[15px] font-bold tracking-wide
         rounded-lg border-none cursor-pointer
-        
+
         hover:bg-[#06b6d4] hover:shadow-[0_0_15px_rgba(34,211,238,0.4)] hover:-translate-y-0.5
         active:translate-y-0
-        
+
         transition-all duration-300
     `,
 
     // --- FOOTER SIGNUP ---
-    signupWrapper: `
-        mt-8 text-center pt-6 border-t border-[#334155]
+    signupWrapper: (theme: Theme) => `
+        mt-8 text-center pt-6 border-t ${theme === 'dark' ? 'border-[#334155]' : 'border-gray-200'}
     `,
-    signupText: `
-        text-[#94a3b8] text-sm
+    signupText: (theme: Theme) => `
+        ${theme === 'dark' ? 'text-[#94a3b8]' : 'text-gray-600'} text-sm
     `,
-    signupLink: `
+    signupLink: (theme: Theme) => `
         text-[#22d3ee] font-bold ml-1
-        hover:text-[#f1f5f9] hover:underline
+        ${theme === 'dark' ? 'hover:text-[#f1f5f9]' : 'hover:text-cyan-600'} hover:underline
         transition-colors duration-300
     `
 };

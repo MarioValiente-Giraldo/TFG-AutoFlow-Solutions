@@ -1,7 +1,9 @@
+import type { Theme } from '../../context/ThemeContext';
+
 export const styles = {
-    // Footer container styling (Solo Dark: Fondo Slate-900, Borde Slate-800)
-    footer: `
-        bg-slate-900 border-t border-slate-800 
+    // Footer container styling
+    footer: (theme: Theme) => `
+        ${theme === 'dark' ? 'bg-slate-900 border-t border-slate-800' : 'bg-white border-t border-gray-200'}
         py-8 md:py-12
         transition-colors duration-300
     `,
@@ -16,19 +18,19 @@ export const styles = {
     logoWrapper: `
         flex items-center gap-3
     `,
-    
+
     logoImage: `
         h-8 w-auto object-contain
     `,
-    
-    logoText: `
-        font-bold text-lg text-slate-100
+
+    logoText: (theme: Theme) => `
+        font-bold text-lg ${theme === 'dark' ? 'text-slate-100' : 'text-gray-900'}
         transition-colors duration-300
     `,
 
     // --- COPYRIGHT ---
-    copyright: `
-        text-sm text-slate-400
+    copyright: (theme: Theme) => `
+        text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}
         transition-colors duration-300 text-center md:text-left
     `,
 
@@ -36,16 +38,16 @@ export const styles = {
     socialWrapper: `
         flex gap-6
     `,
-    
-    socialLink: `
-        text-slate-500 hover:text-slate-100
+
+    socialLink: (theme: Theme) => `
+        ${theme === 'dark' ? 'text-slate-500 hover:text-slate-100' : 'text-gray-500 hover:text-gray-900'}
         transition-colors duration-300
     `,
-    
+
     socialIcon: `
         h-5 w-5
     `,
-    
+
     // Utilidad para accesibilidad
     srOnly: `
         sr-only
