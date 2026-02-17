@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { styles } from './MainBodyStyles';
+import N8nWorkflowPlayer from '../N8nAnimation/N8nWorkflowPlayer';
 
 const Main = () => {
   const { theme } = useTheme();
@@ -37,16 +38,10 @@ const Main = () => {
               </div>
             </div>
 
-            {/* Columna de imagen */}
+            {/* Columna de animación — workflow N8N montándose */}
             <div className={styles.imageColumn}>
               <div className={styles.imageWrapper(theme)}>
-                <img
-                  className={styles.heroImage}
-                  src="/heroBannerMainBody.webp"
-                  alt="Visualización futurista de automatización"
-                  fetchPriority="high"
-                />
-                <div className={styles.imageOverlay(theme)}></div>
+                <N8nWorkflowPlayer />
               </div>
             </div>
 
