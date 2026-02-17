@@ -94,9 +94,9 @@ const LoginForm: React.FC = () => {
       {/* Login Header */}
       <div className={styles.headerContent}>
         <img
-            src="/logo.png"
-            alt="AutoFlow Logo"
-            className={styles.logo}
+          src="/logo.webp"
+          alt="AutoFlow Logo"
+          className={styles.logo}
         />
         <h2 className={styles.title(theme)}>Inicia sesión en tu cuenta</h2>
         <p className={styles.subtitle(theme)}>Bienvenido de nuevo a AutoFlow Solutions</p>

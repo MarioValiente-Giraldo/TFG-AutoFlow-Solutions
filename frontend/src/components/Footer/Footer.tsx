@@ -12,9 +12,10 @@ const Footer = () => {
         <div className={styles.logoWrapper}>
           {/* Aplicamos la clase directa a la imagen y corregimos la ruta */}
           <img
-            src="/logo.png"
+            src="/logo.webp"
             alt="Logotipo de AutoFlow Solutions"
             className={styles.logoImage}
+            loading="lazy"
           />
           <span className={styles.logoText(theme)}>AutoFlow Solutions</span>
         </div>

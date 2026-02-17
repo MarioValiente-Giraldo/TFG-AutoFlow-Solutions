@@ -21,7 +21,7 @@ const Navbar = () => {
           {/* --- 1. LOGO --- */}
           <Link to="/" className={styles.logoContainer}>
             <img
-              src="/logo.png"
+              src="/logo.webp"
               alt="AutoFlow Logo"
               className={styles.logoImage}
             />

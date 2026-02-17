@@ -42,8 +42,9 @@ const Main = () => {
               <div className={styles.imageWrapper(theme)}>
                 <img
                   className={styles.heroImage}
-                  src="/heroBannerMainBody.png"
+                  src="/heroBannerMainBody.webp"
                   alt="Visualización futurista de automatización"
+                  fetchPriority="high"
                 />
                 <div className={styles.imageOverlay(theme)}></div>
               </div>
@@ -61,7 +62,7 @@ const Main = () => {
             {/* Tarjeta 1 */}
             <div className={styles.featureCard(theme)}>
               <div className={`${styles.iconWrapper} ${styles.iconCyan(theme)}`}>
-                <img className={styles.featureIcon} src='/acctreeMainBody.png' alt="Diseño de flujos" />
+                <img className={styles.featureIcon} src='/acctreeMainBody.webp' alt="Diseño de flujos" loading="lazy" />
               </div>
               <h3 className={styles.featureTitle(theme)}>Diseño de Flujos Personalizados</h3>
               <p className={styles.featureDesc(theme)}>
@@ -72,7 +73,7 @@ const Main = () => {
             {/* Tarjeta 2 */}
             <div className={styles.featureCard(theme)}>
               <div className={`${styles.iconWrapper} ${styles.iconBlue(theme)}`}>
-                <img className={styles.featureIcon} src='/trendingUpMainBody.png' alt="Infraestructura escalable" />
+                <img className={styles.featureIcon} src='/trendingUpMainBody.webp' alt="Infraestructura escalable" loading="lazy" />
               </div>
               <h3 className={styles.featureTitle(theme)}>Infraestructura Escalable</h3>
               <p className={styles.featureDesc(theme)}>
@@ -83,7 +84,7 @@ const Main = () => {
             {/* Tarjeta 3 */}
             <div className={styles.featureCard(theme)}>
               <div className={`${styles.iconWrapper} ${styles.iconTeal(theme)}`}>
-                <img className={styles.featureIconLarge} src='/shieldSecurityMainBody.png' alt="Seguridad y mantenimiento" />
+                <img className={styles.featureIconLarge} src='/shieldSecurityMainBody.webp' alt="Seguridad y mantenimiento" loading="lazy" />
               </div>
               <h3 className={styles.featureTitle(theme)}>Mantenimiento Proactivo</h3>
               <p className={styles.featureDesc(theme)}>
