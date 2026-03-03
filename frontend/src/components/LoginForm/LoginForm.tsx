@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { styles } from './LoginFormStyles';
+import { usersAPI } from '../../services/usersAPI';
 
 // 1. Definimos el tipo de estado del formulario
 // Añadimos 'user' opcional para pasar los datos del backend al useEffect
@@ -29,39 +30,11 @@ const LoginForm: React.FC = () => {
     }
 
     try {
-      // Usamos fallback por seguridad
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-
-      const response = await fetch(`${API_URL}/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        return { 
-            success: false, 
-            message: data.message || "Credenciales incorrectas." 
-        };
-      }
-
-      // ÉXITO: Devolvemos el usuario junto con el success
-      // No hacemos login() aquí directamente porque estamos dentro de una acción pura
-      console.log("Login exitoso:", data.user);
-
-      return { 
-        success: true, 
-        message: "¡Bienvenido de nuevo! Entrando...", 
-        user: data.user // <--- Pasamos el usuario al estado
-      };
-
+      const { user } = await usersAPI.login({ email, password });
+      return { success: true, message: "¡Bienvenido de nuevo! Entrando...", user };
     } catch (error) {
-      console.error("Error de login:", error);
-      return { success: false, message: "Error de conexión con el servidor." };
+      const message = error instanceof Error ? error.message : "Error de conexión con el servidor.";
+      return { success: false, message };
     }
   };
 

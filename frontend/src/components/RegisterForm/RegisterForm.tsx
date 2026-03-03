@@ -2,8 +2,7 @@ import React, { useActionState, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { styles } from './RegisterFormStyles';
-
-const VITE_API_URL = import.meta.env.VITE_API_URL
+import { usersAPI } from '../../services/usersAPI';
 type FormState = {
   success: boolean;
   message: string;
@@ -61,46 +60,18 @@ const RegisterForm: React.FC = () => {
     }
 
     try {
-      // 3. Petición al Backend (Flask)
-      const response = await fetch(`${VITE_API_URL}/register`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        // Convertimos los datos a JSON para enviarlos
-        body: JSON.stringify({
-            fullName,
-            email,
-            phone,   
-            company,
-            password,
-            acceptTerms: acceptTerms === 'on' 
-        })
+      await usersAPI.register({
+        fullName: fullName!,
+        email: email!,
+        phone: phone || '',
+        company: company!,
+        password: password!,
+        acceptTerms: acceptTerms === 'on',
       });
-
-      // 4. Leer la respuesta del servidor
-      const data = await response.json();
-
-      // 5. Verificar si el servidor devolvió un error (ej: 400, 409, 500)
-      if (!response.ok) {
-        return { 
-            success: false, 
-            message: data.message || "Error al registrar el usuario." 
-        };
-      }
-
-      // 6. Éxito total
-      return { 
-        success: true, 
-        message: "¡Cuenta creada con éxito! Redirigiendo..." 
-      };
-
+      return { success: true, message: "¡Cuenta creada con éxito! Redirigiendo..." };
     } catch (error) {
-      console.error("Error de red:", error);
-      return { 
-        success: false, 
-        message: "Error de conexión con el servidor. Inténtalo más tarde." 
-      };
+      const message = error instanceof Error ? error.message : "Error de conexión con el servidor. Inténtalo más tarde.";
+      return { success: false, message };
     }
   };
 
