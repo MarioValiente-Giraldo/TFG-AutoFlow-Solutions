@@ -14,9 +14,11 @@ def create_app():
 
     from blueprints.auth import auth_bp
     from blueprints.citas import citas_bp
+    from blueprints.automatizaciones import automatizaciones_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(citas_bp)
+    app.register_blueprint(automatizaciones_bp)
 
     @app.route('/')
     def home():
