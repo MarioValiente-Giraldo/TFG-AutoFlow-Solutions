@@ -3,7 +3,9 @@ import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import AgendarCita from "./pages/AgendarCita"
+import AdminDashboard from "./pages/AdminDashboard"
 import ProtectedRouteAuth from "./components/ProtectedRoutes/ProtectedRouteAuth"
+import ProtectedRouteAdmin from "./components/ProtectedRoutes/ProtectedRouteAdmin"
 
 const App = () => {
   return (
@@ -17,6 +19,16 @@ const App = () => {
           element={
             <ProtectedRouteAuth>
               <AgendarCita />
+            </ProtectedRouteAuth>
+          }
+        />
+        <Route
+          path="/dashboard/admin"
+          element={
+            <ProtectedRouteAuth>
+              <ProtectedRouteAdmin>
+                <AdminDashboard />
+              </ProtectedRouteAdmin>
             </ProtectedRouteAuth>
           }
         />
