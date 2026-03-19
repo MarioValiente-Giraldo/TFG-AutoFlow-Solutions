@@ -2,7 +2,8 @@ import React, { useActionState, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { styles } from './AgendarCitaFormStyles';
-import { citasAPI } from '../../services/citasAPI';
+import { crearAutomatizacion } from '../../services/automatizacionesAPI';
+import { useAuth } from '../../context/AuthContext';
 
 type FormState = {
   success: boolean;
@@ -27,19 +28,18 @@ const FRANJAS = [
 
 const AgendarCitaForm: React.FC = () => {
   const { theme } = useTheme();
+  const { user } = useAuth();
   const [charCount, setCharCount] = useState(0);
   const [franja, setFranja] = useState('');
 
   const agendarAction = async (_prevState: FormState, formData: FormData): Promise<FormState> => {
-    const nombre = formData.get('nombre')?.toString().trim();
-    const email = formData.get('email')?.toString().trim();
     const tipoAutomatizacion = formData.get('tipoAutomatizacion')?.toString();
     const descripcion = formData.get('descripcion')?.toString().trim();
     const fechaPreferida = formData.get('fechaPreferida')?.toString();
     const franjaHoraria = formData.get('franjaHoraria')?.toString();
     const aceptaPrivacidad = formData.get('aceptaPrivacidad');
 
-    if (!nombre || !email || !tipoAutomatizacion || !descripcion || !fechaPreferida || !franjaHoraria) {
+    if (!tipoAutomatizacion || !descripcion || !fechaPreferida || !franjaHoraria) {
       return { success: false, message: 'Por favor completa todos los campos obligatorios.' };
     }
 
@@ -48,17 +48,15 @@ const AgendarCitaForm: React.FC = () => {
     }
 
     try {
-      await citasAPI.agendarCita({
-        nombre: nombre!,
-        email: email!,
-        telefono: formData.get('telefono')?.toString().trim() || '',
-        empresa: formData.get('empresa')?.toString().trim() || '',
-        tipoAutomatizacion: tipoAutomatizacion!,
-        descripcion: descripcion!,
-        fechaPreferida: fechaPreferida!,
-        franjaHoraria: franjaHoraria!,
+      await crearAutomatizacion({
+        titulo: tipoAutomatizacion,
+        descripcion: descripcion,
+        tipo_automatizacion: tipoAutomatizacion,
+        identificador_propietario: user!.id,
+        email_propietario: user!.email,
+        nombre_propietario: user!.nombre,
       });
-      return { success: true, message: '¡Solicitud recibida!', submittedEmail: email };
+      return { success: true, message: '¡Solicitud recibida!', submittedEmail: user!.email };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Error de conexión con el servidor.';
       return { success: false, message };
