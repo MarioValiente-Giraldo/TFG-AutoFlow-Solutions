@@ -3,6 +3,11 @@ import type { CitaPayload } from '../types/index';
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const citasAPI = {
+  /**
+   * Envía una solicitud de cita al backend con los datos del formulario.
+   * @param payload - Objeto con `nombre`, `email`, `telefono`, `empresa`, `tipoAutomatizacion`, `descripcion`, `fechaPreferida` y `franjaHoraria`.
+   * @returns Void. Lanza error si la petición falla o faltan campos obligatorios.
+   */
   async agendarCita(payload: CitaPayload): Promise<void> {
     const response = await fetch(`${BASE_URL}/agendar-cita`, {
       method: 'POST',
