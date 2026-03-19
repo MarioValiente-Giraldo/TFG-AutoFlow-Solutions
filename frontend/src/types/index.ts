@@ -38,3 +38,18 @@ export interface AutomatizacionPayload {
   email_propietario: string;
   nombre_propietario: string;
 }
+
+export interface Automatizacion {
+  identificador_unico: string;
+  identificador_propietario: string;
+  email_propietario: string;
+  nombre_propietario: string;
+  titulo: string;
+  descripcion: string;
+  tipo_automatizacion: string;
+  estado: 'pendiente_revision' | 'aceptada_pendiente_cliente' | 'en_desarrollo' | 'terminada' | 'rechazada';
+  gasto_estimado: number | null;
+  motivo_rechazo: string | null;
+  fecha_solicitud: string;
+  fecha_actualizacion: string;
+}
