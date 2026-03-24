@@ -4,6 +4,7 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import AgendarCita from "./pages/AgendarCita"
 import AdminDashboard from "./pages/AdminDashboard"
+import ClienteDashboard from "./pages/ClienteDashboard"
 import ProtectedRouteAuth from "./components/ProtectedRoutes/ProtectedRouteAuth"
 import ProtectedRouteAdmin from "./components/ProtectedRoutes/ProtectedRouteAdmin"
 
@@ -19,6 +20,14 @@ const App = () => {
           element={
             <ProtectedRouteAuth>
               <AgendarCita />
+            </ProtectedRouteAuth>
+          }
+        />
+        <Route
+          path="/dashboard/cliente"
+          element={
+            <ProtectedRouteAuth>
+              <ClienteDashboard />
             </ProtectedRouteAuth>
           }
         />
