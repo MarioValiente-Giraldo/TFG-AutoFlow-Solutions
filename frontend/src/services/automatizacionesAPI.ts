@@ -86,6 +86,21 @@ export async function aceptarCliente(id: string) {
 }
 
 /**
+ * Cliente rechaza la propuesta económica, pasando la automatización a estado `rechazada`.
+ * @param id - Identificador único de la automatización.
+ * @returns Respuesta del servidor con `success` y `message`.
+ */
+export async function rechazarCliente(id: string) {
+  const res = await fetch(`${API_URL}/automatizaciones/${id}/rechazar-cliente`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({}),
+  });
+  if (!res.ok) throw new Error('Error al rechazar propuesta');
+  return res.json();
+}
+
+/**
  * Admin marca una automatización como `en_desarrollo` desde `aceptada_pendiente_cliente`.
  * @param id - Identificador único de la automatización.
  * @returns Respuesta del servidor con `success` y `message`.

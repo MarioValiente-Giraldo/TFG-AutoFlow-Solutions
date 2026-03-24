@@ -152,6 +152,28 @@ def aceptar_cliente(id):
         return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
 
 
+@automatizaciones_bp.route('/automatizaciones/<id>/rechazar-cliente', methods=['PATCH'])
+def rechazar_cliente(id):
+    db = get_db()
+    if db is None:
+        return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
+
+    try:
+        result = db.Automatizaciones.update_one(
+            {"identificador_unico": id, "estado": "aceptada_pendiente_cliente"},
+            {"$set": {
+                "estado": "rechazada",
+                "motivo_rechazo": "Propuesta rechazada por el cliente",
+                "fecha_actualizacion": datetime.utcnow(),
+            }}
+        )
+        if result.matched_count == 0:
+            return jsonify({"success": False, "message": "Automatización no encontrada o estado incorrecto"}), 404
+        return jsonify({"success": True, "message": "Propuesta rechazada por el cliente"}), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
+
+
 @automatizaciones_bp.route('/automatizaciones/<id>/marcar-desarrollo', methods=['PATCH'])
 def marcar_desarrollo(id):
     db = get_db()

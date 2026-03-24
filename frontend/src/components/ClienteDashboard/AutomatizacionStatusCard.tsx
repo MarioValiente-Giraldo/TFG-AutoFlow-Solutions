@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
-import { aceptarCliente } from '../../services/automatizacionesAPI';
+import { aceptarCliente, rechazarCliente } from '../../services/automatizacionesAPI';
 import type { Automatizacion } from '../../types';
 import { styles } from './ClienteDashboardStyles';
 
@@ -34,6 +34,19 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
     }
   };
 
+  const handleRechazarPropuesta = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      await rechazarCliente(identificador_unico);
+      onRefresh();
+    } catch {
+      setError('Error al rechazar la propuesta');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={styles.card(theme)}>
       <div className={styles.cardHeader}>
@@ -50,9 +63,14 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
         <div className={styles.propuestaBox(theme)}>
           <p className={styles.propuestaLabel(theme)}>Propuesta recibida</p>
           <p className={styles.propuestaGasto(theme)}>{gasto_estimado} €</p>
-          <button className={styles.btnAceptar} onClick={handleAceptarPropuesta} disabled={loading}>
-            {loading ? 'Procesando...' : 'Aceptar propuesta'}
-          </button>
+          <div className="flex gap-3">
+            <button className={styles.btnAceptar} onClick={handleAceptarPropuesta} disabled={loading}>
+              {loading ? 'Procesando...' : 'Aceptar propuesta'}
+            </button>
+            <button className={styles.btnRechazar} onClick={handleRechazarPropuesta} disabled={loading}>
+              Rechazar
+            </button>
+          </div>
           {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
         </div>
       )}
