@@ -4,7 +4,6 @@ import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { getMisAutomatizaciones } from '../services/automatizacionesAPI';
 import AutomatizacionStatusCard from '../components/ClienteDashboard/AutomatizacionStatusCard';
-import NavBar from '../components/NavBar/NavBar';
 import type { Automatizacion } from '../types';
 import { styles } from '../components/ClienteDashboard/ClienteDashboardStyles';
 
@@ -35,7 +34,6 @@ const ClienteDashboard = () => {
 
   return (
     <>
-      <NavBar />
       <div className={styles.page(theme)}>
         <div className={styles.container}>
           <h1 className={styles.pageTitle(theme)}>Mis Automatizaciones</h1>

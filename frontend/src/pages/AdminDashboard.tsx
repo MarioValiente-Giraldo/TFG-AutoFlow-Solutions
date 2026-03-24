@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { getAllAutomatizaciones } from '../services/automatizacionesAPI';
 import AutomatizacionCardAdmin from '../components/AdminDashboard/AutomatizacionCardAdmin';
-import NavBar from '../components/NavBar/NavBar';
 import type { Automatizacion } from '../types';
 import { styles } from '../components/AdminDashboard/AdminDashboardStyles';
 
@@ -39,7 +38,6 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <NavBar />
       <div className={styles.page(theme)}>
         <div className={styles.container}>
           <h1 className={styles.pageTitle(theme)}>Panel de Administración</h1>

@@ -1,6 +1,4 @@
 import AgendarCitaForm from '../components/AgendarCita/AgendarCitaForm';
-import Footer from '../components/Footer/Footer';
-import Navbar from '../components/NavBar/NavBar';
 import { useTheme } from '../context/ThemeContext';
 
 const AgendarCita = () => {
@@ -14,11 +12,9 @@ const AgendarCita = () => {
 
   return (
     <div className={pageWrapper}>
-      <Navbar />
       <main className="flex-grow flex items-start justify-center px-4 py-12">
         <AgendarCitaForm />
       </main>
-      <Footer />
     </div>
   );
 };

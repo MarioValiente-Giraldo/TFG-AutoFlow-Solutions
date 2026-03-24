@@ -1,6 +1,4 @@
-import Footer from "../components/Footer/Footer";
 import LoginForm from "../components/LoginForm/LoginForm";
-import Navbar from "../components/NavBar/NavBar";
 import { useTheme } from "../context/ThemeContext";
 
 const Login = () => {
@@ -20,12 +18,9 @@ const Login = () => {
 
   return (
     <div className={pageStyles.pageWrapper}>
-      <Navbar />
       <main className={pageStyles.mainContent}>
         <LoginForm />
       </main>
-
-      <Footer />
     </div>
   );
 };
