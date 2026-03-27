@@ -39,6 +39,12 @@ export interface AutomatizacionPayload {
   nombre_propietario: string;
 }
 
+export interface ActualizacionDesarrollo {
+  mensaje: string;
+  porcentaje: number;
+  fecha: string;
+}
+
 export interface Automatizacion {
   identificador_unico: string;
   identificador_propietario: string;
@@ -52,4 +58,5 @@ export interface Automatizacion {
   motivo_rechazo: string | null;
   fecha_solicitud: string;
   fecha_actualizacion: string;
+  actualizaciones_desarrollo?: ActualizacionDesarrollo[];
 }
