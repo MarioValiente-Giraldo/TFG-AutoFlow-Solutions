@@ -94,6 +94,13 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
       setUpdateError('El porcentaje debe ser un número entre 0 y 100');
       return;
     }
+    if (actualizaciones_desarrollo && actualizaciones_desarrollo.length > 0) {
+      const ultimoPct = actualizaciones_desarrollo[actualizaciones_desarrollo.length - 1].porcentaje;
+      if (pct <= ultimoPct) {
+        setUpdateError(`El porcentaje debe ser mayor que el anterior (${ultimoPct}%)`);
+        return;
+      }
+    }
     setUpdateLoading(true);
     setUpdateError('');
     try {
