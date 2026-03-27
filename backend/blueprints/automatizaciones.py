@@ -237,6 +237,22 @@ def actualizar_desarrollo(id):
     if not (0 <= porcentaje <= 100):
         return jsonify({"success": False, "message": "porcentaje debe estar entre 0 y 100"}), 400
 
+    doc = db.Automatizaciones.find_one(
+        {"identificador_unico": id, "estado": "en_desarrollo"},
+        {"actualizaciones_desarrollo": 1}
+    )
+    if not doc:
+        return jsonify({"success": False, "message": "Automatización no encontrada o no está en desarrollo"}), 404
+
+    updates = doc.get("actualizaciones_desarrollo") or []
+    if updates:
+        ultimo_porcentaje = updates[-1]["porcentaje"]
+        if porcentaje <= ultimo_porcentaje:
+            return jsonify({
+                "success": False,
+                "message": f"El porcentaje debe ser mayor que el anterior ({ultimo_porcentaje}%)"
+            }), 400
+
     nueva_actualizacion = {
         "mensaje": mensaje,
         "porcentaje": porcentaje,
