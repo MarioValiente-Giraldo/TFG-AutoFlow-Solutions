@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { styles } from './AgendarCitaFormStyles';
 import { crearAutomatizacion } from '../../services/automatizacionesAPI';
+import { citasAPI } from '../../services/citasAPI';
 import { useAuth } from '../../context/AuthContext';
 
 type FormState = {
@@ -48,14 +49,26 @@ const AgendarCitaForm: React.FC = () => {
     }
 
     try {
-      await crearAutomatizacion({
-        titulo: tipoAutomatizacion,
-        descripcion: descripcion,
-        tipo_automatizacion: tipoAutomatizacion,
-        identificador_propietario: user!.id,
-        email_propietario: user!.email,
-        nombre_propietario: user!.nombre,
-      });
+      await Promise.all([
+        crearAutomatizacion({
+          titulo: tipoAutomatizacion,
+          descripcion: descripcion,
+          tipo_automatizacion: tipoAutomatizacion,
+          identificador_propietario: user!.id,
+          email_propietario: user!.email,
+          nombre_propietario: user!.nombre,
+        }),
+        citasAPI.agendarCita({
+          nombre: user!.nombre,
+          email: user!.email,
+          telefono: user!.telefono,
+          empresa: user!.empresa,
+          tipoAutomatizacion: tipoAutomatizacion,
+          descripcion: descripcion,
+          fechaPreferida: fechaPreferida,
+          franjaHoraria: franjaHoraria,
+        }),
+      ]);
       return { success: true, message: '¡Solicitud recibida!', submittedEmail: user!.email };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Error de conexión con el servidor.';
@@ -112,64 +125,7 @@ const AgendarCitaForm: React.FC = () => {
             </div>
           )}
 
-          {/* SECCIÓN 1: Información de contacto */}
-          <div className={styles.sectionTitle(theme)}>Información de contacto</div>
-
-          {/* Nombre */}
-          <div className={styles.formField}>
-            <label className={styles.label(theme)}>
-              Nombre completo <span className={styles.required}>*</span>
-            </label>
-            <input
-              className={styles.input(theme)}
-              type="text"
-              name="nombre"
-              placeholder="Mario García"
-              required
-              disabled={isPending}
-            />
-          </div>
-
-          {/* Email */}
-          <div className={styles.formField}>
-            <label className={styles.label(theme)}>
-              Correo electrónico <span className={styles.required}>*</span>
-            </label>
-            <input
-              className={styles.input(theme)}
-              type="email"
-              name="email"
-              placeholder="mario@empresa.com"
-              required
-              disabled={isPending}
-            />
-          </div>
-
-          {/* Teléfono + Empresa */}
-          <div className={styles.formRow}>
-            <div className={styles.formField}>
-              <label className={styles.label(theme)}>Teléfono</label>
-              <input
-                className={styles.input(theme)}
-                type="tel"
-                name="telefono"
-                placeholder="+34 600 000 000"
-                disabled={isPending}
-              />
-            </div>
-            <div className={styles.formField}>
-              <label className={styles.label(theme)}>Empresa</label>
-              <input
-                className={styles.input(theme)}
-                type="text"
-                name="empresa"
-                placeholder="AutoFlow S.L."
-                disabled={isPending}
-              />
-            </div>
-          </div>
-
-          {/* SECCIÓN 2: Tu proyecto */}
+          {/* SECCIÓN 1: Tu proyecto */}
           <div className={styles.sectionDivider(theme)}>
             <div className={styles.sectionTitle(theme)}>Tu proyecto</div>
 

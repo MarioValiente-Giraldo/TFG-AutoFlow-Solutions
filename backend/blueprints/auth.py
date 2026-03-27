@@ -69,6 +69,8 @@ def login():
                 "id": user['identificador_unico_usuario'],
                 "email": user['correo_electronico_acceso'],
                 "nombre": user['datos_perfil_comercial']['nombre'],
+                "empresa": user['datos_perfil_comercial'].get('empresa', ''),
+                "telefono": user.get('telefono', ''),
                 "rol": user['rol']
             }
         }), 200
