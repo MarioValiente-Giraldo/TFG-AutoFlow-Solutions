@@ -129,3 +129,20 @@ export async function marcarTerminada(id: string) {
   if (!res.ok) throw new Error('Error al marcar terminada');
   return res.json();
 }
+
+/**
+ * Admin publica una actualización de desarrollo para una automatización en estado `en_desarrollo`.
+ * @param id - Identificador único de la automatización.
+ * @param mensaje - Descripción del avance realizado.
+ * @param porcentaje - Porcentaje de completado (0-100).
+ * @returns Respuesta del servidor con `success` y `message`.
+ */
+export async function publicarActualizacion(id: string, mensaje: string, porcentaje: number) {
+  const res = await fetch(`${API_URL}/automatizaciones/${id}/actualizar-desarrollo`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mensaje, porcentaje }),
+  });
+  if (!res.ok) throw new Error('Error al publicar la actualización');
+  return res.json();
+}
