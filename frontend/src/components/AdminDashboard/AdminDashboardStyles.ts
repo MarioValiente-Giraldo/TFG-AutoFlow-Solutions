@@ -163,6 +163,66 @@ export const styles = {
         mt-2 text-sm text-red-400
     `,
 
+    // --- ACTUALIZACIONES (ADMIN) ---
+    updateFormSection: (theme: Theme) => `
+        mt-4 pt-4 border-t
+        ${theme === 'dark' ? 'border-[#334155]' : 'border-gray-100'}
+    `,
+    updateFormTitle: (theme: Theme) => `
+        text-xs font-semibold uppercase tracking-widest mb-3
+        ${theme === 'dark' ? 'text-[#64748b]' : 'text-gray-400'}
+    `,
+    updateFormRow: `
+        flex flex-col sm:flex-row gap-2 mb-2
+    `,
+    updateFormPctInput: (theme: Theme) => `
+        w-full sm:w-24 h-10 px-3 rounded-lg border text-sm
+        ${theme === 'dark'
+            ? 'bg-[#1e293b] border-[#334155] text-[#f1f5f9] placeholder:text-[#64748b]'
+            : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-400'
+        }
+        focus:outline-none focus:border-[#22d3ee] focus:ring-2 focus:ring-[#22d3ee]/20
+        transition-all duration-200
+    `,
+    btnPublish: `
+        px-4 py-2 rounded-lg text-sm font-semibold
+        bg-violet-500/10 border border-violet-500/30 text-violet-400
+        hover:bg-violet-500/20 transition-colors duration-200 cursor-pointer
+    `,
+    updateHistorySection: (theme: Theme) => `
+        mt-4 pt-4 border-t
+        ${theme === 'dark' ? 'border-[#334155]' : 'border-gray-100'}
+    `,
+    updateHistoryTitle: (theme: Theme) => `
+        text-xs font-semibold uppercase tracking-widest mb-3
+        ${theme === 'dark' ? 'text-[#64748b]' : 'text-gray-400'}
+    `,
+    updateItem: (theme: Theme) => `
+        mb-3 p-3 rounded-lg
+        ${theme === 'dark' ? 'bg-[#0f172a]' : 'bg-gray-50'}
+    `,
+    updateItemHeader: `
+        flex items-center justify-between mb-1
+    `,
+    updateItemMsg: (theme: Theme) => `
+        text-sm
+        ${theme === 'dark' ? 'text-[#cbd5e1]' : 'text-gray-700'}
+    `,
+    updateItemDate: (theme: Theme) => `
+        text-xs
+        ${theme === 'dark' ? 'text-[#475569]' : 'text-gray-400'}
+    `,
+    updateItemPct: `
+        text-xs font-semibold text-violet-400
+    `,
+    progressBarTrack: (theme: Theme) => `
+        w-full h-1.5 rounded-full mt-2 overflow-hidden
+        ${theme === 'dark' ? 'bg-[#1e293b]' : 'bg-gray-200'}
+    `,
+    progressBarFill: `
+        h-full rounded-full bg-violet-400 transition-all duration-500
+    `,
+
     // --- LOADING / ERROR ---
     loadingText: (theme: Theme) => `
         text-center py-20 text-sm
