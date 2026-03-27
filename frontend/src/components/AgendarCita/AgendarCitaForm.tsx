@@ -61,8 +61,8 @@ const AgendarCitaForm: React.FC = () => {
         citasAPI.agendarCita({
           nombre: user!.nombre,
           email: user!.email,
-          telefono: user!.telefono,
-          empresa: user!.empresa,
+          telefono: user!.telefono || '',
+          empresa: user!.empresa || '',
           tipoAutomatizacion: tipoAutomatizacion,
           descripcion: descripcion,
           fechaPreferida: fechaPreferida,
