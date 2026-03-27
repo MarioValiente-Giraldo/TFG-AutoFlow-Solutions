@@ -15,7 +15,8 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
   const [error, setError] = useState('');
 
   const { identificador_unico, titulo, tipo_automatizacion, descripcion,
-    estado, gasto_estimado, motivo_rechazo, fecha_solicitud } = automatizacion;
+    estado, gasto_estimado, motivo_rechazo, fecha_solicitud,
+    actualizaciones_desarrollo } = automatizacion;
 
   const fecha = new Date(fecha_solicitud).toLocaleDateString('es-ES', {
     day: '2-digit', month: 'short', year: 'numeric',
@@ -47,6 +48,10 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
     }
   };
 
+  const updates = actualizaciones_desarrollo
+    ? [...actualizaciones_desarrollo].reverse()
+    : [];
+
   return (
     <div className={styles.card(theme)}>
       <div className={styles.cardHeader}>
@@ -77,6 +82,32 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
 
       {estado === 'rechazada' && motivo_rechazo && (
         <p className={styles.motivoRechazo}>Motivo: {motivo_rechazo}</p>
+      )}
+
+      {estado === 'en_desarrollo' && updates.length > 0 && (
+        <div className={styles.updatesSection(theme)}>
+          <p className={styles.updatesSectionTitle(theme)}>Actualizaciones del equipo</p>
+          {updates.map((u, i) => (
+            <div key={i} className={styles.updateItem(theme)}>
+              <div className={styles.updateItemHeader}>
+                <span className={styles.updateItemMsg(theme)}>{u.mensaje}</span>
+                <span className={styles.updateItemPct}>{u.porcentaje}%</span>
+              </div>
+              <p className={styles.updateItemDate(theme)}>
+                {new Date(u.fecha).toLocaleDateString('es-ES', {
+                  day: '2-digit', month: 'short', year: 'numeric',
+                  hour: '2-digit', minute: '2-digit',
+                })}
+              </p>
+              <div className={styles.progressBarTrack(theme)}>
+                <div
+                  className={styles.progressBarFill}
+                  style={{ width: `${u.porcentaje}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

@@ -107,6 +107,41 @@ export const styles = {
         hover:bg-[#06b6d4] transition-colors duration-200
     `,
 
+    // --- ACTUALIZACIONES (CLIENTE) ---
+    updatesSection: (theme: Theme) => `
+        mt-4 pt-4 border-t
+        ${theme === 'dark' ? 'border-[#334155]' : 'border-gray-100'}
+    `,
+    updatesSectionTitle: (theme: Theme) => `
+        text-xs font-semibold uppercase tracking-widest mb-3
+        ${theme === 'dark' ? 'text-[#64748b]' : 'text-gray-400'}
+    `,
+    updateItem: (theme: Theme) => `
+        mb-3 p-3 rounded-lg
+        ${theme === 'dark' ? 'bg-[#0f172a]' : 'bg-gray-50'}
+    `,
+    updateItemHeader: `
+        flex items-center justify-between mb-1
+    `,
+    updateItemMsg: (theme: Theme) => `
+        text-sm
+        ${theme === 'dark' ? 'text-[#cbd5e1]' : 'text-gray-700'}
+    `,
+    updateItemDate: (theme: Theme) => `
+        text-xs
+        ${theme === 'dark' ? 'text-[#475569]' : 'text-gray-400'}
+    `,
+    updateItemPct: `
+        text-xs font-semibold text-violet-400
+    `,
+    progressBarTrack: (theme: Theme) => `
+        w-full h-1.5 rounded-full mt-2 overflow-hidden
+        ${theme === 'dark' ? 'bg-[#1e293b]' : 'bg-gray-200'}
+    `,
+    progressBarFill: `
+        h-full rounded-full bg-violet-400 transition-all duration-500
+    `,
+
     // --- LOADING / ERROR ---
     loadingText: (theme: Theme) => `
         text-center py-20 text-sm
