@@ -141,6 +141,23 @@ export const styles = {
         transition-colors duration-200 cursor-pointer
     `,
 
+    // --- TABS ---
+    tabsWrapper: `
+        flex flex-wrap gap-2 mb-8
+    `,
+    tab: (active: boolean, theme: Theme) => `
+        px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer
+        ${active
+            ? 'bg-cyan-400 text-[#0f172a]'
+            : theme === 'dark'
+                ? 'bg-[#1e293b] border border-[#334155] text-[#64748b] hover:text-[#94a3b8]'
+                : 'bg-white border border-gray-200 text-gray-500 hover:text-gray-700'
+        }
+    `,
+    tabCount: `
+        ml-1.5 text-xs opacity-70
+    `,
+
     // --- MOTIVO RECHAZO ---
     motivoRechazo: `
         mt-2 text-sm text-red-400
