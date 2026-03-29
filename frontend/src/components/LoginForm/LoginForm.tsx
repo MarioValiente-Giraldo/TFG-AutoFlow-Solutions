@@ -15,7 +15,6 @@ type FormState = {
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { login } = useAuth();
   const { theme } = useTheme();
 

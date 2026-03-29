@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { getAllAutomatizaciones } from '../services/automatizacionesAPI';
 import AutomatizacionCardAdmin from '../components/AdminDashboard/AutomatizacionCardAdmin';
+import StatsCards from '../components/AdminDashboard/StatsCards';
 import type { Automatizacion } from '../types';
 import { styles } from '../components/AdminDashboard/AdminDashboardStyles';
 
@@ -58,6 +59,8 @@ const AdminDashboard = () => {
 
           {loading && <p className={styles.loadingText(theme)}>Cargando automatizaciones...</p>}
           {error && <p className={styles.errorText}>{error}</p>}
+
+          {!loading && !error && <StatsCards automatizaciones={automatizaciones} />}
 
           {!loading && !error && (
             <div className={styles.tabsWrapper}>
