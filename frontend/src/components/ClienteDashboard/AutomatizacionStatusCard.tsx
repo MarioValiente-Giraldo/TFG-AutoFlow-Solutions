@@ -87,7 +87,7 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
         <p className={styles.motivoRechazo}>Motivo: {motivo_rechazo}</p>
       )}
 
-      {estado === 'en_desarrollo' && updates.length > 0 && (
+      {(estado === 'en_desarrollo' || estado === 'terminada') && updates.length > 0 && (
         <div className={styles.updatesSection(theme)}>
           <p className={styles.updatesSectionTitle(theme)}>Actualizaciones del equipo</p>
           {updates.map((u, i) => (
