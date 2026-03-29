@@ -51,11 +51,11 @@ const LoginForm: React.FC = () => {
       // A) Actualizamos el contexto global
       login(state.user);
 
-      // B) Redirigimos SIEMPRE a la Landing Page (Home)
-      // Quitamos la lógica de 'origin' para forzar que vaya al inicio
+      // B) Redirigimos según el rol del usuario
+      const destination = state.user.rol === 'admin' ? '/admin' : '/dashboard';
       const timer = setTimeout(() => {
-        navigate('/', { replace: true }); 
-      }, 1000); 
+        navigate(destination, { replace: true });
+      }, 1000);
 
       return () => clearTimeout(timer);
     }
