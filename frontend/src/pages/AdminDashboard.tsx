@@ -5,17 +5,7 @@ import AutomatizacionCardAdmin from '../components/AdminDashboard/Automatizacion
 import StatsCards from '../components/AdminDashboard/StatsCards';
 import type { Automatizacion } from '../types';
 import { styles } from '../components/AdminDashboard/AdminDashboardStyles';
-
-type TabEstado = 'todos' | Automatizacion['estado'];
-
-const TABS: { key: TabEstado; label: string }[] = [
-  { key: 'todos', label: 'Todos' },
-  { key: 'pendiente_revision', label: 'Pendiente revisión' },
-  { key: 'aceptada_pendiente_cliente', label: 'Esperando cliente' },
-  { key: 'en_desarrollo', label: 'En desarrollo' },
-  { key: 'terminada', label: 'Terminada' },
-  { key: 'rechazada', label: 'Rechazada' },
-];
+import { TABS_ADMIN, type TabEstado } from '../utils/automatizacionesUtils';
 
 const AdminDashboard = () => {
   const { theme } = useTheme();
@@ -64,7 +54,7 @@ const AdminDashboard = () => {
 
           {!loading && !error && (
             <div className={styles.tabsWrapper}>
-              {TABS.map(tab => (
+              {TABS_ADMIN.map(tab => (
                 <button
                   key={tab.key}
                   className={styles.tab(tabActivo === tab.key, theme)}

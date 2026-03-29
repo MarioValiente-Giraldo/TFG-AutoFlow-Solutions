@@ -1,4 +1,5 @@
 import type { Theme } from '../../context/ThemeContext';
+import { getBadgeClass, ESTADO_LABELS_ADMIN } from '../../utils/automatizacionesUtils';
 
 export const styles = {
     // --- PAGE ---
@@ -58,27 +59,8 @@ export const styles = {
     `,
 
     // --- BADGE ---
-    badge: (estado: string) => {
-        const map: Record<string, string> = {
-            pendiente_revision: 'bg-amber-400/10 border-amber-400/30 text-amber-400',
-            aceptada_pendiente_cliente: 'bg-cyan-400/10 border-cyan-400/30 text-cyan-400',
-            en_desarrollo: 'bg-violet-400/10 border-violet-400/30 text-violet-400',
-            terminada: 'bg-green-500/10 border-green-500/30 text-green-400',
-            rechazada: 'bg-red-500/10 border-red-500/30 text-red-400',
-        };
-        return `text-xs font-medium px-2.5 py-1 rounded-full border ${map[estado] ?? 'bg-gray-500/10 border-gray-500/30 text-gray-400'}`;
-    },
-
-    badgeLabel: (estado: string): string => {
-        const map: Record<string, string> = {
-            pendiente_revision: 'Pendiente revisión',
-            aceptada_pendiente_cliente: 'Esperando cliente',
-            en_desarrollo: 'En desarrollo',
-            terminada: 'Terminada',
-            rechazada: 'Rechazada',
-        };
-        return map[estado] ?? estado;
-    },
+    badge: getBadgeClass,
+    badgeLabel: (estado: string): string => ESTADO_LABELS_ADMIN[estado] ?? estado,
 
     // --- ACTIONS ---
     actionsRow: `
