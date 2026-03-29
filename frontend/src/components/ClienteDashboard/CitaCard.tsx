@@ -37,11 +37,6 @@ const CitaCard: React.FC<CitaCardProps> = ({ cita }) => {
         </span>
       </div>
 
-      {cita.estado === 'pendiente' && (
-        <button className={styles.btnEditar}>
-          Editar cita
-        </button>
-      )}
     </div>
   );
 };

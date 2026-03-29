@@ -42,9 +42,4 @@ export const styles = {
     font-medium
     ${theme === 'dark' ? 'text-[#cbd5e1]' : 'text-gray-700'}
   `,
-  btnEditar: `
-    mt-4 px-4 py-2 rounded-lg text-sm font-semibold
-    bg-cyan-400/10 border border-cyan-400/30 text-cyan-400
-    hover:bg-cyan-400/20 transition-colors duration-200 cursor-pointer
-  `,
 };

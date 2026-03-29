@@ -193,6 +193,9 @@ const AgendarCitaForm: React.FC = () => {
                 required
                 disabled={isPending}
               />
+              <p className="mt-1.5 text-xs text-amber-400">
+                Elige bien la fecha y franja horaria. Una vez enviada la solicitud no podrás modificarla.
+              </p>
             </div>
 
             {/* Franja horaria */}
