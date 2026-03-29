@@ -42,6 +42,7 @@ const CitaCardAdmin = ({ cita, onRefresh }: CitaCardAdminProps) => {
         tipo_automatizacion: cita.tipo_automatizacion,
         email_propietario: cita.email,
         nombre_propietario: cita.nombre,
+        id_cita_origen: cita.identificador_unico_cita,
       });
       onRefresh();
     } catch {

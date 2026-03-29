@@ -38,6 +38,7 @@ def crear_automatizacion():
         "estado": "pendiente_revision",
         "gasto_estimado": None,
         "motivo_rechazo": None,
+        "id_cita_origen": data.get('id_cita_origen', None),
         "fecha_solicitud": datetime.utcnow(),
         "fecha_actualizacion": datetime.utcnow(),
     }

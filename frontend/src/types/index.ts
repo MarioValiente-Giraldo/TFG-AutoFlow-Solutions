@@ -52,6 +52,7 @@ export interface AutomatizacionPayload {
   tipo_automatizacion: string;
   email_propietario: string;
   nombre_propietario: string;
+  id_cita_origen?: string;
 }
 
 export interface ActualizacionDesarrollo {
