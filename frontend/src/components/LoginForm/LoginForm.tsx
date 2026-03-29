@@ -51,7 +51,7 @@ const LoginForm: React.FC = () => {
       login(state.user);
 
       // B) Redirigimos según el rol del usuario
-      const destination = state.user.rol === 'admin' ? '/admin' : '/dashboard';
+      const destination = state.user.rol === 'admin' ? '/dashboard/admin' : '/dashboard/cliente';
       const timer = setTimeout(() => {
         navigate(destination, { replace: true });
       }, 1000);

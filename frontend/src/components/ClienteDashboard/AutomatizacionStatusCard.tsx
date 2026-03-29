@@ -3,6 +3,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { aceptarCliente, rechazarCliente } from '../../services/automatizacionesAPI';
 import type { Automatizacion } from '../../types';
 import { styles } from './ClienteDashboardStyles';
+import EstadoTimeline from './EstadoTimeline';
 
 interface Props {
   automatizacion: Automatizacion;
@@ -61,6 +62,8 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
         </div>
         <span className={styles.badge(estado)}>{styles.badgeLabel(estado)}</span>
       </div>
+
+      <EstadoTimeline automatizacion={automatizacion} />
 
       <p className={styles.cardDescription(theme)}>{descripcion}</p>
 
