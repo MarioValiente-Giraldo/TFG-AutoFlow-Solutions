@@ -28,4 +28,17 @@ export const citasAPI = {
     if (!response.ok) throw new Error(data.message || 'Error al obtener las citas.');
     return data;
   },
+
+  async getAllCitas(): Promise<{ data: Cita[] }> {
+    const response = await fetch(`${BASE_URL}/admin/citas`);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al obtener las citas.');
+    return data;
+  },
+
+  async marcarAtendida(id: string): Promise<void> {
+    const response = await fetch(`${BASE_URL}/citas/${id}/marcar-atendida`, { method: 'PATCH' });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al marcar la cita.');
+  },
 };

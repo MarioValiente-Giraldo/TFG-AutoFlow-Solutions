@@ -20,6 +20,32 @@ def get_citas():
     return jsonify({"success": True, "data": citas}), 200
 
 
+@citas_bp.route('/admin/citas', methods=['GET'])
+def get_todas_citas():
+    db = get_db()
+    if db is None:
+        return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
+
+    citas = list(db.Citas.find({}, {"_id": 0}))
+    return jsonify({"success": True, "data": citas}), 200
+
+
+@citas_bp.route('/citas/<id>/marcar-atendida', methods=['PATCH'])
+def marcar_atendida(id):
+    db = get_db()
+    if db is None:
+        return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
+
+    result = db.Citas.update_one(
+        {"identificador_unico_cita": id, "estado": "pendiente"},
+        {"$set": {"estado": "atendida"}}
+    )
+    if result.matched_count == 0:
+        return jsonify({"success": False, "message": "Cita no encontrada o ya atendida"}), 404
+
+    return jsonify({"success": True, "message": "Cita marcada como atendida"}), 200
+
+
 @citas_bp.route('/agendar-cita', methods=['POST'])
 def agendar_cita():
     db = get_db()

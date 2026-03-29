@@ -50,7 +50,6 @@ export interface AutomatizacionPayload {
   titulo: string;
   descripcion: string;
   tipo_automatizacion: string;
-  identificador_propietario: string;
   email_propietario: string;
   nombre_propietario: string;
 }

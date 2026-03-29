@@ -15,14 +15,21 @@ def crear_automatizacion():
     data = request.get_json()
 
     required_fields = ['titulo', 'descripcion', 'tipo_automatizacion',
-                       'identificador_propietario', 'email_propietario', 'nombre_propietario']
+                       'email_propietario', 'nombre_propietario']
     for field in required_fields:
         if field not in data or not data[field]:
             return jsonify({"success": False, "message": f"Falta el campo obligatorio: {field}"}), 400
 
+    # Obtener el ID real del usuario por email
+    usuario = db.Usuarios.find_one({"correo_electronico_acceso": data['email_propietario']})
+    if not usuario:
+        return jsonify({"success": False, "message": "No existe un usuario con ese email"}), 404
+
+    id_propietario = usuario['identificador_unico_usuario']
+
     nueva_automatizacion = {
         "identificador_unico": str(uuid.uuid4()),
-        "identificador_propietario": data['identificador_propietario'],
+        "identificador_propietario": id_propietario,
         "email_propietario": data['email_propietario'],
         "nombre_propietario": data['nombre_propietario'],
         "titulo": data['titulo'],
