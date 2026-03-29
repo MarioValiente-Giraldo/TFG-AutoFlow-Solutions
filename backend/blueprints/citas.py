@@ -67,7 +67,6 @@ def agendar_cita():
         "empresa": data.get('empresa', ''),
         "tipo_automatizacion": data['tipoAutomatizacion'],
         "descripcion": data['descripcion'],
-        "presupuesto": data.get('presupuesto', ''),
         "fecha_preferida": data['fechaPreferida'],
         "franja_horaria": data['franjaHoraria'],
         "estado": "pendiente",
