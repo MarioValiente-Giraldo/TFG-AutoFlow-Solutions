@@ -1,4 +1,4 @@
-import type { CitaPayload } from '../types/index';
+import type { CitaPayload, Cita } from '../types/index';
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -20,5 +20,12 @@ export const citasAPI = {
     if (!response.ok) {
       throw new Error(data.message || 'Error al enviar la solicitud.');
     }
+  },
+
+  async getMisCitas(email: string): Promise<{ data: Cita[] }> {
+    const response = await fetch(`${BASE_URL}/citas?email=${encodeURIComponent(email)}`);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Error al obtener las citas.');
+    return data;
   },
 };

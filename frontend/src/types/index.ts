@@ -32,6 +32,20 @@ export interface CitaPayload {
   franjaHoraria: string;
 }
 
+export interface Cita {
+  identificador_unico_cita: string;
+  nombre: string;
+  email: string;
+  telefono: string;
+  empresa: string;
+  tipo_automatizacion: string;
+  descripcion: string;
+  fecha_preferida: string;
+  franja_horaria: string;
+  estado: 'pendiente' | 'atendida';
+  fecha_solicitud: string;
+}
+
 export interface AutomatizacionPayload {
   titulo: string;
   descripcion: string;

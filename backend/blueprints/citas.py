@@ -6,6 +6,20 @@ from db import get_db
 citas_bp = Blueprint('citas', __name__, url_prefix='/api')
 
 
+@citas_bp.route('/citas', methods=['GET'])
+def get_citas():
+    db = get_db()
+    if db is None:
+        return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
+
+    email = request.args.get('email')
+    if not email:
+        return jsonify({"success": False, "message": "Falta el parámetro email"}), 400
+
+    citas = list(db.Citas.find({"email": email}, {"_id": 0}))
+    return jsonify({"success": True, "data": citas}), 200
+
+
 @citas_bp.route('/agendar-cita', methods=['POST'])
 def agendar_cita():
     db = get_db()
