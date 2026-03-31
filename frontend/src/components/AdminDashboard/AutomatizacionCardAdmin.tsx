@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { aceptarAdmin, rechazarAdmin, marcarTerminada, publicarActualizacion, cancelarAutomatizacion } from '../../services/automatizacionesAPI';
 import type { Automatizacion } from '../../types';
 import { styles } from './AdminDashboardStyles';
@@ -15,6 +16,7 @@ type ActionMode = 'none' | 'aceptar' | 'rechazar';
 const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
   const { theme } = useTheme();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [mode, setMode] = useState<ActionMode>('none');
   const [gasto, setGasto] = useState('');
   const [motivo, setMotivo] = useState('');
@@ -155,6 +157,13 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
       </div>
 
       <p className={styles.cardDescription(theme)}>{descripcion}</p>
+
+      <button
+        onClick={() => navigate(`/automatizacion/${identificador_unico}`)}
+        className={`mb-3 text-xs font-medium transition-colors duration-200 cursor-pointer ${theme === 'dark' ? 'text-cyan-400 hover:text-cyan-300' : 'text-cyan-600 hover:text-cyan-700'}`}
+      >
+        Ver detalle →
+      </button>
 
       {estado === 'aceptada_pendiente_cliente' && gasto_estimado !== null && (
         <p className={styles.cardMeta(theme)}>Gasto estimado: <strong>{gasto_estimado} €</strong></p>

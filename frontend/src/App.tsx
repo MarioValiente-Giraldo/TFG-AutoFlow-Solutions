@@ -8,6 +8,7 @@ import AdminDashboard from "./pages/AdminDashboard"
 import ClienteDashboard from "./pages/ClienteDashboard"
 import ProtectedRouteAuth from "./components/ProtectedRoutes/ProtectedRouteAuth"
 import ProtectedRouteAdmin from "./components/ProtectedRoutes/ProtectedRouteAdmin"
+import AutomatizacionDetalle from "./pages/AutomatizacionDetalle"
 
 const App = () => {
   return (
@@ -29,6 +30,14 @@ const App = () => {
           element={
             <ProtectedRouteAuth>
               <ClienteDashboard />
+            </ProtectedRouteAuth>
+          }
+        />
+        <Route
+          path="/automatizacion/:id"
+          element={
+            <ProtectedRouteAuth>
+              <AutomatizacionDetalle />
             </ProtectedRouteAuth>
           }
         />

@@ -56,6 +56,21 @@ def crear_automatizacion():
         return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
 
 
+@automatizaciones_bp.route('/automatizaciones/<id>', methods=['GET'])
+def obtener_automatizacion(id):
+    db = get_db()
+    if db is None:
+        return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
+
+    try:
+        automatizacion = db.Automatizaciones.find_one({"identificador_unico": id}, {'_id': 0})
+        if not automatizacion:
+            return jsonify({"success": False, "message": "Automatización no encontrada"}), 404
+        return jsonify({"success": True, "data": automatizacion}), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
+
+
 @automatizaciones_bp.route('/automatizaciones', methods=['GET'])
 def obtener_automatizaciones():
     db = get_db()

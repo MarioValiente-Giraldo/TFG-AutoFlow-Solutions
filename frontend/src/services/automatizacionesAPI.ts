@@ -21,6 +21,12 @@ export async function crearAutomatizacion(payload: AutomatizacionPayload) {
  * Obtiene todas las automatizaciones del sistema. Solo para uso del admin.
  * @returns Objeto con `success` y `data` (array de `Automatizacion`).
  */
+export async function getAutomatizacion(id: string) {
+  const res = await fetch(`${API_URL}/automatizaciones/${id}`);
+  if (!res.ok) throw new Error('Error al obtener la automatización');
+  return res.json();
+}
+
 export async function getAllAutomatizaciones() {
   const res = await fetch(`${API_URL}/automatizaciones`);
   if (!res.ok) throw new Error('Error al obtener automatizaciones');

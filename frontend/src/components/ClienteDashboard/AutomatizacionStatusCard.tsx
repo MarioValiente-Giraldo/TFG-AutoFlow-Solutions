@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
+import { useNavigate } from 'react-router-dom';
 import { aceptarCliente, rechazarCliente, cancelarAutomatizacion } from '../../services/automatizacionesAPI';
 import type { Automatizacion } from '../../types';
 import { styles } from './ClienteDashboardStyles';
@@ -13,6 +14,7 @@ interface Props {
 
 const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
   const { theme } = useTheme();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -81,6 +83,13 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
       <EstadoTimeline automatizacion={automatizacion} />
 
       <p className={styles.cardDescription(theme)}>{descripcion}</p>
+
+      <button
+        onClick={() => navigate(`/automatizacion/${identificador_unico}`)}
+        className={`mb-3 text-xs font-medium transition-colors duration-200 cursor-pointer ${theme === 'dark' ? 'text-cyan-400 hover:text-cyan-300' : 'text-cyan-600 hover:text-cyan-700'}`}
+      >
+        Ver detalle →
+      </button>
 
       {nombre_admin && (estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'terminada') && (
         <p className={styles.cardMeta(theme)}>Tu gestor: <strong>{nombre_admin}</strong></p>
