@@ -287,3 +287,24 @@ def actualizar_desarrollo(id):
         return jsonify({"success": True, "message": "Actualización publicada"}), 200
     except Exception as e:
         return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
+
+
+@automatizaciones_bp.route('/automatizaciones/<id>/cancelar', methods=['PATCH'])
+def cancelar_automatizacion(id):
+    db = get_db()
+    if db is None:
+        return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
+
+    try:
+        result = db.Automatizaciones.update_one(
+            {"identificador_unico": id, "estado": {"$in": ["en_desarrollo", "aceptada_pendiente_cliente", "pendiente_revision"]}},
+            {"$set": {
+                "estado": "cancelada",
+                "fecha_actualizacion": datetime.utcnow(),
+            }}
+        )
+        if result.matched_count == 0:
+            return jsonify({"success": False, "message": "Automatización no encontrada o no se puede cancelar"}), 404
+        return jsonify({"success": True, "message": "Automatización cancelada"}), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500

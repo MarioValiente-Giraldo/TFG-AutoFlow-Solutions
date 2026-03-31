@@ -141,6 +141,16 @@ export async function marcarTerminada(id: string) {
  * @param porcentaje - Porcentaje de completado (0-100).
  * @returns Respuesta del servidor con `success` y `message`.
  */
+export async function cancelarAutomatizacion(id: string) {
+  const res = await fetch(`${API_URL}/automatizaciones/${id}/cancelar`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({}),
+  });
+  if (!res.ok) throw new Error('Error al cancelar');
+  return res.json();
+}
+
 export async function publicarActualizacion(id: string, mensaje: string, porcentaje: number) {
   const res = await fetch(`${API_URL}/automatizaciones/${id}/actualizar-desarrollo`, {
     method: 'PATCH',

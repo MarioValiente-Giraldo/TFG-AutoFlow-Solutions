@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
-import { aceptarAdmin, rechazarAdmin, marcarTerminada, publicarActualizacion } from '../../services/automatizacionesAPI';
+import { aceptarAdmin, rechazarAdmin, marcarTerminada, publicarActualizacion, cancelarAutomatizacion } from '../../services/automatizacionesAPI';
 import type { Automatizacion } from '../../types';
 import { styles } from './AdminDashboardStyles';
 
@@ -117,6 +117,20 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
     }
   };
 
+  const handleCancelar = async () => {
+    if (!confirm('¿Estás seguro de que quieres cancelar esta automatización?')) return;
+    setLoading(true);
+    setError('');
+    try {
+      await cancelarAutomatizacion(identificador_unico);
+      onRefresh();
+    } catch {
+      setError('Error al cancelar la automatización');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const cancelMode = () => {
     setMode('none');
     setGasto('');
@@ -151,18 +165,22 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
       )}
 
       {/* Acciones según estado */}
-      {estado === 'pendiente_revision' && mode === 'none' && (
+      {mode === 'none' && (
         <div className={styles.actionsRow}>
-          <button className={styles.btnAccept} onClick={() => setMode('aceptar')}>Aceptar</button>
-          <button className={styles.btnReject} onClick={() => setMode('rechazar')}>Rechazar</button>
-        </div>
-      )}
-
-      {estado === 'en_desarrollo' && mode === 'none' && (
-        <div className={styles.actionsRow}>
-          <button className={styles.btnDone} onClick={handleMarcarTerminada} disabled={loading}>
-            {loading ? 'Guardando...' : 'Marcar terminada'}
-          </button>
+          {estado === 'pendiente_revision' && (
+            <>
+              <button className={styles.btnAccept} onClick={() => setMode('aceptar')}>Aceptar</button>
+              <button className={styles.btnReject} onClick={() => setMode('rechazar')}>Rechazar</button>
+            </>
+          )}
+          {estado === 'en_desarrollo' && (
+            <button className={styles.btnDone} onClick={handleMarcarTerminada} disabled={loading}>
+              {loading ? 'Guardando...' : 'Marcar terminada'}
+            </button>
+          )}
+          {(estado === 'pendiente_revision' || estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente') && (
+            <button className={styles.btnReject} onClick={handleCancelar} disabled={loading}>Cancelar</button>
+          )}
         </div>
       )}
 

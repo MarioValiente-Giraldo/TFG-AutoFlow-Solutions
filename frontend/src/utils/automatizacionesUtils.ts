@@ -7,6 +7,7 @@ const BADGE_COLOR_MAP: Record<string, string> = {
   en_desarrollo: 'bg-violet-400/10 border-violet-400/30 text-violet-400',
   terminada: 'bg-green-500/10 border-green-500/30 text-green-400',
   rechazada: 'bg-red-500/10 border-red-500/30 text-red-400',
+  cancelada: 'bg-orange-500/10 border-orange-500/30 text-orange-400',
 };
 
 export const getBadgeClass = (estado: string): string =>
@@ -19,6 +20,7 @@ export const ESTADO_LABELS_ADMIN: Record<string, string> = {
   en_desarrollo: 'En desarrollo',
   terminada: 'Terminada',
   rechazada: 'Rechazada',
+  cancelada: 'Cancelada',
 };
 
 // Labels desde la perspectiva del cliente
@@ -28,6 +30,7 @@ export const ESTADO_LABELS_CLIENTE: Record<string, string> = {
   en_desarrollo: 'En desarrollo',
   terminada: 'Terminada',
   rechazada: 'Rechazada',
+  cancelada: 'Cancelada',
 };
 
 // Tabs para el panel de admin
@@ -40,4 +43,5 @@ export const TABS_ADMIN: { key: TabEstado; label: string }[] = [
   { key: 'en_desarrollo', label: 'En desarrollo' },
   { key: 'terminada', label: 'Terminada' },
   { key: 'rechazada', label: 'Rechazada' },
+  { key: 'cancelada', label: 'Cancelada' },
 ];

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
-import { aceptarCliente, rechazarCliente } from '../../services/automatizacionesAPI';
+import { aceptarCliente, rechazarCliente, cancelarAutomatizacion } from '../../services/automatizacionesAPI';
 import type { Automatizacion } from '../../types';
 import { styles } from './ClienteDashboardStyles';
 import EstadoTimeline from './EstadoTimeline';
@@ -49,6 +49,20 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
     }
   };
 
+  const handleCancelar = async () => {
+    if (!confirm('¿Estás seguro de que quieres cancelar esta automatización?')) return;
+    setLoading(true);
+    setError('');
+    try {
+      await cancelarAutomatizacion(identificador_unico);
+      onRefresh();
+    } catch {
+      setError('Error al cancelar la automatización');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const updates = actualizaciones_desarrollo
     ? [...actualizaciones_desarrollo].reverse()
     : [];
@@ -83,6 +97,15 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
               Rechazar
             </button>
           </div>
+          {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
+        </div>
+      )}
+
+      {(estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'pendiente_revision') && (
+        <div className="mt-3">
+          <button className={styles.btnRechazar} onClick={handleCancelar} disabled={loading}>
+            {loading ? 'Cancelando...' : 'Cancelar automatización'}
+          </button>
           {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
         </div>
       )}

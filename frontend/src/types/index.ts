@@ -69,7 +69,7 @@ export interface Automatizacion {
   titulo: string;
   descripcion: string;
   tipo_automatizacion: string;
-  estado: 'pendiente_revision' | 'aceptada_pendiente_cliente' | 'en_desarrollo' | 'terminada' | 'rechazada';
+  estado: 'pendiente_revision' | 'aceptada_pendiente_cliente' | 'en_desarrollo' | 'terminada' | 'rechazada' | 'cancelada';
   gasto_estimado: number | null;
   motivo_rechazo: string | null;
   identificador_admin: string | null;
