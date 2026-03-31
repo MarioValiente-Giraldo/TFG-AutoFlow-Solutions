@@ -12,6 +12,7 @@ import type { Automatizacion } from '../types';
 import EstadoTimeline from '../components/ClienteDashboard/EstadoTimeline';
 import StarRating from '../components/StarRating/StarRating';
 import { styles } from '../components/AdminDashboard/AdminDashboardStyles';
+import { detalleStyles as ds } from './AutomatizacionDetalleStyles';
 import { getBadgeClass, ESTADO_LABELS_ADMIN } from '../utils/automatizacionesUtils';
 
 type ActionMode = 'none' | 'aceptar' | 'rechazar';
@@ -135,19 +136,15 @@ const AutomatizacionDetalle = () => {
 
   return (
     <div className={styles.page(theme)}>
-      <div className="max-w-3xl mx-auto px-4 py-10">
+      <div className={ds.container}>
 
         {/* Botón volver */}
-        <button
-          onClick={() => navigate(-1)}
-          className={`mb-6 flex items-center gap-2 text-sm font-medium transition-colors duration-200 cursor-pointer
-            ${theme === 'dark' ? 'text-[#64748b] hover:text-[#94a3b8]' : 'text-gray-400 hover:text-gray-600'}`}
-        >
+        <button onClick={() => navigate(-1)} className={ds.btnVolver(theme)}>
           ← Volver
         </button>
 
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 mb-6">
+        <div className={ds.header}>
           <div>
             <h1 className={styles.pageTitle(theme)}>{titulo}</h1>
             <p className={styles.cardMeta(theme)}>
@@ -161,13 +158,13 @@ const AutomatizacionDetalle = () => {
         </div>
 
         {/* Timeline */}
-        <div className="mb-6">
+        <div className={ds.timelineWrapper}>
           <EstadoTimeline automatizacion={automatizacion} />
         </div>
 
         {/* Descripción */}
-        <div className={`rounded-xl border p-5 mb-4 ${theme === 'dark' ? 'bg-[#1e293b] border-[#334155]' : 'bg-white border-gray-200'}`}>
-          <p className={`text-xs font-semibold uppercase tracking-widest mb-2 ${theme === 'dark' ? 'text-[#64748b]' : 'text-gray-400'}`}>Descripción</p>
+        <div className={ds.section(theme)}>
+          <p className={ds.sectionLabel(theme)}>Descripción</p>
           <p className={styles.cardDescription(theme)}>{descripcion}</p>
 
           {nombre_admin && (estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'terminada') && (
@@ -175,9 +172,7 @@ const AutomatizacionDetalle = () => {
           )}
 
           {gasto_estimado !== null && estado !== 'pendiente_revision' && (
-            <p className={`mt-2 text-sm font-semibold ${theme === 'dark' ? 'text-cyan-400' : 'text-cyan-600'}`}>
-              Gasto estimado: {gasto_estimado} €
-            </p>
+            <p className={ds.gastoText(theme)}>Gasto estimado: {gasto_estimado} €</p>
           )}
 
           {estado === 'rechazada' && motivo_rechazo && (
@@ -187,8 +182,8 @@ const AutomatizacionDetalle = () => {
 
         {/* Acciones admin */}
         {isAdmin && (
-          <div className={`rounded-xl border p-5 mb-4 ${theme === 'dark' ? 'bg-[#1e293b] border-[#334155]' : 'bg-white border-gray-200'}`}>
-            <p className={`text-xs font-semibold uppercase tracking-widest mb-3 ${theme === 'dark' ? 'text-[#64748b]' : 'text-gray-400'}`}>Acciones</p>
+          <div className={ds.section(theme)}>
+            <p className={ds.sectionLabelMb3(theme)}>Acciones</p>
 
             {mode === 'none' && (
               <div className={styles.actionsRow}>
@@ -263,16 +258,14 @@ const AutomatizacionDetalle = () => {
 
         {/* Acciones cliente */}
         {!isAdmin && estado === 'aceptada_pendiente_cliente' && gasto_estimado !== null && (
-          <div className={`rounded-xl border p-5 mb-4 ${theme === 'dark' ? 'bg-cyan-400/5 border-cyan-400/20' : 'bg-cyan-50 border-cyan-200'}`}>
-            <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${theme === 'dark' ? 'text-cyan-400' : 'text-cyan-600'}`}>Propuesta recibida</p>
-            <p className={`text-lg font-bold mb-3 ${theme === 'dark' ? 'text-[#f1f5f9]' : 'text-gray-900'}`}>{gasto_estimado} €</p>
-            <div className="flex gap-3">
-              <button className={`px-4 py-2 rounded-lg text-sm font-semibold bg-cyan-400 text-[#0f172a] hover:bg-[#06b6d4] transition-colors duration-200 cursor-pointer`}
-                onClick={handleAceptarCliente} disabled={actionLoading}>
+          <div className={ds.propuestaBox(theme)}>
+            <p className={ds.propuestaLabel(theme)}>Propuesta recibida</p>
+            <p className={ds.propuestaGasto(theme)}>{gasto_estimado} €</p>
+            <div className={ds.propuestaActions}>
+              <button className={ds.btnAceptarPropuesta} onClick={handleAceptarCliente} disabled={actionLoading}>
                 {actionLoading ? 'Procesando...' : 'Aceptar propuesta'}
               </button>
-              <button className={`px-4 py-2 rounded-lg text-sm font-semibold border border-red-400/50 text-red-400 hover:bg-red-400/10 transition-colors duration-200 cursor-pointer`}
-                onClick={handleRechazarCliente} disabled={actionLoading}>
+              <button className={ds.btnRechazarPropuesta} onClick={handleRechazarCliente} disabled={actionLoading}>
                 Rechazar
               </button>
             </div>
@@ -281,10 +274,8 @@ const AutomatizacionDetalle = () => {
         )}
 
         {!isAdmin && (estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'pendiente_revision') && (
-          <div className="mb-4">
-            <button
-              className={`px-4 py-2 rounded-lg text-sm font-semibold border border-red-400/50 text-red-400 hover:bg-red-400/10 transition-colors duration-200 cursor-pointer`}
-              onClick={handleCancelar} disabled={actionLoading}>
+          <div className={ds.cancelWrapper}>
+            <button className={ds.btnRechazarPropuesta} onClick={handleCancelar} disabled={actionLoading}>
               {actionLoading ? 'Cancelando...' : 'Cancelar automatización'}
             </button>
             {actionError && <p className="text-xs text-red-400 mt-2">{actionError}</p>}
@@ -293,7 +284,7 @@ const AutomatizacionDetalle = () => {
 
         {/* Actualizaciones */}
         {updates.length > 0 && (
-          <div className={`rounded-xl border p-5 mb-4 ${theme === 'dark' ? 'bg-[#1e293b] border-[#334155]' : 'bg-white border-gray-200'}`}>
+          <div className={ds.section(theme)}>
             <p className={styles.updateHistoryTitle(theme)}>Actualizaciones del equipo</p>
             {updates.map((u, i) => (
               <div key={i} className={styles.updateItem(theme)}>
@@ -317,7 +308,7 @@ const AutomatizacionDetalle = () => {
 
         {/* Valoración (solo cliente) */}
         {!isAdmin && estado === 'terminada' && (
-          <div className={`rounded-xl border p-5 mb-4 ${theme === 'dark' ? 'bg-[#1e293b] border-[#334155]' : 'bg-white border-gray-200'}`}>
+          <div className={ds.section(theme)}>
             <StarRating
               idAutomatizacion={identificador_unico}
               valoracion={valoracion}

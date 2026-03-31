@@ -21,6 +21,9 @@ const AdminDashboard = () => {
   const [seccion, setSeccion] = useState<SeccionActiva>('automatizaciones');
   const [tabActivo, setTabActivo] = useState<TabEstado>('todos');
   const [tabCitas, setTabCitas] = useState<TabCitas>('pendiente');
+  const [busqueda, setBusqueda] = useState('');
+  const [busquedaDebounced, setBusquedaDebounced] = useState('');
+  const [orden, setOrden] = useState<'desc' | 'asc'>('desc');
 
   const fetchData = async () => {
     setLoading(true);
@@ -43,6 +46,11 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setBusquedaDebounced(busqueda), 3000);
+    return () => clearTimeout(timer);
+  }, [busqueda]);
+
   const filtradas = tabActivo === 'todos'
     ? automatizaciones
     : automatizaciones.filter(a => a.estado === tabActivo);
@@ -53,6 +61,19 @@ const AdminDashboard = () => {
       : automatizaciones.filter(a => a.estado === key).length;
 
   const citasFiltradas = citas.filter(c => c.estado === tabCitas);
+
+  const automatizacionesFiltradas = filtradas
+    .filter(a => {
+      const q = busquedaDebounced.toLowerCase();
+      return (
+        a.titulo.toLowerCase().includes(q) ||
+        a.nombre_propietario.toLowerCase().includes(q)
+      );
+    })
+    .sort((a, b) => {
+      const diff = new Date(a.fecha_solicitud).getTime() - new Date(b.fecha_solicitud).getTime();
+      return orden === 'asc' ? diff : -diff;
+    });
 
   return (
     <div className={styles.page(theme)}>
@@ -101,11 +122,28 @@ const AdminDashboard = () => {
                   ))}
                 </div>
 
-                {filtradas.length === 0 && (
-                  <p className={styles.emptySection(theme)}>Sin automatizaciones en este estado</p>
+                {/* Búsqueda y orden */}
+                <div className={styles.searchRow}>
+                  <input
+                    type="text"
+                    placeholder="Buscar por título o nombre del cliente..."
+                    value={busqueda}
+                    onChange={e => setBusqueda(e.target.value)}
+                    className={styles.searchInput(theme)}
+                  />
+                  <button
+                    onClick={() => setOrden(o => o === 'desc' ? 'asc' : 'desc')}
+                    className={styles.searchBtn(theme)}
+                  >
+                    {orden === 'desc' ? 'Más reciente primero' : 'Más antiguo primero'}
+                  </button>
+                </div>
+
+                {automatizacionesFiltradas.length === 0 && (
+                  <p className={styles.emptySection(theme)}>Sin resultados</p>
                 )}
 
-                {filtradas.map(a => (
+                {automatizacionesFiltradas.map(a => (
                   <AutomatizacionCardAdmin
                     key={a.identificador_unico}
                     automatizacion={a}

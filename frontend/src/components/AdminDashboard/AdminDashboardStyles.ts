@@ -205,6 +205,23 @@ export const styles = {
         h-full rounded-full bg-violet-400 transition-all duration-500
     `,
 
+    // --- BÚSQUEDA / FILTROS ---
+    searchRow: `flex flex-col sm:flex-row gap-2 mb-4`,
+    searchInput: (theme: Theme) => `
+        flex-1 h-10 px-3 rounded-lg border text-sm
+        ${theme === 'dark'
+            ? 'bg-[#1e293b] border-[#334155] text-[#f1f5f9] placeholder:text-[#64748b]'
+            : 'bg-white border-gray-200 text-gray-900 placeholder:text-gray-400'}
+        focus:outline-none focus:border-cyan-400
+    `,
+    searchBtn: (theme: Theme) => `
+        h-10 px-4 rounded-lg border text-sm font-medium
+        transition-colors duration-200 cursor-pointer whitespace-nowrap
+        ${theme === 'dark'
+            ? 'bg-[#1e293b] border-[#334155] text-[#94a3b8] hover:text-[#f1f5f9]'
+            : 'bg-white border-gray-200 text-gray-500 hover:text-gray-700'}
+    `,
+
     // --- LOADING / ERROR ---
     loadingText: (theme: Theme) => `
         text-center py-20 text-sm
