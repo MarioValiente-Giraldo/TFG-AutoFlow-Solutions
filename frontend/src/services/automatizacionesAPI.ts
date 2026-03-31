@@ -44,11 +44,15 @@ export async function getMisAutomatizaciones(userId: string) {
  * @param gastoEstimado - Coste estimado en euros para realizar la automatización.
  * @returns Respuesta del servidor con `success` y `message`.
  */
-export async function aceptarAdmin(id: string, gastoEstimado: number) {
+export async function aceptarAdmin(id: string, gastoEstimado: number, identificadorAdmin: string, nombreAdmin: string) {
   const res = await fetch(`${API_URL}/automatizaciones/${id}/aceptar-admin`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ gasto_estimado: gastoEstimado }),
+    body: JSON.stringify({
+      gasto_estimado: gastoEstimado,
+      identificador_admin: identificadorAdmin,
+      nombre_admin: nombreAdmin,
+    }),
   });
   if (!res.ok) throw new Error('Error al aceptar');
   return res.json();

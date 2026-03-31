@@ -72,6 +72,8 @@ export interface Automatizacion {
   estado: 'pendiente_revision' | 'aceptada_pendiente_cliente' | 'en_desarrollo' | 'terminada' | 'rechazada';
   gasto_estimado: number | null;
   motivo_rechazo: string | null;
+  identificador_admin: string | null;
+  nombre_admin: string | null;
   fecha_solicitud: string;
   fecha_actualizacion: string;
   actualizaciones_desarrollo?: ActualizacionDesarrollo[];

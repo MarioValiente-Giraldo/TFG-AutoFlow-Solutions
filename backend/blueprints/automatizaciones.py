@@ -97,12 +97,19 @@ def aceptar_admin(id):
     except (TypeError, ValueError):
         return jsonify({"success": False, "message": "gasto_estimado debe ser un número"}), 400
 
+    identificador_admin = data.get('identificador_admin')
+    nombre_admin = data.get('nombre_admin')
+    if not identificador_admin or not nombre_admin:
+        return jsonify({"success": False, "message": "Faltan datos del admin"}), 400
+
     try:
         result = db.Automatizaciones.update_one(
             {"identificador_unico": id, "estado": "pendiente_revision"},
             {"$set": {
                 "estado": "aceptada_pendiente_cliente",
                 "gasto_estimado": gasto,
+                "identificador_admin": identificador_admin,
+                "nombre_admin": nombre_admin,
                 "fecha_actualizacion": datetime.utcnow(),
             }}
         )

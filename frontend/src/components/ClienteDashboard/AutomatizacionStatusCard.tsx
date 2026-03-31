@@ -16,7 +16,7 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
   const [error, setError] = useState('');
 
   const { identificador_unico, titulo, tipo_automatizacion, descripcion,
-    estado, gasto_estimado, motivo_rechazo, fecha_solicitud,
+    estado, gasto_estimado, motivo_rechazo, nombre_admin, fecha_solicitud,
     actualizaciones_desarrollo } = automatizacion;
 
   const fecha = new Date(fecha_solicitud).toLocaleDateString('es-ES', {
@@ -66,6 +66,10 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
       <EstadoTimeline automatizacion={automatizacion} />
 
       <p className={styles.cardDescription(theme)}>{descripcion}</p>
+
+      {nombre_admin && (estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'terminada') && (
+        <p className={styles.cardMeta(theme)}>Tu gestor: <strong>{nombre_admin}</strong></p>
+      )}
 
       {estado === 'aceptada_pendiente_cliente' && gasto_estimado !== null && (
         <div className={styles.propuestaBox(theme)}>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
 import { aceptarAdmin, rechazarAdmin, marcarTerminada, publicarActualizacion } from '../../services/automatizacionesAPI';
 import type { Automatizacion } from '../../types';
 import { styles } from './AdminDashboardStyles';
@@ -13,6 +14,7 @@ type ActionMode = 'none' | 'aceptar' | 'rechazar';
 
 const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
   const { theme } = useTheme();
+  const { user } = useAuth();
   const [mode, setMode] = useState<ActionMode>('none');
   const [gasto, setGasto] = useState('');
   const [motivo, setMotivo] = useState('');
@@ -41,7 +43,7 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
     setLoading(true);
     setError('');
     try {
-      await aceptarAdmin(identificador_unico, gastoNum);
+      await aceptarAdmin(identificador_unico, gastoNum, user!.id, user!.nombre);
       setMode('none');
       setGasto('');
       onRefresh();
