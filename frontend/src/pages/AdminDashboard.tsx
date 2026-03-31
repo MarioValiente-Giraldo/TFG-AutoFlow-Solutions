@@ -144,6 +144,7 @@ const AdminDashboard = () => {
                     key={c.identificador_unico_cita}
                     cita={c}
                     onRefresh={fetchData}
+                    tieneAutomatizacion={automatizaciones.some(a => a.id_cita_origen === c.identificador_unico_cita)}
                   />
                 ))}
               </>

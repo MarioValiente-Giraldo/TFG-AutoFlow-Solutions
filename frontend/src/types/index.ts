@@ -77,4 +77,5 @@ export interface Automatizacion {
   fecha_solicitud: string;
   fecha_actualizacion: string;
   actualizaciones_desarrollo?: ActualizacionDesarrollo[];
+  id_cita_origen?: string;
 }

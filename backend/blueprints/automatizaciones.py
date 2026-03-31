@@ -27,6 +27,12 @@ def crear_automatizacion():
 
     id_propietario = usuario['identificador_unico_usuario']
 
+    id_cita_origen = data.get('id_cita_origen')
+    if id_cita_origen:
+        existente = db.Automatizaciones.find_one({"id_cita_origen": id_cita_origen})
+        if existente:
+            return jsonify({"success": False, "message": "Ya existe una automatización para esta cita"}), 409
+
     nueva_automatizacion = {
         "identificador_unico": str(uuid.uuid4()),
         "identificador_propietario": id_propietario,

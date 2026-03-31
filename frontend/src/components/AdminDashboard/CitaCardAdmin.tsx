@@ -8,9 +8,10 @@ import { styles } from './CitaCardAdminStyles';
 interface CitaCardAdminProps {
   cita: Cita;
   onRefresh: () => void;
+  tieneAutomatizacion?: boolean;
 }
 
-const CitaCardAdmin = ({ cita, onRefresh }: CitaCardAdminProps) => {
+const CitaCardAdmin = ({ cita, onRefresh, tieneAutomatizacion = false }: CitaCardAdminProps) => {
   const { theme } = useTheme();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -86,12 +87,16 @@ const CitaCardAdmin = ({ cita, onRefresh }: CitaCardAdminProps) => {
         </div>
       )}
 
-      {cita.estado === 'atendida' && (
+      {cita.estado === 'atendida' && !tieneAutomatizacion && (
         <div className={styles.actionsRow}>
           <button className={styles.btnCrearAuto} onClick={handleCrearAutomatizacion} disabled={loading}>
             {loading ? 'Procesando...' : 'Crear automatización'}
           </button>
         </div>
+      )}
+
+      {cita.estado === 'atendida' && tieneAutomatizacion && (
+        <p className={styles.meta(theme)}>Automatización ya creada</p>
       )}
 
       {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
