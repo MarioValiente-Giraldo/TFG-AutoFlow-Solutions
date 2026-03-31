@@ -55,6 +55,12 @@ export interface AutomatizacionPayload {
   id_cita_origen?: string;
 }
 
+export interface Valoracion {
+  puntuacion: number;
+  comentario: string;
+  fecha: string;
+}
+
 export interface ActualizacionDesarrollo {
   mensaje: string;
   porcentaje: number;
@@ -78,4 +84,5 @@ export interface Automatizacion {
   fecha_actualizacion: string;
   actualizaciones_desarrollo?: ActualizacionDesarrollo[];
   id_cita_origen?: string;
+  valoracion?: Valoracion;
 }

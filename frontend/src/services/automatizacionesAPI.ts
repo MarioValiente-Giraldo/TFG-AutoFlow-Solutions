@@ -151,6 +151,16 @@ export async function cancelarAutomatizacion(id: string) {
   return res.json();
 }
 
+export async function valorarAutomatizacion(id: string, puntuacion: number, comentario: string) {
+  const res = await fetch(`${API_URL}/automatizaciones/${id}/valorar`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ puntuacion, comentario }),
+  });
+  if (!res.ok) throw new Error('Error al enviar la valoración');
+  return res.json();
+}
+
 export async function publicarActualizacion(id: string, mensaje: string, porcentaje: number) {
   const res = await fetch(`${API_URL}/automatizaciones/${id}/actualizar-desarrollo`, {
     method: 'PATCH',

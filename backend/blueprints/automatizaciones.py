@@ -295,6 +295,44 @@ def actualizar_desarrollo(id):
         return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
 
 
+@automatizaciones_bp.route('/automatizaciones/<id>/valorar', methods=['POST'])
+def valorar(id):
+    db = get_db()
+    if db is None:
+        return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
+
+    data = request.get_json()
+    puntuacion = data.get('puntuacion')
+    comentario = data.get('comentario', '').strip()
+
+    if puntuacion is None or not isinstance(puntuacion, int) or not (1 <= puntuacion <= 5):
+        return jsonify({"success": False, "message": "puntuacion debe ser un entero entre 1 y 5"}), 400
+
+    automatizacion = db.Automatizaciones.find_one({"identificador_unico": id})
+    if not automatizacion:
+        return jsonify({"success": False, "message": "Automatización no encontrada"}), 404
+    if automatizacion.get('estado') != 'terminada':
+        return jsonify({"success": False, "message": "Solo se puede valorar una automatización terminada"}), 400
+    if automatizacion.get('valoracion'):
+        return jsonify({"success": False, "message": "Esta automatización ya ha sido valorada"}), 409
+
+    try:
+        db.Automatizaciones.update_one(
+            {"identificador_unico": id},
+            {"$set": {
+                "valoracion": {
+                    "puntuacion": puntuacion,
+                    "comentario": comentario,
+                    "fecha": datetime.utcnow().isoformat(),
+                },
+                "fecha_actualizacion": datetime.utcnow(),
+            }}
+        )
+        return jsonify({"success": True, "message": "Valoración guardada"}), 201
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
+
+
 @automatizaciones_bp.route('/automatizaciones/<id>/cancelar', methods=['PATCH'])
 def cancelar_automatizacion(id):
     db = get_db()

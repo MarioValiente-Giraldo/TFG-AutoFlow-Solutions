@@ -4,6 +4,7 @@ import { aceptarCliente, rechazarCliente, cancelarAutomatizacion } from '../../s
 import type { Automatizacion } from '../../types';
 import { styles } from './ClienteDashboardStyles';
 import EstadoTimeline from './EstadoTimeline';
+import StarRating from '../StarRating/StarRating';
 
 interface Props {
   automatizacion: Automatizacion;
@@ -17,7 +18,7 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
 
   const { identificador_unico, titulo, tipo_automatizacion, descripcion,
     estado, gasto_estimado, motivo_rechazo, nombre_admin, fecha_solicitud,
-    actualizaciones_desarrollo } = automatizacion;
+    actualizaciones_desarrollo, valoracion } = automatizacion;
 
   const fecha = new Date(fecha_solicitud).toLocaleDateString('es-ES', {
     day: '2-digit', month: 'short', year: 'numeric',
@@ -138,6 +139,13 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
             </div>
           ))}
         </div>
+      )}
+      {estado === 'terminada' && (
+        <StarRating
+          idAutomatizacion={identificador_unico}
+          valoracion={valoracion}
+          onRefresh={onRefresh}
+        />
       )}
     </div>
   );
