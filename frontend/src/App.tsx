@@ -9,6 +9,7 @@ import ClienteDashboard from "./pages/ClienteDashboard"
 import ProtectedRouteAuth from "./components/ProtectedRoutes/ProtectedRouteAuth"
 import ProtectedRouteAdmin from "./components/ProtectedRoutes/ProtectedRouteAdmin"
 import AutomatizacionDetalle from "./pages/AutomatizacionDetalle"
+import PagoCompletado from "./pages/PagoCompletado"
 
 const App = () => {
   return (
@@ -33,6 +34,7 @@ const App = () => {
             </ProtectedRouteAuth>
           }
         />
+        <Route path="/pago-completado" element={<PagoCompletado />} />
         <Route
           path="/automatizacion/:id"
           element={

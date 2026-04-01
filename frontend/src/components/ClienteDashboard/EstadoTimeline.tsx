@@ -21,6 +21,7 @@ const STEPS = [
 const ESTADO_STEP: Record<string, number> = {
   pendiente_revision:          1,
   aceptada_pendiente_cliente:  2,
+  pendiente_pago:              2,
   en_desarrollo:               3,
   terminada:                   4,
 };

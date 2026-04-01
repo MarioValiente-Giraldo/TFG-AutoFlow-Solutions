@@ -157,6 +157,15 @@ export async function cancelarAutomatizacion(id: string) {
   return res.json();
 }
 
+export async function crearSesionPago(id: string) {
+  const res = await fetch(`${API_URL}/automatizaciones/${id}/crear-sesion-pago`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!res.ok) throw new Error('Error al crear la sesión de pago');
+  return res.json();
+}
+
 export async function valorarAutomatizacion(id: string, puntuacion: number, comentario: string) {
   const res = await fetch(`${API_URL}/automatizaciones/${id}/valorar`, {
     method: 'POST',

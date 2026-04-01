@@ -15,7 +15,7 @@ const StatsCards: React.FC<StatsCardsProps> = ({ automatizaciones }) => {
   const enDesarrollo = automatizaciones.filter(a => a.estado === 'en_desarrollo').length;
   const terminadas = automatizaciones.filter(a => a.estado === 'terminada').length;
   const ingresos = automatizaciones
-    .filter(a => a.gasto_estimado !== null && ['aceptada_pendiente_cliente', 'en_desarrollo', 'terminada'].includes(a.estado))
+    .filter(a => a.gasto_estimado !== null && ['aceptada_pendiente_cliente', 'pendiente_pago', 'en_desarrollo', 'terminada'].includes(a.estado))
     .reduce((sum, a) => sum + (a.gasto_estimado ?? 0), 0);
 
   const stats = [

@@ -4,6 +4,7 @@ import type { Automatizacion } from '../types';
 const BADGE_COLOR_MAP: Record<string, string> = {
   pendiente_revision: 'bg-amber-400/10 border-amber-400/30 text-amber-400',
   aceptada_pendiente_cliente: 'bg-cyan-400/10 border-cyan-400/30 text-cyan-400',
+  pendiente_pago: 'bg-blue-500/10 border-blue-500/30 text-blue-400',
   en_desarrollo: 'bg-violet-400/10 border-violet-400/30 text-violet-400',
   terminada: 'bg-green-500/10 border-green-500/30 text-green-400',
   rechazada: 'bg-red-500/10 border-red-500/30 text-red-400',
@@ -17,6 +18,7 @@ export const getBadgeClass = (estado: string): string =>
 export const ESTADO_LABELS_ADMIN: Record<string, string> = {
   pendiente_revision: 'Pendiente revisión',
   aceptada_pendiente_cliente: 'Esperando cliente',
+  pendiente_pago: 'Pendiente de pago',
   en_desarrollo: 'En desarrollo',
   terminada: 'Terminada',
   rechazada: 'Rechazada',
@@ -27,6 +29,7 @@ export const ESTADO_LABELS_ADMIN: Record<string, string> = {
 export const ESTADO_LABELS_CLIENTE: Record<string, string> = {
   pendiente_revision: 'Pendiente revisión',
   aceptada_pendiente_cliente: 'Propuesta recibida',
+  pendiente_pago: 'Pendiente de pago',
   en_desarrollo: 'En desarrollo',
   terminada: 'Terminada',
   rechazada: 'Rechazada',
@@ -40,6 +43,7 @@ export const TABS_ADMIN: { key: TabEstado; label: string }[] = [
   { key: 'todos', label: 'Todos' },
   { key: 'pendiente_revision', label: 'Pendiente revisión' },
   { key: 'aceptada_pendiente_cliente', label: 'Esperando cliente' },
+  { key: 'pendiente_pago', label: 'Pendiente de pago' },
   { key: 'en_desarrollo', label: 'En desarrollo' },
   { key: 'terminada', label: 'Terminada' },
   { key: 'rechazada', label: 'Rechazada' },

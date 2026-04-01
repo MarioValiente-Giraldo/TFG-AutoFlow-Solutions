@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
-import { aceptarCliente, rechazarCliente, cancelarAutomatizacion } from '../../services/automatizacionesAPI';
+import { aceptarCliente, rechazarCliente, cancelarAutomatizacion, crearSesionPago } from '../../services/automatizacionesAPI';
 import type { Automatizacion } from '../../types';
 import { styles } from './ClienteDashboardStyles';
 import EstadoTimeline from './EstadoTimeline';
@@ -52,6 +52,19 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
     }
   };
 
+  const handlePagar = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await crearSesionPago(identificador_unico);
+      window.location.href = res.url;
+    } catch {
+      setError('Error al iniciar el pago');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleCancelar = async () => {
     if (!confirm('¿Estás seguro de que quieres cancelar esta automatización?')) return;
     setLoading(true);
@@ -91,7 +104,7 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
         Ver detalle →
       </button>
 
-      {nombre_admin && (estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'terminada') && (
+      {nombre_admin && (estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'pendiente_pago' || estado === 'terminada') && (
         <p className={styles.cardMeta(theme)}>Tu gestor: <strong>{nombre_admin}</strong></p>
       )}
 
@@ -111,7 +124,18 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
         </div>
       )}
 
-      {(estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'pendiente_revision') && (
+      {estado === 'pendiente_pago' && gasto_estimado !== null && (
+        <div className={styles.propuestaBox(theme)}>
+          <p className={styles.propuestaLabel(theme)}>Pago pendiente</p>
+          <p className={styles.propuestaGasto(theme)}>{gasto_estimado} €</p>
+          <button className={styles.btnAceptar} onClick={handlePagar} disabled={loading}>
+            {loading ? 'Redirigiendo...' : 'Pagar ahora'}
+          </button>
+          {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
+        </div>
+      )}
+
+      {(estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'pendiente_revision' || estado === 'pendiente_pago') && (
         <div className="mt-3">
           <button className={styles.btnRechazar} onClick={handleCancelar} disabled={loading}>
             {loading ? 'Cancelando...' : 'Cancelar automatización'}

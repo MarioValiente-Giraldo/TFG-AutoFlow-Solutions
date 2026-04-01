@@ -24,16 +24,25 @@ def webhook():
         session = event['data']['object']
         automatizacion_id = session.get('metadata', {}).get('automatizacion_id')
 
-        if automatizacion_id:
-            db = get_db()
-            if db is not None:
-                db.Automatizaciones.update_one(
-                    {"identificador_unico": automatizacion_id, "estado": "pendiente_pago"},
-                    {"$set": {
-                        "estado": "en_desarrollo",
-                        "fecha_pago": datetime.utcnow(),
-                        "fecha_actualizacion": datetime.utcnow(),
-                    }}
-                )
+        if not automatizacion_id:
+            return jsonify({"success": False, "message": "automatizacion_id no encontrado en metadata"}), 400
+
+        db = get_db()
+        if db is None:
+            return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
+
+        try:
+            result = db.Automatizaciones.update_one(
+                {"identificador_unico": automatizacion_id, "estado": "pendiente_pago"},
+                {"$set": {
+                    "estado": "en_desarrollo",
+                    "fecha_pago": datetime.utcnow(),
+                    "fecha_actualizacion": datetime.utcnow(),
+                }}
+            )
+            if result.matched_count == 0:
+                return jsonify({"success": False, "message": "Automatización no encontrada o estado incorrecto"}), 404
+        except Exception as e:
+            return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
 
     return jsonify({"success": True}), 200

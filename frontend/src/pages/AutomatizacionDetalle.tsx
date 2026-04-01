@@ -6,7 +6,7 @@ import {
   getAutomatizacion,
   aceptarAdmin, rechazarAdmin, marcarTerminada,
   publicarActualizacion, cancelarAutomatizacion,
-  aceptarCliente, rechazarCliente, valorarAutomatizacion,
+  aceptarCliente, rechazarCliente, valorarAutomatizacion, crearSesionPago,
 } from '../services/automatizacionesAPI';
 import type { Automatizacion } from '../types';
 import EstadoTimeline from '../components/ClienteDashboard/EstadoTimeline';
@@ -120,6 +120,15 @@ const AutomatizacionDetalle = () => {
     finally { setActionLoading(false); }
   };
 
+  const handlePagar = async () => {
+    setActionLoading(true); setActionError('');
+    try {
+      const res = await crearSesionPago(identificador_unico);
+      window.location.href = res.url;
+    } catch { setActionError('Error al iniciar el pago'); }
+    finally { setActionLoading(false); }
+  };
+
   const handleAceptarCliente = async () => {
     setActionLoading(true); setActionError('');
     try { await aceptarCliente(identificador_unico); fetchData(); }
@@ -198,7 +207,7 @@ const AutomatizacionDetalle = () => {
                     {actionLoading ? 'Guardando...' : 'Marcar terminada'}
                   </button>
                 )}
-                {(estado === 'pendiente_revision' || estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente') && (
+                {(estado === 'pendiente_revision' || estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'pendiente_pago') && (
                   <button className={styles.btnReject} onClick={handleCancelar} disabled={actionLoading}>Cancelar</button>
                 )}
                 {(estado === 'rechazada' || estado === 'cancelada' || estado === 'terminada') && (
@@ -256,6 +265,18 @@ const AutomatizacionDetalle = () => {
           </div>
         )}
 
+        {/* Acciones cliente - pago pendiente */}
+        {!isAdmin && estado === 'pendiente_pago' && gasto_estimado !== null && (
+          <div className={ds.propuestaBox(theme)}>
+            <p className={ds.propuestaLabel(theme)}>Pago pendiente</p>
+            <p className={ds.propuestaGasto(theme)}>{gasto_estimado} €</p>
+            <button className={ds.btnAceptarPropuesta} onClick={handlePagar} disabled={actionLoading}>
+              {actionLoading ? 'Redirigiendo...' : 'Pagar ahora'}
+            </button>
+            {actionError && <p className="text-xs text-red-400 mt-2">{actionError}</p>}
+          </div>
+        )}
+
         {/* Acciones cliente */}
         {!isAdmin && estado === 'aceptada_pendiente_cliente' && gasto_estimado !== null && (
           <div className={ds.propuestaBox(theme)}>
@@ -273,7 +294,7 @@ const AutomatizacionDetalle = () => {
           </div>
         )}
 
-        {!isAdmin && (estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'pendiente_revision') && (
+        {!isAdmin && (estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'pendiente_revision' || estado === 'pendiente_pago') && (
           <div className={ds.cancelWrapper}>
             <button className={ds.btnRechazarPropuesta} onClick={handleCancelar} disabled={actionLoading}>
               {actionLoading ? 'Cancelando...' : 'Cancelar automatización'}

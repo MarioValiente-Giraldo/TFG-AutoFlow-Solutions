@@ -406,7 +406,7 @@ def cancelar_automatizacion(id):
 
     try:
         result = db.Automatizaciones.update_one(
-            {"identificador_unico": id, "estado": {"$in": ["en_desarrollo", "aceptada_pendiente_cliente", "pendiente_revision"]}},
+            {"identificador_unico": id, "estado": {"$in": ["en_desarrollo", "aceptada_pendiente_cliente", "pendiente_pago", "pendiente_revision"]}},
             {"$set": {
                 "estado": "cancelada",
                 "fecha_actualizacion": datetime.utcnow(),
