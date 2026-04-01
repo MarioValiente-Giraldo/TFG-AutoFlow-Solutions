@@ -11,10 +11,16 @@ const BADGE_COLOR_MAP: Record<string, string> = {
   cancelada:              'bg-orange-500/10 border-orange-500/30 text-orange-400',
 };
 
+/**
+ * Devuelve las clases Tailwind completas para el badge de estado de una automatización.
+ * Incluye color de fondo, borde y texto según el estado.
+ * @param estado - Estado actual de la automatización.
+ * @returns String de clases Tailwind listo para usar en `className`.
+ */
 export const getBadgeClass = (estado: string): string =>
   `text-xs font-medium px-2.5 py-1 rounded-full border ${BADGE_COLOR_MAP[estado] ?? 'bg-gray-500/10 border-gray-500/30 text-gray-400'}`;
 
-// Labels desde la perspectiva del admin
+/** Labels de estado desde la perspectiva del admin. */
 export const ESTADO_LABELS_ADMIN: Record<string, string> = {
   pendiente_revision:      'Pendiente revisión',
   pendiente_pago_anticipo: 'Pendiente anticipo',
@@ -25,7 +31,7 @@ export const ESTADO_LABELS_ADMIN: Record<string, string> = {
   cancelada:               'Cancelada',
 };
 
-// Labels desde la perspectiva del cliente
+/** Labels de estado desde la perspectiva del cliente. */
 export const ESTADO_LABELS_CLIENTE: Record<string, string> = {
   pendiente_revision:      'Pendiente revisión',
   pendiente_pago_anticipo: 'Pagar anticipo (50%)',
@@ -36,9 +42,10 @@ export const ESTADO_LABELS_CLIENTE: Record<string, string> = {
   cancelada:               'Cancelada',
 };
 
-// Tabs para el panel de admin
+/** Tipo para las pestañas de filtrado del panel admin. */
 export type TabEstado = 'todos' | Automatizacion['estado'];
 
+/** Definición de pestañas del panel admin con su clave de estado y label visible. */
 export const TABS_ADMIN: { key: TabEstado; label: string }[] = [
   { key: 'todos',                label: 'Todos' },
   { key: 'pendiente_revision',   label: 'Pendiente revisión' },

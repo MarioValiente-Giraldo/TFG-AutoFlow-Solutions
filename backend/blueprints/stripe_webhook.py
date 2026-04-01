@@ -12,6 +12,9 @@ WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 
 @stripe_bp.route('/stripe/webhook', methods=['POST'])
 def webhook():
+    """POST /api/stripe/webhook — Recibe eventos de Stripe y verifica la firma del webhook.
+    En 'checkout.session.completed': si tipo_pago='anticipo' pasa a 'en_desarrollo',
+    si tipo_pago='final' pasa a 'terminada'."""
     payload = request.get_data()
     sig_header = request.headers.get('Stripe-Signature')
 

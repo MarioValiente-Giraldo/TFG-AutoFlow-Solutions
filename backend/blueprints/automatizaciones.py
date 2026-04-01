@@ -12,6 +12,8 @@ automatizaciones_bp = Blueprint('automatizaciones', __name__, url_prefix='/api')
 
 @automatizaciones_bp.route('/automatizaciones', methods=['POST'])
 def crear_automatizacion():
+    """POST /api/automatizaciones — Crea una automatización en estado 'pendiente_revision'.
+    Verifica que el usuario exista y que no haya duplicado por id_cita_origen."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -61,6 +63,7 @@ def crear_automatizacion():
 
 @automatizaciones_bp.route('/automatizaciones/<id>', methods=['GET'])
 def obtener_automatizacion(id):
+    """GET /api/automatizaciones/<id> — Devuelve una automatización por su identificador único."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -76,6 +79,7 @@ def obtener_automatizacion(id):
 
 @automatizaciones_bp.route('/automatizaciones', methods=['GET'])
 def obtener_automatizaciones():
+    """GET /api/automatizaciones — Devuelve todas las automatizaciones del sistema. Solo para el admin."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -89,6 +93,7 @@ def obtener_automatizaciones():
 
 @automatizaciones_bp.route('/automatizaciones/mis-automatizaciones', methods=['GET'])
 def obtener_mis_automatizaciones():
+    """GET /api/automatizaciones/mis-automatizaciones?userId=<id> — Devuelve las automatizaciones de un cliente."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -108,6 +113,8 @@ def obtener_mis_automatizaciones():
 
 @automatizaciones_bp.route('/automatizaciones/<id>/aceptar-admin', methods=['PATCH'])
 def aceptar_admin(id):
+    """PATCH /api/automatizaciones/<id>/aceptar-admin — El admin acepta la revisión, asigna el gasto
+    y se asigna como gestor. Pasa el estado a 'pendiente_pago_anticipo'."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -146,6 +153,8 @@ def aceptar_admin(id):
 
 @automatizaciones_bp.route('/automatizaciones/<id>/rechazar', methods=['PATCH'])
 def rechazar(id):
+    """PATCH /api/automatizaciones/<id>/rechazar — El admin rechaza la automatización indicando el motivo.
+    Pasa el estado a 'rechazada'."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -172,6 +181,8 @@ def rechazar(id):
 
 @automatizaciones_bp.route('/automatizaciones/<id>/crear-sesion-pago-anticipo', methods=['POST'])
 def crear_sesion_pago_anticipo(id):
+    """POST /api/automatizaciones/<id>/crear-sesion-pago-anticipo — Crea una sesión Stripe por el 50%
+    del gasto total. El webhook actualiza el estado a 'en_desarrollo' al completarse el pago."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -219,6 +230,8 @@ def crear_sesion_pago_anticipo(id):
 
 @automatizaciones_bp.route('/automatizaciones/<id>/crear-sesion-pago-final', methods=['POST'])
 def crear_sesion_pago_final(id):
+    """POST /api/automatizaciones/<id>/crear-sesion-pago-final — Crea una sesión Stripe por el 50%
+    restante del gasto total. El webhook actualiza el estado a 'terminada' al completarse el pago."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -266,6 +279,8 @@ def crear_sesion_pago_final(id):
 
 @automatizaciones_bp.route('/automatizaciones/<id>/marcar-terminada', methods=['PATCH'])
 def marcar_terminada(id):
+    """PATCH /api/automatizaciones/<id>/marcar-terminada — El admin marca el desarrollo como terminado.
+    Pasa el estado a 'pendiente_pago_final'."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -287,6 +302,8 @@ def marcar_terminada(id):
 
 @automatizaciones_bp.route('/automatizaciones/<id>/actualizar-desarrollo', methods=['PATCH'])
 def actualizar_desarrollo(id):
+    """PATCH /api/automatizaciones/<id>/actualizar-desarrollo — El admin publica un avance de desarrollo.
+    El porcentaje debe ser mayor que el de la última actualización publicada."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -345,6 +362,8 @@ def actualizar_desarrollo(id):
 
 @automatizaciones_bp.route('/automatizaciones/<id>/valorar', methods=['POST'])
 def valorar(id):
+    """POST /api/automatizaciones/<id>/valorar — El cliente valora una automatización 'terminada'
+    con puntuación del 1 al 5. Solo se puede valorar una vez."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -383,6 +402,8 @@ def valorar(id):
 
 @automatizaciones_bp.route('/automatizaciones/<id>/cancelar', methods=['PATCH'])
 def cancelar_automatizacion(id):
+    """PATCH /api/automatizaciones/<id>/cancelar — Cancela una automatización. Permitido en estados:
+    'pendiente_revision', 'pendiente_pago_anticipo', 'en_desarrollo' y 'pendiente_pago_final'."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500

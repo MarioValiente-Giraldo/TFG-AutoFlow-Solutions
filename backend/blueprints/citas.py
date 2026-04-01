@@ -8,6 +8,7 @@ citas_bp = Blueprint('citas', __name__, url_prefix='/api')
 
 @citas_bp.route('/citas', methods=['GET'])
 def get_citas():
+    """GET /api/citas?email=<email> — Devuelve las citas de un cliente filtradas por email."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -22,6 +23,7 @@ def get_citas():
 
 @citas_bp.route('/admin/citas', methods=['GET'])
 def get_todas_citas():
+    """GET /api/admin/citas — Devuelve todas las citas del sistema. Solo para el admin."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -32,6 +34,7 @@ def get_todas_citas():
 
 @citas_bp.route('/citas/<id>/marcar-atendida', methods=['PATCH'])
 def marcar_atendida(id):
+    """PATCH /api/citas/<id>/marcar-atendida — Cambia el estado de una cita de 'pendiente' a 'atendida'."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -48,6 +51,7 @@ def marcar_atendida(id):
 
 @citas_bp.route('/agendar-cita', methods=['POST'])
 def agendar_cita():
+    """POST /api/agendar-cita — Crea una nueva solicitud de cita con estado 'pendiente'. Accesible sin autenticación."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500

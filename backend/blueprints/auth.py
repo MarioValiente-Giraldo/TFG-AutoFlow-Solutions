@@ -9,6 +9,7 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/api')
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
+    """POST /api/register — Registra un nuevo usuario con rol 'cliente'. Hashea la contraseña con Werkzeug."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -48,6 +49,7 @@ def register():
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
+    """POST /api/login — Autentica al usuario con email y contraseña. Devuelve el objeto user."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a BD"}), 500
@@ -80,4 +82,5 @@ def login():
 
 @auth_bp.route('/logout', methods=['POST'])
 def logout():
+    """POST /api/logout — Confirma el cierre de sesión. El frontend limpia el localStorage."""
     return jsonify({"success": True, "message": "Sesión cerrada correctamente"}), 200

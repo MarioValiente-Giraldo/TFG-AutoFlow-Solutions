@@ -22,6 +22,11 @@ export const citasAPI = {
     }
   },
 
+  /**
+   * Obtiene las citas de un cliente concreto filtradas por email.
+   * @param email - Email del cliente propietario de las citas.
+   * @returns Objeto con `data` (array de `Cita` del cliente).
+   */
   async getMisCitas(email: string): Promise<{ data: Cita[] }> {
     const response = await fetch(`${BASE_URL}/citas?email=${encodeURIComponent(email)}`);
     const data = await response.json();
@@ -29,6 +34,10 @@ export const citasAPI = {
     return data;
   },
 
+  /**
+   * Obtiene todas las citas del sistema. Solo para uso del admin.
+   * @returns Objeto con `data` (array de todas las `Cita`).
+   */
   async getAllCitas(): Promise<{ data: Cita[] }> {
     const response = await fetch(`${BASE_URL}/admin/citas`);
     const data = await response.json();
@@ -36,6 +45,11 @@ export const citasAPI = {
     return data;
   },
 
+  /**
+   * Marca una cita como atendida. Solo disponible para el admin.
+   * @param id - Identificador único de la cita.
+   * @returns Void. Lanza error si la cita no existe o ya estaba atendida.
+   */
   async marcarAtendida(id: string): Promise<void> {
     const response = await fetch(`${BASE_URL}/citas/${id}/marcar-atendida`, { method: 'PATCH' });
     const data = await response.json();

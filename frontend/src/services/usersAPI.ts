@@ -25,9 +25,9 @@ export const usersAPI = {
   },
 
   /**
-   * Registra un nuevo usuario en el sistema.
+   * Registra un nuevo usuario en el sistema con rol `cliente` por defecto.
    * @param payload - Objeto con `fullName`, `email`, `phone`, `company`, `password` y `acceptTerms`.
-   * @returns Void. Lanza error si el email ya existe o faltan campos obligatorios.
+   * @returns Void. Lanza error si el email ya está registrado o faltan campos obligatorios.
    */
   async register(payload: RegisterPayload): Promise<void> {
     const response = await fetch(`${BASE_URL}/register`, {
