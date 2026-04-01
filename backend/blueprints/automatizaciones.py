@@ -24,7 +24,6 @@ def crear_automatizacion():
         if field not in data or not data[field]:
             return jsonify({"success": False, "message": f"Falta el campo obligatorio: {field}"}), 400
 
-    # Obtener el ID real del usuario por email
     usuario = db.Usuarios.find_one({"correo_electronico_acceso": data['email_propietario']})
     if not usuario:
         return jsonify({"success": False, "message": "No existe un usuario con ese email"}), 404
@@ -131,7 +130,7 @@ def aceptar_admin(id):
         result = db.Automatizaciones.update_one(
             {"identificador_unico": id, "estado": "pendiente_revision"},
             {"$set": {
-                "estado": "aceptada_pendiente_cliente",
+                "estado": "pendiente_pago_anticipo",
                 "gasto_estimado": gasto,
                 "identificador_admin": identificador_admin,
                 "nombre_admin": nombre_admin,
@@ -140,7 +139,7 @@ def aceptar_admin(id):
         )
         if result.matched_count == 0:
             return jsonify({"success": False, "message": "Automatización no encontrada o estado incorrecto"}), 404
-        return jsonify({"success": True, "message": "Automatización aceptada por el administrador"}), 200
+        return jsonify({"success": True, "message": "Automatización aceptada, pendiente de anticipo"}), 200
     except Exception as e:
         return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
 
@@ -171,29 +170,8 @@ def rechazar(id):
         return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
 
 
-@automatizaciones_bp.route('/automatizaciones/<id>/aceptar-cliente', methods=['PATCH'])
-def aceptar_cliente(id):
-    db = get_db()
-    if db is None:
-        return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
-
-    try:
-        result = db.Automatizaciones.update_one(
-            {"identificador_unico": id, "estado": "aceptada_pendiente_cliente"},
-            {"$set": {
-                "estado": "pendiente_pago",
-                "fecha_actualizacion": datetime.utcnow(),
-            }}
-        )
-        if result.matched_count == 0:
-            return jsonify({"success": False, "message": "Automatización no encontrada o estado incorrecto"}), 404
-        return jsonify({"success": True, "message": "Propuesta aceptada, pendiente de pago"}), 200
-    except Exception as e:
-        return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
-
-
-@automatizaciones_bp.route('/automatizaciones/<id>/crear-sesion-pago', methods=['POST'])
-def crear_sesion_pago(id):
+@automatizaciones_bp.route('/automatizaciones/<id>/crear-sesion-pago-anticipo', methods=['POST'])
+def crear_sesion_pago_anticipo(id):
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
@@ -201,12 +179,13 @@ def crear_sesion_pago(id):
     automatizacion = db.Automatizaciones.find_one({"identificador_unico": id})
     if not automatizacion:
         return jsonify({"success": False, "message": "Automatización no encontrada"}), 404
-    if automatizacion.get('estado') != 'pendiente_pago':
-        return jsonify({"success": False, "message": "La automatización no está pendiente de pago"}), 400
+    if automatizacion.get('estado') != 'pendiente_pago_anticipo':
+        return jsonify({"success": False, "message": "La automatización no está pendiente de anticipo"}), 400
     if automatizacion.get('gasto_estimado') is None:
         return jsonify({"success": False, "message": "No hay gasto estimado definido"}), 400
 
     frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:5173')
+    importe_anticipo = int(automatizacion['gasto_estimado'] * 0.5 * 100)
 
     try:
         session = stripe.checkout.Session.create(
@@ -215,22 +194,22 @@ def crear_sesion_pago(id):
                 'price_data': {
                     'currency': 'eur',
                     'product_data': {
-                        'name': automatizacion['titulo'],
-                        'description': automatizacion.get('descripcion', ''),
+                        'name': f"Anticipo — {automatizacion['titulo']}",
+                        'description': '50% del coste total (anticipo para inicio del desarrollo)',
                     },
-                    'unit_amount': int(automatizacion['gasto_estimado'] * 100),
+                    'unit_amount': importe_anticipo,
                 },
                 'quantity': 1,
             }],
             mode='payment',
             success_url=f"{frontend_url}/pago-completado?session_id={{CHECKOUT_SESSION_ID}}",
             cancel_url=f"{frontend_url}/dashboard/cliente",
-            metadata={'automatizacion_id': id},
+            metadata={'automatizacion_id': id, 'tipo_pago': 'anticipo'},
         )
 
         db.Automatizaciones.update_one(
             {"identificador_unico": id},
-            {"$set": {"stripe_session_id": session.id, "fecha_actualizacion": datetime.utcnow()}}
+            {"$set": {"stripe_session_anticipo_id": session.id, "fecha_actualizacion": datetime.utcnow()}}
         )
 
         return jsonify({"success": True, "url": session.url}), 200
@@ -238,47 +217,51 @@ def crear_sesion_pago(id):
         return jsonify({"success": False, "message": f"Error al crear sesión de pago: {str(e)}"}), 500
 
 
-@automatizaciones_bp.route('/automatizaciones/<id>/rechazar-cliente', methods=['PATCH'])
-def rechazar_cliente(id):
+@automatizaciones_bp.route('/automatizaciones/<id>/crear-sesion-pago-final', methods=['POST'])
+def crear_sesion_pago_final(id):
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
 
-    try:
-        result = db.Automatizaciones.update_one(
-            {"identificador_unico": id, "estado": "aceptada_pendiente_cliente"},
-            {"$set": {
-                "estado": "rechazada",
-                "motivo_rechazo": "Propuesta rechazada por el cliente",
-                "fecha_actualizacion": datetime.utcnow(),
-            }}
-        )
-        if result.matched_count == 0:
-            return jsonify({"success": False, "message": "Automatización no encontrada o estado incorrecto"}), 404
-        return jsonify({"success": True, "message": "Propuesta rechazada por el cliente"}), 200
-    except Exception as e:
-        return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
+    automatizacion = db.Automatizaciones.find_one({"identificador_unico": id})
+    if not automatizacion:
+        return jsonify({"success": False, "message": "Automatización no encontrada"}), 404
+    if automatizacion.get('estado') != 'pendiente_pago_final':
+        return jsonify({"success": False, "message": "La automatización no está pendiente de pago final"}), 400
+    if automatizacion.get('gasto_estimado') is None:
+        return jsonify({"success": False, "message": "No hay gasto estimado definido"}), 400
 
-
-@automatizaciones_bp.route('/automatizaciones/<id>/marcar-desarrollo', methods=['PATCH'])
-def marcar_desarrollo(id):
-    db = get_db()
-    if db is None:
-        return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
+    frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:5173')
+    importe_final = int(automatizacion['gasto_estimado'] * 0.5 * 100)
 
     try:
-        result = db.Automatizaciones.update_one(
-            {"identificador_unico": id, "estado": "aceptada_pendiente_cliente"},
-            {"$set": {
-                "estado": "en_desarrollo",
-                "fecha_actualizacion": datetime.utcnow(),
-            }}
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': 'eur',
+                    'product_data': {
+                        'name': f"Pago final — {automatizacion['titulo']}",
+                        'description': '50% restante del coste total',
+                    },
+                    'unit_amount': importe_final,
+                },
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url=f"{frontend_url}/pago-completado?session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{frontend_url}/dashboard/cliente",
+            metadata={'automatizacion_id': id, 'tipo_pago': 'final'},
         )
-        if result.matched_count == 0:
-            return jsonify({"success": False, "message": "Automatización no encontrada o estado incorrecto"}), 404
-        return jsonify({"success": True, "message": "Automatización marcada en desarrollo"}), 200
+
+        db.Automatizaciones.update_one(
+            {"identificador_unico": id},
+            {"$set": {"stripe_session_final_id": session.id, "fecha_actualizacion": datetime.utcnow()}}
+        )
+
+        return jsonify({"success": True, "url": session.url}), 200
     except Exception as e:
-        return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
+        return jsonify({"success": False, "message": f"Error al crear sesión de pago: {str(e)}"}), 500
 
 
 @automatizaciones_bp.route('/automatizaciones/<id>/marcar-terminada', methods=['PATCH'])
@@ -291,13 +274,13 @@ def marcar_terminada(id):
         result = db.Automatizaciones.update_one(
             {"identificador_unico": id, "estado": "en_desarrollo"},
             {"$set": {
-                "estado": "terminada",
+                "estado": "pendiente_pago_final",
                 "fecha_actualizacion": datetime.utcnow(),
             }}
         )
         if result.matched_count == 0:
             return jsonify({"success": False, "message": "Automatización no encontrada o estado incorrecto"}), 404
-        return jsonify({"success": True, "message": "Automatización marcada como terminada"}), 200
+        return jsonify({"success": True, "message": "Automatización terminada, pendiente de pago final"}), 200
     except Exception as e:
         return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
 
@@ -406,7 +389,9 @@ def cancelar_automatizacion(id):
 
     try:
         result = db.Automatizaciones.update_one(
-            {"identificador_unico": id, "estado": {"$in": ["en_desarrollo", "aceptada_pendiente_cliente", "pendiente_pago", "pendiente_revision"]}},
+            {"identificador_unico": id, "estado": {"$in": [
+                "pendiente_revision", "pendiente_pago_anticipo", "en_desarrollo", "pendiente_pago_final"
+            ]}},
             {"$set": {
                 "estado": "cancelada",
                 "fecha_actualizacion": datetime.utcnow(),

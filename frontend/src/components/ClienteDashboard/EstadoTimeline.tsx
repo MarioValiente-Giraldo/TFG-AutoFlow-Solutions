@@ -12,18 +12,19 @@ type StepStatus = 'done' | 'current' | 'future' | 'rejected';
 const STEPS = [
   { key: 'solicitud',   label: 'Solicitud' },
   { key: 'revision',    label: 'Revisión' },
-  { key: 'propuesta',   label: 'Propuesta' },
+  { key: 'anticipo',    label: 'Anticipo' },
   { key: 'desarrollo',  label: 'Desarrollo' },
+  { key: 'pago_final',  label: 'Pago final' },
   { key: 'terminada',   label: 'Terminada' },
 ];
 
 // Índice del paso "activo" según el estado de la automatización
 const ESTADO_STEP: Record<string, number> = {
-  pendiente_revision:          1,
-  aceptada_pendiente_cliente:  2,
-  pendiente_pago:              2,
-  en_desarrollo:               3,
-  terminada:                   4,
+  pendiente_revision:      1,
+  pendiente_pago_anticipo: 2,
+  en_desarrollo:           3,
+  pendiente_pago_final:    4,
+  terminada:               5,
 };
 
 const getStepStatus = (

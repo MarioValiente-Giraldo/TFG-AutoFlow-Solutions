@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
-import { aceptarCliente, rechazarCliente, cancelarAutomatizacion, crearSesionPago } from '../../services/automatizacionesAPI';
+import { cancelarAutomatizacion, crearSesionPagoAnticipo, crearSesionPagoFinal } from '../../services/automatizacionesAPI';
 import type { Automatizacion } from '../../types';
 import { styles } from './ClienteDashboardStyles';
 import EstadoTimeline from './EstadoTimeline';
@@ -26,62 +26,42 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
     day: '2-digit', month: 'short', year: 'numeric',
   });
 
-  const handleAceptarPropuesta = async () => {
-    setLoading(true);
-    setError('');
+  const handlePagarAnticipo = async () => {
+    setLoading(true); setError('');
     try {
-      await aceptarCliente(identificador_unico);
-      onRefresh();
-    } catch {
-      setError('Error al aceptar la propuesta');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRechazarPropuesta = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      await rechazarCliente(identificador_unico);
-      onRefresh();
-    } catch {
-      setError('Error al rechazar la propuesta');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handlePagar = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const res = await crearSesionPago(identificador_unico);
+      const res = await crearSesionPagoAnticipo(identificador_unico);
       window.location.href = res.url;
     } catch {
       setError('Error al iniciar el pago');
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
+  };
+
+  const handlePagarFinal = async () => {
+    setLoading(true); setError('');
+    try {
+      const res = await crearSesionPagoFinal(identificador_unico);
+      window.location.href = res.url;
+    } catch {
+      setError('Error al iniciar el pago');
+    } finally { setLoading(false); }
   };
 
   const handleCancelar = async () => {
     if (!confirm('¿Estás seguro de que quieres cancelar esta automatización?')) return;
-    setLoading(true);
-    setError('');
+    setLoading(true); setError('');
     try {
       await cancelarAutomatizacion(identificador_unico);
       onRefresh();
     } catch {
       setError('Error al cancelar la automatización');
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   };
 
   const updates = actualizaciones_desarrollo
     ? [...actualizaciones_desarrollo].reverse()
     : [];
+
+  const anticipo = gasto_estimado !== null ? (gasto_estimado * 0.5).toFixed(2) : null;
 
   return (
     <div className={styles.card(theme)}>
@@ -104,38 +84,33 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
         Ver detalle →
       </button>
 
-      {nombre_admin && (estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'pendiente_pago' || estado === 'terminada') && (
+      {nombre_admin && (estado === 'pendiente_pago_anticipo' || estado === 'en_desarrollo' || estado === 'pendiente_pago_final' || estado === 'terminada') && (
         <p className={styles.cardMeta(theme)}>Tu gestor: <strong>{nombre_admin}</strong></p>
       )}
 
-      {estado === 'aceptada_pendiente_cliente' && gasto_estimado !== null && (
+      {estado === 'pendiente_pago_anticipo' && anticipo !== null && (
         <div className={styles.propuestaBox(theme)}>
-          <p className={styles.propuestaLabel(theme)}>Propuesta recibida</p>
-          <p className={styles.propuestaGasto(theme)}>{gasto_estimado} €</p>
-          <div className="flex gap-3">
-            <button className={styles.btnAceptar} onClick={handleAceptarPropuesta} disabled={loading}>
-              {loading ? 'Procesando...' : 'Aceptar propuesta'}
-            </button>
-            <button className={styles.btnRechazar} onClick={handleRechazarPropuesta} disabled={loading}>
-              Rechazar
-            </button>
-          </div>
-          {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
-        </div>
-      )}
-
-      {estado === 'pendiente_pago' && gasto_estimado !== null && (
-        <div className={styles.propuestaBox(theme)}>
-          <p className={styles.propuestaLabel(theme)}>Pago pendiente</p>
-          <p className={styles.propuestaGasto(theme)}>{gasto_estimado} €</p>
-          <button className={styles.btnAceptar} onClick={handlePagar} disabled={loading}>
-            {loading ? 'Redirigiendo...' : 'Pagar ahora'}
+          <p className={styles.propuestaLabel(theme)}>Anticipo para iniciar el desarrollo</p>
+          <p className={styles.propuestaGasto(theme)}>{anticipo} € <span className="text-xs opacity-60">(50% del total)</span></p>
+          <button className={styles.btnAceptar} onClick={handlePagarAnticipo} disabled={loading}>
+            {loading ? 'Redirigiendo...' : 'Pagar anticipo'}
           </button>
           {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
         </div>
       )}
 
-      {(estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'pendiente_revision' || estado === 'pendiente_pago') && (
+      {estado === 'pendiente_pago_final' && anticipo !== null && (
+        <div className={styles.propuestaBox(theme)}>
+          <p className={styles.propuestaLabel(theme)}>Pago final — trabajo completado</p>
+          <p className={styles.propuestaGasto(theme)}>{anticipo} € <span className="text-xs opacity-60">(50% restante)</span></p>
+          <button className={styles.btnAceptar} onClick={handlePagarFinal} disabled={loading}>
+            {loading ? 'Redirigiendo...' : 'Pagar resto'}
+          </button>
+          {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
+        </div>
+      )}
+
+      {(estado === 'pendiente_revision' || estado === 'pendiente_pago_anticipo' || estado === 'en_desarrollo' || estado === 'pendiente_pago_final') && (
         <div className="mt-3">
           <button className={styles.btnRechazar} onClick={handleCancelar} disabled={loading}>
             {loading ? 'Cancelando...' : 'Cancelar automatización'}
@@ -173,6 +148,7 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
           ))}
         </div>
       )}
+
       {estado === 'terminada' && (
         <StarRating
           idAutomatizacion={identificador_unico}

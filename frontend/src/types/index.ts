@@ -75,7 +75,7 @@ export interface Automatizacion {
   titulo: string;
   descripcion: string;
   tipo_automatizacion: string;
-  estado: 'pendiente_revision' | 'aceptada_pendiente_cliente' | 'pendiente_pago' | 'en_desarrollo' | 'terminada' | 'rechazada' | 'cancelada';
+  estado: 'pendiente_revision' | 'pendiente_pago_anticipo' | 'en_desarrollo' | 'pendiente_pago_final' | 'terminada' | 'rechazada' | 'cancelada';
   gasto_estimado: number | null;
   motivo_rechazo: string | null;
   identificador_admin: string | null;
@@ -85,6 +85,8 @@ export interface Automatizacion {
   actualizaciones_desarrollo?: ActualizacionDesarrollo[];
   id_cita_origen?: string;
   valoracion?: Valoracion;
-  stripe_session_id?: string;
-  fecha_pago?: string;
+  stripe_session_anticipo_id?: string;
+  stripe_session_final_id?: string;
+  fecha_pago_anticipo?: string;
+  fecha_pago_final?: string;
 }

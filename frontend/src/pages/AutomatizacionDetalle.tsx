@@ -6,7 +6,7 @@ import {
   getAutomatizacion,
   aceptarAdmin, rechazarAdmin, marcarTerminada,
   publicarActualizacion, cancelarAutomatizacion,
-  aceptarCliente, rechazarCliente, valorarAutomatizacion, crearSesionPago,
+  valorarAutomatizacion, crearSesionPagoAnticipo, crearSesionPagoFinal,
 } from '../services/automatizacionesAPI';
 import type { Automatizacion } from '../types';
 import EstadoTimeline from '../components/ClienteDashboard/EstadoTimeline';
@@ -67,6 +67,7 @@ const AutomatizacionDetalle = () => {
     : [];
 
   const isAdmin = user?.rol === 'admin';
+  const anticipo = gasto_estimado !== null ? (gasto_estimado * 0.5).toFixed(2) : null;
 
   const handleAceptarAdmin = async () => {
     const gastoNum = parseFloat(gasto);
@@ -120,26 +121,21 @@ const AutomatizacionDetalle = () => {
     finally { setActionLoading(false); }
   };
 
-  const handlePagar = async () => {
+  const handlePagarAnticipo = async () => {
     setActionLoading(true); setActionError('');
     try {
-      const res = await crearSesionPago(identificador_unico);
+      const res = await crearSesionPagoAnticipo(identificador_unico);
       window.location.href = res.url;
     } catch { setActionError('Error al iniciar el pago'); }
     finally { setActionLoading(false); }
   };
 
-  const handleAceptarCliente = async () => {
+  const handlePagarFinal = async () => {
     setActionLoading(true); setActionError('');
-    try { await aceptarCliente(identificador_unico); fetchData(); }
-    catch { setActionError('Error al aceptar propuesta'); }
-    finally { setActionLoading(false); }
-  };
-
-  const handleRechazarCliente = async () => {
-    setActionLoading(true); setActionError('');
-    try { await rechazarCliente(identificador_unico); fetchData(); }
-    catch { setActionError('Error al rechazar propuesta'); }
+    try {
+      const res = await crearSesionPagoFinal(identificador_unico);
+      window.location.href = res.url;
+    } catch { setActionError('Error al iniciar el pago'); }
     finally { setActionLoading(false); }
   };
 
@@ -176,12 +172,12 @@ const AutomatizacionDetalle = () => {
           <p className={ds.sectionLabel(theme)}>Descripción</p>
           <p className={styles.cardDescription(theme)}>{descripcion}</p>
 
-          {nombre_admin && (estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'terminada') && (
+          {nombre_admin && (estado === 'pendiente_pago_anticipo' || estado === 'en_desarrollo' || estado === 'pendiente_pago_final' || estado === 'terminada') && (
             <p className={styles.cardMeta(theme)}>Gestor asignado: <strong>{nombre_admin}</strong></p>
           )}
 
           {gasto_estimado !== null && estado !== 'pendiente_revision' && (
-            <p className={ds.gastoText(theme)}>Gasto estimado: {gasto_estimado} €</p>
+            <p className={ds.gastoText(theme)}>Gasto total: {gasto_estimado} €</p>
           )}
 
           {estado === 'rechazada' && motivo_rechazo && (
@@ -207,7 +203,7 @@ const AutomatizacionDetalle = () => {
                     {actionLoading ? 'Guardando...' : 'Marcar terminada'}
                   </button>
                 )}
-                {(estado === 'pendiente_revision' || estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'pendiente_pago') && (
+                {(estado === 'pendiente_revision' || estado === 'pendiente_pago_anticipo' || estado === 'en_desarrollo' || estado === 'pendiente_pago_final') && (
                   <button className={styles.btnReject} onClick={handleCancelar} disabled={actionLoading}>Cancelar</button>
                 )}
                 {(estado === 'rechazada' || estado === 'cancelada' || estado === 'terminada') && (
@@ -265,36 +261,36 @@ const AutomatizacionDetalle = () => {
           </div>
         )}
 
-        {/* Acciones cliente - pago pendiente */}
-        {!isAdmin && estado === 'pendiente_pago' && gasto_estimado !== null && (
+        {/* Acciones cliente — anticipo */}
+        {!isAdmin && estado === 'pendiente_pago_anticipo' && anticipo !== null && (
           <div className={ds.propuestaBox(theme)}>
-            <p className={ds.propuestaLabel(theme)}>Pago pendiente</p>
-            <p className={ds.propuestaGasto(theme)}>{gasto_estimado} €</p>
-            <button className={ds.btnAceptarPropuesta} onClick={handlePagar} disabled={actionLoading}>
-              {actionLoading ? 'Redirigiendo...' : 'Pagar ahora'}
+            <p className={ds.propuestaLabel(theme)}>Anticipo para iniciar el desarrollo</p>
+            <p className={ds.propuestaGasto(theme)}>
+              {anticipo} € <span className="text-xs opacity-60">(50% del total: {gasto_estimado} €)</span>
+            </p>
+            <button className={ds.btnAceptarPropuesta} onClick={handlePagarAnticipo} disabled={actionLoading}>
+              {actionLoading ? 'Redirigiendo...' : 'Pagar anticipo'}
             </button>
             {actionError && <p className="text-xs text-red-400 mt-2">{actionError}</p>}
           </div>
         )}
 
-        {/* Acciones cliente */}
-        {!isAdmin && estado === 'aceptada_pendiente_cliente' && gasto_estimado !== null && (
+        {/* Acciones cliente — pago final */}
+        {!isAdmin && estado === 'pendiente_pago_final' && anticipo !== null && (
           <div className={ds.propuestaBox(theme)}>
-            <p className={ds.propuestaLabel(theme)}>Propuesta recibida</p>
-            <p className={ds.propuestaGasto(theme)}>{gasto_estimado} €</p>
-            <div className={ds.propuestaActions}>
-              <button className={ds.btnAceptarPropuesta} onClick={handleAceptarCliente} disabled={actionLoading}>
-                {actionLoading ? 'Procesando...' : 'Aceptar propuesta'}
-              </button>
-              <button className={ds.btnRechazarPropuesta} onClick={handleRechazarCliente} disabled={actionLoading}>
-                Rechazar
-              </button>
-            </div>
+            <p className={ds.propuestaLabel(theme)}>Pago final — trabajo completado</p>
+            <p className={ds.propuestaGasto(theme)}>
+              {anticipo} € <span className="text-xs opacity-60">(50% restante del total: {gasto_estimado} €)</span>
+            </p>
+            <button className={ds.btnAceptarPropuesta} onClick={handlePagarFinal} disabled={actionLoading}>
+              {actionLoading ? 'Redirigiendo...' : 'Pagar resto'}
+            </button>
             {actionError && <p className="text-xs text-red-400 mt-2">{actionError}</p>}
           </div>
         )}
 
-        {!isAdmin && (estado === 'en_desarrollo' || estado === 'aceptada_pendiente_cliente' || estado === 'pendiente_revision' || estado === 'pendiente_pago') && (
+        {/* Cancelar (cliente) */}
+        {!isAdmin && (estado === 'pendiente_revision' || estado === 'pendiente_pago_anticipo' || estado === 'en_desarrollo' || estado === 'pendiente_pago_final') && (
           <div className={ds.cancelWrapper}>
             <button className={ds.btnRechazarPropuesta} onClick={handleCancelar} disabled={actionLoading}>
               {actionLoading ? 'Cancelando...' : 'Cancelar automatización'}
