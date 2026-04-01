@@ -1,7 +1,11 @@
+import os
 import uuid
 from datetime import datetime
+import stripe
 from flask import Blueprint, jsonify, request
 from db import get_db
+
+stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
 automatizaciones_bp = Blueprint('automatizaciones', __name__, url_prefix='/api')
 
@@ -177,15 +181,61 @@ def aceptar_cliente(id):
         result = db.Automatizaciones.update_one(
             {"identificador_unico": id, "estado": "aceptada_pendiente_cliente"},
             {"$set": {
-                "estado": "en_desarrollo",
+                "estado": "pendiente_pago",
                 "fecha_actualizacion": datetime.utcnow(),
             }}
         )
         if result.matched_count == 0:
             return jsonify({"success": False, "message": "Automatización no encontrada o estado incorrecto"}), 404
-        return jsonify({"success": True, "message": "Propuesta aceptada por el cliente"}), 200
+        return jsonify({"success": True, "message": "Propuesta aceptada, pendiente de pago"}), 200
     except Exception as e:
         return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
+
+
+@automatizaciones_bp.route('/automatizaciones/<id>/crear-sesion-pago', methods=['POST'])
+def crear_sesion_pago(id):
+    db = get_db()
+    if db is None:
+        return jsonify({"success": False, "message": "Error de conexión a Base de Datos"}), 500
+
+    automatizacion = db.Automatizaciones.find_one({"identificador_unico": id})
+    if not automatizacion:
+        return jsonify({"success": False, "message": "Automatización no encontrada"}), 404
+    if automatizacion.get('estado') != 'pendiente_pago':
+        return jsonify({"success": False, "message": "La automatización no está pendiente de pago"}), 400
+    if automatizacion.get('gasto_estimado') is None:
+        return jsonify({"success": False, "message": "No hay gasto estimado definido"}), 400
+
+    frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:5173')
+
+    try:
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': 'eur',
+                    'product_data': {
+                        'name': automatizacion['titulo'],
+                        'description': automatizacion.get('descripcion', ''),
+                    },
+                    'unit_amount': int(automatizacion['gasto_estimado'] * 100),
+                },
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url=f"{frontend_url}/pago-completado?session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{frontend_url}/dashboard/cliente",
+            metadata={'automatizacion_id': id},
+        )
+
+        db.Automatizaciones.update_one(
+            {"identificador_unico": id},
+            {"$set": {"stripe_session_id": session.id, "fecha_actualizacion": datetime.utcnow()}}
+        )
+
+        return jsonify({"success": True, "url": session.url}), 200
+    except Exception as e:
+        return jsonify({"success": False, "message": f"Error al crear sesión de pago: {str(e)}"}), 500
 
 
 @automatizaciones_bp.route('/automatizaciones/<id>/rechazar-cliente', methods=['PATCH'])
