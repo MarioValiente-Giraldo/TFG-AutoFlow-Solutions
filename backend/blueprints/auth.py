@@ -1,10 +1,37 @@
+import os
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+import jwt
 from flask import Blueprint, jsonify, request
 from werkzeug.security import generate_password_hash, check_password_hash
 from db import get_db
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api')
+
+SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret')
+
+
+def _generate_tokens(user_id: str, rol: str) -> dict:
+    """Genera access_token (15min) y refresh_token (7d) para el usuario."""
+    now = datetime.now(timezone.utc)
+    access_payload = {
+        'sub': user_id,
+        'rol': rol,
+        'iat': now,
+        'exp': now + timedelta(minutes=15),
+        'type': 'access',
+    }
+    refresh_payload = {
+        'sub': user_id,
+        'rol': rol,
+        'iat': now,
+        'exp': now + timedelta(days=7),
+        'type': 'refresh',
+    }
+    return {
+        'access_token': jwt.encode(access_payload, SECRET_KEY, algorithm='HS256'),
+        'refresh_token': jwt.encode(refresh_payload, SECRET_KEY, algorithm='HS256'),
+    }
 
 
 @auth_bp.route('/register', methods=['POST'])
@@ -49,7 +76,7 @@ def register():
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    """POST /api/login — Autentica al usuario con email y contraseña. Devuelve el objeto user."""
+    """POST /api/login — Autentica al usuario. Devuelve user + access_token + refresh_token."""
     db = get_db()
     if db is None:
         return jsonify({"success": False, "message": "Error de conexión a BD"}), 500
@@ -64,6 +91,7 @@ def login():
     user = db.Usuarios.find_one({"correo_electronico_acceso": email})
 
     if user and check_password_hash(user['contrasena'], password):
+        tokens = _generate_tokens(user['identificador_unico_usuario'], user['rol'])
         return jsonify({
             "success": True,
             "message": "Inicio de sesión correcto",
@@ -74,10 +102,33 @@ def login():
                 "empresa": user['datos_perfil_comercial'].get('empresa', ''),
                 "telefono": user.get('telefono', ''),
                 "rol": user['rol']
-            }
+            },
+            **tokens,
         }), 200
     else:
         return jsonify({"success": False, "message": "Correo o contraseña incorrectos"}), 401
+
+
+@auth_bp.route('/auth/refresh', methods=['POST'])
+def refresh():
+    """POST /api/auth/refresh — Recibe refresh_token, devuelve nuevo access_token."""
+    data = request.get_json()
+    refresh_token = data.get('refresh_token') if data else None
+
+    if not refresh_token:
+        return jsonify({"success": False, "message": "Falta el refresh_token"}), 400
+
+    try:
+        payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=['HS256'])
+        if payload.get('type') != 'refresh':
+            raise jwt.InvalidTokenError('Token no es de tipo refresh')
+    except jwt.ExpiredSignatureError:
+        return jsonify({"success": False, "message": "Refresh token expirado"}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({"success": False, "message": "Refresh token inválido"}), 401
+
+    tokens = _generate_tokens(payload['sub'], payload['rol'])
+    return jsonify({"success": True, "access_token": tokens['access_token']}), 200
 
 
 @auth_bp.route('/logout', methods=['POST'])
