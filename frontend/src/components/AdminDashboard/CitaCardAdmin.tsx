@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { useTheme } from '../../context/ThemeContext';
 import { citasAPI } from '../../services/citasAPI';
 import { crearAutomatizacion } from '../../services/automatizacionesAPI';
@@ -14,7 +15,6 @@ interface CitaCardAdminProps {
 const CitaCardAdmin = ({ cita, onRefresh, tieneAutomatizacion = false }: CitaCardAdminProps) => {
   const { theme } = useTheme();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const fecha = new Date(cita.fecha_preferida).toLocaleDateString('es-ES', {
     day: '2-digit', month: 'short', year: 'numeric',
@@ -22,12 +22,12 @@ const CitaCardAdmin = ({ cita, onRefresh, tieneAutomatizacion = false }: CitaCar
 
   const handleMarcarAtendida = async () => {
     setLoading(true);
-    setError('');
     try {
       await citasAPI.marcarAtendida(cita.identificador_unico_cita);
+      toast.success('Cita marcada como atendida');
       onRefresh();
     } catch {
-      setError('Error al marcar la cita como atendida');
+      toast.error('Error al marcar la cita como atendida');
     } finally {
       setLoading(false);
     }
@@ -35,7 +35,6 @@ const CitaCardAdmin = ({ cita, onRefresh, tieneAutomatizacion = false }: CitaCar
 
   const handleCrearAutomatizacion = async () => {
     setLoading(true);
-    setError('');
     try {
       await crearAutomatizacion({
         titulo: cita.tipo_automatizacion,
@@ -45,9 +44,10 @@ const CitaCardAdmin = ({ cita, onRefresh, tieneAutomatizacion = false }: CitaCar
         nombre_propietario: cita.nombre,
         id_cita_origen: cita.identificador_unico_cita,
       });
+      toast.success('Automatización creada');
       onRefresh();
     } catch {
-      setError('Error al crear la automatización');
+      toast.error('Error al crear la automatización');
     } finally {
       setLoading(false);
     }
@@ -98,8 +98,6 @@ const CitaCardAdmin = ({ cita, onRefresh, tieneAutomatizacion = false }: CitaCar
       {cita.estado === 'atendida' && tieneAutomatizacion && (
         <p className={styles.meta(theme)}>Automatización ya creada</p>
       )}
-
-      {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
     </div>
   );
 };

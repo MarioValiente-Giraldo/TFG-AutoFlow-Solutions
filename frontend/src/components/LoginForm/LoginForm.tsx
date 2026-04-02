@@ -1,5 +1,6 @@
 import React, { useActionState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { styles } from './LoginFormStyles';
@@ -30,10 +31,12 @@ const LoginForm: React.FC = () => {
 
     try {
       const { user } = await usersAPI.login({ email, password });
-      return { success: true, message: "¡Bienvenido de nuevo! Entrando...", user };
+      toast.success("¡Bienvenido de nuevo!");
+      return { success: true, message: '', user };
     } catch (error) {
       const message = error instanceof Error ? error.message : "Error de conexión con el servidor.";
-      return { success: false, message };
+      toast.error(message);
+      return { success: false, message: '' };
     }
   };
 
@@ -77,15 +80,11 @@ const LoginForm: React.FC = () => {
       {/* Formulario conectado a la acción */}
       <form className={styles.form} action={submitAction}>
 
-        {/* Mensaje de Estado (Feedback) */}
+        {/* Mensaje de validación */}
         {state.message && (
-            <div className={`p-3 rounded-lg text-sm text-center border transition-all duration-300 ${
-                state.success
-                ? 'bg-green-500/10 border-green-500/20 text-green-400'
-                : 'bg-red-500/10 border-red-500/20 text-red-400'
-            }`}>
-              {state.message}
-            </div>
+          <div className="p-3 rounded-lg text-sm text-center border bg-red-500/10 border-red-500/20 text-red-400">
+            {state.message}
+          </div>
         )}
 
         {/* Campo Email */}

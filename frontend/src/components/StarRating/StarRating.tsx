@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { useTheme } from '../../context/ThemeContext';
 import { valorarAutomatizacion } from '../../services/automatizacionesAPI';
 import type { Valoracion } from '../../types';
@@ -16,17 +17,16 @@ const StarRating = ({ idAutomatizacion, valoracion, onRefresh }: Props) => {
   const [seleccionada, setSeleccionada] = useState(0);
   const [comentario, setComentario] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleEnviar = async () => {
     if (seleccionada === 0) return;
     setLoading(true);
-    setError('');
     try {
       await valorarAutomatizacion(idAutomatizacion, seleccionada, comentario);
+      toast.success('Valoración enviada');
       onRefresh();
     } catch {
-      setError('Error al enviar la valoración');
+      toast.error('Error al enviar la valoración');
     } finally {
       setLoading(false);
     }
@@ -86,7 +86,6 @@ const StarRating = ({ idAutomatizacion, valoracion, onRefresh }: Props) => {
       >
         {loading ? 'Enviando...' : 'Enviar valoración'}
       </button>
-      {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useActionState, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { useTheme } from '../../context/ThemeContext';
 import { styles } from './RegisterFormStyles';
 import { usersAPI } from '../../services/usersAPI';
@@ -68,10 +69,12 @@ const RegisterForm: React.FC = () => {
         password: password!,
         acceptTerms: acceptTerms === 'on',
       });
-      return { success: true, message: "¡Cuenta creada con éxito! Redirigiendo..." };
+      toast.success("¡Cuenta creada con éxito! Redirigiendo...");
+      return { success: true, message: '' };
     } catch (error) {
       const message = error instanceof Error ? error.message : "Error de conexión con el servidor. Inténtalo más tarde.";
-      return { success: false, message };
+      toast.error(message);
+      return { success: false, message: '' };
     }
   };
 
@@ -116,11 +119,9 @@ const RegisterForm: React.FC = () => {
       <form action={submitAction} onChange={handleFormChange} className={styles.form}>
 
         {state.message && (
-            <div className={`p-3 rounded-lg text-sm text-center border ${
-                state.success ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-red-500/10 border-red-500/20 text-red-400'
-            }`}>
-              {state.message}
-            </div>
+          <div className="p-3 rounded-lg text-sm text-center border bg-red-500/10 border-red-500/20 text-red-400">
+            {state.message}
+          </div>
         )}
 
         <div className={styles.formField}>

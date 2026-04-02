@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { cancelarAutomatizacion, crearSesionPagoAnticipo, crearSesionPagoFinal } from '../../services/automatizacionesAPI';
@@ -16,7 +17,6 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
   const { theme } = useTheme();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const { identificador_unico, titulo, tipo_automatizacion, descripcion,
     estado, gasto_estimado, motivo_rechazo, nombre_admin, fecha_solicitud,
@@ -27,33 +27,34 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
   });
 
   const handlePagarAnticipo = async () => {
-    setLoading(true); setError('');
+    setLoading(true);
     try {
       const res = await crearSesionPagoAnticipo(identificador_unico);
       window.location.href = res.url;
     } catch {
-      setError('Error al iniciar el pago');
+      toast.error('Error al iniciar el pago');
     } finally { setLoading(false); }
   };
 
   const handlePagarFinal = async () => {
-    setLoading(true); setError('');
+    setLoading(true);
     try {
       const res = await crearSesionPagoFinal(identificador_unico);
       window.location.href = res.url;
     } catch {
-      setError('Error al iniciar el pago');
+      toast.error('Error al iniciar el pago');
     } finally { setLoading(false); }
   };
 
   const handleCancelar = async () => {
     if (!confirm('¿Estás seguro de que quieres cancelar esta automatización?')) return;
-    setLoading(true); setError('');
+    setLoading(true);
     try {
       await cancelarAutomatizacion(identificador_unico);
+      toast.success('Automatización cancelada');
       onRefresh();
     } catch {
-      setError('Error al cancelar la automatización');
+      toast.error('Error al cancelar la automatización');
     } finally { setLoading(false); }
   };
 
@@ -95,7 +96,6 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
           <button className={styles.btnAceptar} onClick={handlePagarAnticipo} disabled={loading}>
             {loading ? 'Redirigiendo...' : 'Pagar anticipo'}
           </button>
-          {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
         </div>
       )}
 
@@ -106,7 +106,6 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
           <button className={styles.btnAceptar} onClick={handlePagarFinal} disabled={loading}>
             {loading ? 'Redirigiendo...' : 'Pagar resto'}
           </button>
-          {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
         </div>
       )}
 
@@ -115,7 +114,6 @@ const AutomatizacionStatusCard = ({ automatizacion, onRefresh }: Props) => {
           <button className={styles.btnRechazar} onClick={handleCancelar} disabled={loading}>
             {loading ? 'Cancelando...' : 'Cancelar automatización'}
           </button>
-          {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
         </div>
       )}
 

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -21,12 +22,10 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
   const [gasto, setGasto] = useState('');
   const [motivo, setMotivo] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const [updateMsg, setUpdateMsg] = useState('');
   const [updatePct, setUpdatePct] = useState('');
   const [updateLoading, setUpdateLoading] = useState(false);
-  const [updateError, setUpdateError] = useState('');
 
   const { identificador_unico, titulo, nombre_propietario, email_propietario,
     tipo_automatizacion, descripcion, estado, gasto_estimado, motivo_rechazo,
@@ -39,18 +38,18 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
   const handleAceptar = async () => {
     const gastoNum = parseFloat(gasto);
     if (isNaN(gastoNum) || gastoNum <= 0) {
-      setError('Introduce un gasto estimado válido');
+      toast.error('Introduce un gasto estimado válido');
       return;
     }
     setLoading(true);
-    setError('');
     try {
       await aceptarAdmin(identificador_unico, gastoNum, user!.id, user!.nombre);
+      toast.success('Automatización aceptada');
       setMode('none');
       setGasto('');
       onRefresh();
     } catch {
-      setError('Error al aceptar la automatización');
+      toast.error('Error al aceptar la automatización');
     } finally {
       setLoading(false);
     }
@@ -58,18 +57,18 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
 
   const handleRechazar = async () => {
     if (!motivo.trim()) {
-      setError('Introduce el motivo del rechazo');
+      toast.error('Introduce el motivo del rechazo');
       return;
     }
     setLoading(true);
-    setError('');
     try {
       await rechazarAdmin(identificador_unico, motivo.trim());
+      toast.success('Automatización rechazada');
       setMode('none');
       setMotivo('');
       onRefresh();
     } catch {
-      setError('Error al rechazar la automatización');
+      toast.error('Error al rechazar la automatización');
     } finally {
       setLoading(false);
     }
@@ -77,12 +76,12 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
 
   const handleMarcarTerminada = async () => {
     setLoading(true);
-    setError('');
     try {
       await marcarTerminada(identificador_unico);
+      toast.success('Automatización marcada como terminada');
       onRefresh();
     } catch {
-      setError('Error al marcar como terminada');
+      toast.error('Error al marcar como terminada');
     } finally {
       setLoading(false);
     }
@@ -90,30 +89,30 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
 
   const handlePublicarUpdate = async () => {
     if (!updateMsg.trim()) {
-      setUpdateError('El mensaje no puede estar vacío');
+      toast.error('El mensaje no puede estar vacío');
       return;
     }
     const pct = parseInt(updatePct);
     if (isNaN(pct) || pct < 0 || pct > 100) {
-      setUpdateError('El porcentaje debe ser un número entre 0 y 100');
+      toast.error('El porcentaje debe ser un número entre 0 y 100');
       return;
     }
     if (actualizaciones_desarrollo && actualizaciones_desarrollo.length > 0) {
       const ultimoPct = actualizaciones_desarrollo[actualizaciones_desarrollo.length - 1].porcentaje;
       if (pct <= ultimoPct) {
-        setUpdateError(`El porcentaje debe ser mayor que el anterior (${ultimoPct}%)`);
+        toast.error(`El porcentaje debe ser mayor que el anterior (${ultimoPct}%)`);
         return;
       }
     }
     setUpdateLoading(true);
-    setUpdateError('');
     try {
       await publicarActualizacion(identificador_unico, updateMsg.trim(), pct);
+      toast.success('Actualización publicada');
       setUpdateMsg('');
       setUpdatePct('');
       onRefresh();
     } catch {
-      setUpdateError('Error al publicar la actualización');
+      toast.error('Error al publicar la actualización');
     } finally {
       setUpdateLoading(false);
     }
@@ -122,12 +121,12 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
   const handleCancelar = async () => {
     if (!confirm('¿Estás seguro de que quieres cancelar esta automatización?')) return;
     setLoading(true);
-    setError('');
     try {
       await cancelarAutomatizacion(identificador_unico);
+      toast.success('Automatización cancelada');
       onRefresh();
     } catch {
-      setError('Error al cancelar la automatización');
+      toast.error('Error al cancelar la automatización');
     } finally {
       setLoading(false);
     }
@@ -137,7 +136,6 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
     setMode('none');
     setGasto('');
     setMotivo('');
-    setError('');
   };
 
   const updates = actualizaciones_desarrollo
@@ -205,7 +203,6 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
             onChange={e => setGasto(e.target.value)}
             className={styles.inlineInput(theme)}
           />
-          {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
           <div className={styles.inlineActions}>
             <button className={styles.btnConfirm} onClick={handleAceptar} disabled={loading}>
               {loading ? 'Guardando...' : 'Confirmar'}
@@ -226,7 +223,6 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
             onChange={e => setMotivo(e.target.value)}
             className={styles.inlineTextarea(theme)}
           />
-          {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
           <div className={styles.inlineActions}>
             <button className={styles.btnConfirm} onClick={handleRechazar} disabled={loading}>
               {loading ? 'Guardando...' : 'Confirmar'}
@@ -258,7 +254,6 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
               className={styles.updateFormPctInput(theme)}
             />
           </div>
-          {updateError && <p className="text-xs text-red-400 mb-2">{updateError}</p>}
           <button
             className={styles.btnPublish}
             onClick={handlePublicarUpdate}

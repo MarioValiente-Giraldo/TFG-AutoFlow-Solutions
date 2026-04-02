@@ -1,5 +1,6 @@
 import React, { useActionState, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 import { useTheme } from '../../context/ThemeContext';
 import { styles } from './AgendarCitaFormStyles';
 import { crearAutomatizacion } from '../../services/automatizacionesAPI';
@@ -69,10 +70,11 @@ const AgendarCitaForm: React.FC = () => {
           franjaHoraria: franjaHoraria,
         }),
       ]);
-      return { success: true, message: '¡Solicitud recibida!', submittedEmail: user!.email };
+      return { success: true, message: '', submittedEmail: user!.email };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Error de conexión con el servidor.';
-      return { success: false, message };
+      toast.error(message);
+      return { success: false, message: '' };
     }
   };
 
@@ -118,9 +120,9 @@ const AgendarCitaForm: React.FC = () => {
         /* ---- FORM ---- */
         <form className={styles.form} action={submitAction}>
 
-          {/* Status message */}
+          {/* Mensaje de validación */}
           {state.message && (
-            <div className={styles.statusMessage(state.success)}>
+            <div className={styles.statusMessage(false)}>
               {state.message}
             </div>
           )}

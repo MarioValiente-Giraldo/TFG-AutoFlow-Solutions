@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { styles } from './NavbarStyles';
@@ -10,7 +11,8 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/'); // Redirige al inicio tras cerrar sesión
+    toast.success('Sesión cerrada correctamente');
+    navigate('/');
   };
 
   return (

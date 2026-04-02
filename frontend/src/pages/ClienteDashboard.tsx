@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { getMisAutomatizaciones } from '../services/automatizacionesAPI';
@@ -17,7 +18,6 @@ const ClienteDashboard = () => {
   const [automatizaciones, setAutomatizaciones] = useState<Automatizacion[]>([]);
   const [citas, setCitas] = useState<Cita[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [tabActivo, setTabActivo] = useState<Tab>('automatizaciones');
   const [busqueda, setBusqueda] = useState('');
   const [busquedaDebounced, setBusquedaDebounced] = useState('');
@@ -26,7 +26,6 @@ const ClienteDashboard = () => {
   const fetchData = async () => {
     if (!user) return;
     setLoading(true);
-    setError('');
     try {
       const [resAuto, resCitas] = await Promise.all([
         getMisAutomatizaciones(user.id),
@@ -35,7 +34,7 @@ const ClienteDashboard = () => {
       setAutomatizaciones(resAuto.data);
       setCitas(resCitas.data);
     } catch {
-      setError('Error al cargar los datos');
+      toast.error('Error al cargar los datos');
     } finally {
       setLoading(false);
     }
@@ -57,9 +56,8 @@ const ClienteDashboard = () => {
         <p className={styles.pageSubtitle(theme)}>Revisa el estado de tus proyectos y citas</p>
 
         {loading && <p className={styles.loadingText(theme)}>Cargando...</p>}
-        {error && <p className={styles.errorText}>{error}</p>}
 
-        {!loading && !error && (
+        {!loading && (
           <>
             {/* Tabs */}
             <div className={styles.tabsWrapper}>

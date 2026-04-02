@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -33,7 +34,6 @@ const AutomatizacionDetalle = () => {
   const [updateMsg, setUpdateMsg] = useState('');
   const [updatePct, setUpdatePct] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
-  const [actionError, setActionError] = useState('');
 
   const fetchData = async () => {
     try {
@@ -71,71 +71,74 @@ const AutomatizacionDetalle = () => {
 
   const handleAceptarAdmin = async () => {
     const gastoNum = parseFloat(gasto);
-    if (isNaN(gastoNum) || gastoNum <= 0) { setActionError('Introduce un gasto válido'); return; }
-    setActionLoading(true); setActionError('');
+    if (isNaN(gastoNum) || gastoNum <= 0) { toast.error('Introduce un gasto válido'); return; }
+    setActionLoading(true);
     try {
       await aceptarAdmin(identificador_unico, gastoNum, user!.id, user!.nombre);
+      toast.success('Automatización aceptada');
       setMode('none'); setGasto(''); fetchData();
-    } catch { setActionError('Error al aceptar'); }
+    } catch { toast.error('Error al aceptar'); }
     finally { setActionLoading(false); }
   };
 
   const handleRechazarAdmin = async () => {
-    if (!motivo.trim()) { setActionError('Introduce el motivo'); return; }
-    setActionLoading(true); setActionError('');
+    if (!motivo.trim()) { toast.error('Introduce el motivo'); return; }
+    setActionLoading(true);
     try {
       await rechazarAdmin(identificador_unico, motivo.trim());
+      toast.success('Automatización rechazada');
       setMode('none'); setMotivo(''); fetchData();
-    } catch { setActionError('Error al rechazar'); }
+    } catch { toast.error('Error al rechazar'); }
     finally { setActionLoading(false); }
   };
 
   const handleMarcarTerminada = async () => {
-    setActionLoading(true); setActionError('');
-    try { await marcarTerminada(identificador_unico); fetchData(); }
-    catch { setActionError('Error al marcar terminada'); }
+    setActionLoading(true);
+    try { await marcarTerminada(identificador_unico); toast.success('Marcada como terminada'); fetchData(); }
+    catch { toast.error('Error al marcar terminada'); }
     finally { setActionLoading(false); }
   };
 
   const handlePublicarUpdate = async () => {
-    if (!updateMsg.trim()) { setActionError('El mensaje no puede estar vacío'); return; }
+    if (!updateMsg.trim()) { toast.error('El mensaje no puede estar vacío'); return; }
     const pct = parseInt(updatePct);
-    if (isNaN(pct) || pct < 0 || pct > 100) { setActionError('Porcentaje inválido'); return; }
+    if (isNaN(pct) || pct < 0 || pct > 100) { toast.error('Porcentaje inválido'); return; }
     if (actualizaciones_desarrollo?.length) {
       const ultimo = actualizaciones_desarrollo[actualizaciones_desarrollo.length - 1].porcentaje;
-      if (pct <= ultimo) { setActionError(`El porcentaje debe ser mayor que ${ultimo}%`); return; }
+      if (pct <= ultimo) { toast.error(`El porcentaje debe ser mayor que ${ultimo}%`); return; }
     }
-    setActionLoading(true); setActionError('');
+    setActionLoading(true);
     try {
       await publicarActualizacion(identificador_unico, updateMsg.trim(), pct);
+      toast.success('Actualización publicada');
       setUpdateMsg(''); setUpdatePct(''); fetchData();
-    } catch { setActionError('Error al publicar'); }
+    } catch { toast.error('Error al publicar'); }
     finally { setActionLoading(false); }
   };
 
   const handleCancelar = async () => {
     if (!confirm('¿Cancelar esta automatización?')) return;
-    setActionLoading(true); setActionError('');
-    try { await cancelarAutomatizacion(identificador_unico); fetchData(); }
-    catch { setActionError('Error al cancelar'); }
+    setActionLoading(true);
+    try { await cancelarAutomatizacion(identificador_unico); toast.success('Automatización cancelada'); fetchData(); }
+    catch { toast.error('Error al cancelar'); }
     finally { setActionLoading(false); }
   };
 
   const handlePagarAnticipo = async () => {
-    setActionLoading(true); setActionError('');
+    setActionLoading(true);
     try {
       const res = await crearSesionPagoAnticipo(identificador_unico);
       window.location.href = res.url;
-    } catch { setActionError('Error al iniciar el pago'); }
+    } catch { toast.error('Error al iniciar el pago'); }
     finally { setActionLoading(false); }
   };
 
   const handlePagarFinal = async () => {
-    setActionLoading(true); setActionError('');
+    setActionLoading(true);
     try {
       const res = await crearSesionPagoFinal(identificador_unico);
       window.location.href = res.url;
-    } catch { setActionError('Error al iniciar el pago'); }
+    } catch { toast.error('Error al iniciar el pago'); }
     finally { setActionLoading(false); }
   };
 
@@ -217,12 +220,11 @@ const AutomatizacionDetalle = () => {
                 <label className={styles.inlineLabel(theme)}>Gasto estimado (€)</label>
                 <input type="number" min="0" placeholder="Ej: 350" value={gasto}
                   onChange={e => setGasto(e.target.value)} className={styles.inlineInput(theme)} />
-                {actionError && <p className="text-xs text-red-400 mt-1">{actionError}</p>}
                 <div className={styles.inlineActions}>
                   <button className={styles.btnConfirm} onClick={handleAceptarAdmin} disabled={actionLoading}>
                     {actionLoading ? 'Guardando...' : 'Confirmar'}
                   </button>
-                  <button className={styles.btnCancel(theme)} onClick={() => { setMode('none'); setGasto(''); setActionError(''); }}>Cancelar</button>
+                  <button className={styles.btnCancel(theme)} onClick={() => { setMode('none'); setGasto(''); }}>Cancelar</button>
                 </div>
               </div>
             )}
@@ -232,12 +234,11 @@ const AutomatizacionDetalle = () => {
                 <label className={styles.inlineLabel(theme)}>Motivo del rechazo</label>
                 <textarea rows={3} placeholder="Explica por qué se rechaza..." value={motivo}
                   onChange={e => setMotivo(e.target.value)} className={styles.inlineTextarea(theme)} />
-                {actionError && <p className="text-xs text-red-400 mt-1">{actionError}</p>}
                 <div className={styles.inlineActions}>
                   <button className={styles.btnConfirm} onClick={handleRechazarAdmin} disabled={actionLoading}>
                     {actionLoading ? 'Guardando...' : 'Confirmar'}
                   </button>
-                  <button className={styles.btnCancel(theme)} onClick={() => { setMode('none'); setMotivo(''); setActionError(''); }}>Cancelar</button>
+                  <button className={styles.btnCancel(theme)} onClick={() => { setMode('none'); setMotivo(''); }}>Cancelar</button>
                 </div>
               </div>
             )}
@@ -252,7 +253,6 @@ const AutomatizacionDetalle = () => {
                   <input type="number" min="0" max="100" placeholder="% completado" value={updatePct}
                     onChange={e => setUpdatePct(e.target.value)} className={styles.updateFormPctInput(theme)} />
                 </div>
-                {actionError && <p className="text-xs text-red-400 mb-2">{actionError}</p>}
                 <button className={styles.btnPublish} onClick={handlePublicarUpdate} disabled={actionLoading}>
                   {actionLoading ? 'Publicando...' : 'Publicar'}
                 </button>
@@ -271,7 +271,6 @@ const AutomatizacionDetalle = () => {
             <button className={ds.btnAceptarPropuesta} onClick={handlePagarAnticipo} disabled={actionLoading}>
               {actionLoading ? 'Redirigiendo...' : 'Pagar anticipo'}
             </button>
-            {actionError && <p className="text-xs text-red-400 mt-2">{actionError}</p>}
           </div>
         )}
 
@@ -285,7 +284,6 @@ const AutomatizacionDetalle = () => {
             <button className={ds.btnAceptarPropuesta} onClick={handlePagarFinal} disabled={actionLoading}>
               {actionLoading ? 'Redirigiendo...' : 'Pagar resto'}
             </button>
-            {actionError && <p className="text-xs text-red-400 mt-2">{actionError}</p>}
           </div>
         )}
 
@@ -295,7 +293,6 @@ const AutomatizacionDetalle = () => {
             <button className={ds.btnRechazarPropuesta} onClick={handleCancelar} disabled={actionLoading}>
               {actionLoading ? 'Cancelando...' : 'Cancelar automatización'}
             </button>
-            {actionError && <p className="text-xs text-red-400 mt-2">{actionError}</p>}
           </div>
         )}
 
