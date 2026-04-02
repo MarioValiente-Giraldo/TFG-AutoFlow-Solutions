@@ -113,6 +113,7 @@ const AgendarCitaForm: React.FC = () => {
             <span className="text-cyan-400 font-medium">{state.submittedEmail}</span>.
           </p>
           <Link to="/" className={styles.backButton}>Volver al inicio</Link>
+          <Link to="/dashboard/cliente" className={styles.backButton}>Ver mi espacio</Link>
         </div>
 
       ) : (
