@@ -7,7 +7,7 @@ export const styles = {
     transition-colors duration-300
   `,
   header: `
-    flex items-start justify-between gap-4 mb-3
+    flex items-start justify-between gap-2 mb-3
   `,
   title: (theme: Theme) => `
     text-base font-semibold

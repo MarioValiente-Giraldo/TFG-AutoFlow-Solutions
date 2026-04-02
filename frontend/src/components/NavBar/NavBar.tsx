@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
@@ -8,12 +9,16 @@ const Navbar = () => {
   const { isAuthenticated, logout, user } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
+    setMenuOpen(false);
     toast.success('Sesión cerrada correctamente');
     navigate('/');
   };
+
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <nav className={styles.navbar(theme)}>
@@ -129,17 +134,57 @@ const Navbar = () => {
               type="button"
               className={styles.mobileBtn(theme)}
               aria-controls="mobile-menu"
-              aria-expanded="false"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(o => !o)}
             >
               <span className="sr-only">Abrir menú</span>
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+              {menuOpen ? (
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
             </button>
           </div>
-          
+
         </div>
       </div>
+
+      {/* --- MENÚ MÓVIL DESPLEGABLE --- */}
+      {menuOpen && (
+        <div className={styles.mobileMenu(theme)} id="mobile-menu">
+          <Link className={styles.mobileMenuLink(theme)} to="/" onClick={closeMenu}>Inicio</Link>
+          <Link className={styles.mobileMenuLink(theme)} to="/servicios" onClick={closeMenu}>Servicios</Link>
+          <Link className={styles.mobileMenuLink(theme)} to="/nosotros" onClick={closeMenu}>Nosotros</Link>
+          <Link className={styles.mobileMenuLink(theme)} to="/recursos" onClick={closeMenu}>Recursos</Link>
+
+          <div className={styles.mobileMenuDivider(theme)} />
+
+          <Link className={styles.mobileMenuLink(theme)} to="/agendar" onClick={closeMenu}>Agenda una consultoría</Link>
+
+          {isAuthenticated ? (
+            <>
+              <Link
+                className={styles.mobileMenuLink(theme)}
+                to={user?.rol === 'admin' ? '/dashboard/admin' : '/dashboard/cliente'}
+                onClick={closeMenu}
+              >
+                Mi Espacio
+              </Link>
+              <button className={styles.mobileMenuBtn(theme)} onClick={handleLogout}>
+                Cerrar sesión
+              </button>
+            </>
+          ) : (
+            <Link className={styles.mobileMenuLink(theme)} to="/login" onClick={closeMenu}>
+              Identifíquese
+            </Link>
+          )}
+        </div>
+      )}
     </nav>
   );
 };

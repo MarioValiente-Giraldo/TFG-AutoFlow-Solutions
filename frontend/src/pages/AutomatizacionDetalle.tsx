@@ -155,10 +155,10 @@ const AutomatizacionDetalle = () => {
         <div className={ds.header}>
           <div>
             <h1 className={styles.pageTitle(theme)}>{titulo}</h1>
-            <p className={styles.cardMeta(theme)}>
-              {tipo_automatizacion} · {fecha}
-              {isAdmin && ` · ${nombre_propietario} (${email_propietario})`}
-            </p>
+            <p className={styles.cardMeta(theme)}>{tipo_automatizacion} · {fecha}</p>
+            {isAdmin && (
+              <p className={styles.cardMeta(theme)}>{nombre_propietario} · {email_propietario}</p>
+            )}
           </div>
           <span className={getBadgeClass(estado)}>
             {ESTADO_LABELS_ADMIN[estado] ?? estado}

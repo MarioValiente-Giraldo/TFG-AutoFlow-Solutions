@@ -111,5 +111,29 @@ export const styles = {
             : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
         }
         transition-colors focus:outline-none
-    `
+    `,
+
+    // --- MENÚ DESPLEGABLE MÓVIL ---
+    mobileMenu: (theme: Theme) => `
+        md:hidden border-t
+        ${theme === 'dark' ? 'bg-slate-900/95 border-slate-700' : 'bg-white/95 border-gray-200'}
+        backdrop-blur-md px-4 py-4 flex flex-col gap-2
+    `,
+    mobileMenuLink: (theme: Theme) => `
+        px-3 py-2.5 rounded-md text-sm font-medium transition-colors duration-200
+        ${theme === 'dark'
+            ? 'text-slate-300 hover:text-cyan-400 hover:bg-slate-800/50'
+            : 'text-gray-700 hover:text-cyan-600 hover:bg-gray-100'
+        }
+    `,
+    mobileMenuDivider: (theme: Theme) => `
+        border-t my-2 ${theme === 'dark' ? 'border-slate-700' : 'border-gray-200'}
+    `,
+    mobileMenuBtn: (theme: Theme) => `
+        w-full text-left px-3 py-2.5 rounded-md text-sm font-medium transition-colors duration-200
+        ${theme === 'dark'
+            ? 'text-slate-300 hover:text-cyan-400 hover:bg-slate-800/50'
+            : 'text-gray-700 hover:text-cyan-600 hover:bg-gray-100'
+        }
+    `,
 };

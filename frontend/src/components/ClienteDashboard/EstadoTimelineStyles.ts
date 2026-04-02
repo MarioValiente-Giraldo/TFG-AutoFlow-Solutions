@@ -4,7 +4,7 @@ type StepStatus = 'done' | 'current' | 'future' | 'rejected';
 
 export const styles = {
   wrapper: `
-    flex items-start gap-0 mb-5
+    flex items-start gap-0 mb-5 overflow-x-auto pb-1
   `,
 
   step: `

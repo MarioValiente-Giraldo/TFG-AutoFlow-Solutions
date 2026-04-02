@@ -8,7 +8,7 @@ export const detalleStyles = {
     ${theme === 'dark' ? 'text-[#64748b] hover:text-[#94a3b8]' : 'text-gray-400 hover:text-gray-600'}
   `,
 
-  header: `flex items-start justify-between gap-4 mb-6`,
+  header: `flex flex-wrap items-start justify-between gap-3 mb-6`,
 
   timelineWrapper: `mb-6`,
 

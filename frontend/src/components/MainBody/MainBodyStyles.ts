@@ -36,7 +36,7 @@ export const styles = {
         text-center lg:text-left
     `,
     heroTitle: (theme: Theme) => `
-        text-4xl sm:text-5xl lg:text-6xl
+        text-3xl sm:text-4xl md:text-5xl lg:text-6xl
         font-extrabold tracking-tight mb-6
         ${theme === 'dark' ? 'text-slate-100' : 'text-gray-900'}
     `,

@@ -43,7 +43,7 @@ export const styles = {
         transition-all duration-200
     `,
     cardHeader: `
-        flex items-start justify-between gap-4 mb-3
+        flex items-start justify-between gap-2 mb-3
     `,
     cardTitle: (theme: Theme) => `
         text-base font-semibold

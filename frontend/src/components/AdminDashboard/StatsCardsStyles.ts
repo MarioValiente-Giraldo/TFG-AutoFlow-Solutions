@@ -2,7 +2,7 @@ import type { Theme } from '../../context/ThemeContext';
 
 export const styles = {
   grid: `
-    grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8
+    grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8
   `,
   card: (theme: Theme) => `
     rounded-xl border p-5
@@ -13,7 +13,7 @@ export const styles = {
     ${theme === 'dark' ? 'text-[#64748b]' : 'text-gray-400'}
   `,
   value: (theme: Theme) => `
-    text-2xl font-bold
+    text-xl sm:text-2xl font-bold
     ${theme === 'dark' ? 'text-[#f1f5f9]' : 'text-gray-900'}
   `,
 };

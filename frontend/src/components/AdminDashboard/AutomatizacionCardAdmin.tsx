@@ -147,9 +147,8 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
       <div className={styles.cardHeader}>
         <div>
           <p className={styles.cardTitle(theme)}>{titulo}</p>
-          <p className={styles.cardMeta(theme)}>
-            {nombre_propietario} · {email_propietario} · {tipo_automatizacion} · {fecha}
-          </p>
+          <p className={styles.cardMeta(theme)}>{nombre_propietario} · {email_propietario}</p>
+          <p className={styles.cardMeta(theme)}>{tipo_automatizacion} · {fecha}</p>
         </div>
         <span className={styles.badge(estado)}>{styles.badgeLabel(estado)}</span>
       </div>
