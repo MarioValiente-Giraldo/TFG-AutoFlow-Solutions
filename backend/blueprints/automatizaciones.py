@@ -4,6 +4,7 @@ from datetime import datetime
 import stripe
 from flask import Blueprint, jsonify, request
 from db import get_db
+from middleware.auth import require_auth, require_admin
 
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
@@ -11,6 +12,7 @@ automatizaciones_bp = Blueprint('automatizaciones', __name__, url_prefix='/api')
 
 
 @automatizaciones_bp.route('/automatizaciones', methods=['POST'])
+@require_auth
 def crear_automatizacion():
     """POST /api/automatizaciones — Crea una automatización en estado 'pendiente_revision'.
     Verifica que el usuario exista y que no haya duplicado por id_cita_origen."""
@@ -62,6 +64,7 @@ def crear_automatizacion():
 
 
 @automatizaciones_bp.route('/automatizaciones/<id>', methods=['GET'])
+@require_auth
 def obtener_automatizacion(id):
     """GET /api/automatizaciones/<id> — Devuelve una automatización por su identificador único."""
     db = get_db()
@@ -78,6 +81,7 @@ def obtener_automatizacion(id):
 
 
 @automatizaciones_bp.route('/automatizaciones', methods=['GET'])
+@require_admin
 def obtener_automatizaciones():
     """GET /api/automatizaciones — Devuelve todas las automatizaciones del sistema. Solo para el admin."""
     db = get_db()
@@ -92,6 +96,7 @@ def obtener_automatizaciones():
 
 
 @automatizaciones_bp.route('/automatizaciones/mis-automatizaciones', methods=['GET'])
+@require_auth
 def obtener_mis_automatizaciones():
     """GET /api/automatizaciones/mis-automatizaciones?userId=<id> — Devuelve las automatizaciones de un cliente."""
     db = get_db()
@@ -112,6 +117,7 @@ def obtener_mis_automatizaciones():
 
 
 @automatizaciones_bp.route('/automatizaciones/<id>/aceptar-admin', methods=['PATCH'])
+@require_admin
 def aceptar_admin(id):
     """PATCH /api/automatizaciones/<id>/aceptar-admin — El admin acepta la revisión, asigna el gasto
     y se asigna como gestor. Pasa el estado a 'pendiente_pago_anticipo'."""
@@ -152,6 +158,7 @@ def aceptar_admin(id):
 
 
 @automatizaciones_bp.route('/automatizaciones/<id>/rechazar', methods=['PATCH'])
+@require_admin
 def rechazar(id):
     """PATCH /api/automatizaciones/<id>/rechazar — El admin rechaza la automatización indicando el motivo.
     Pasa el estado a 'rechazada'."""
@@ -180,6 +187,7 @@ def rechazar(id):
 
 
 @automatizaciones_bp.route('/automatizaciones/<id>/crear-sesion-pago-anticipo', methods=['POST'])
+@require_auth
 def crear_sesion_pago_anticipo(id):
     """POST /api/automatizaciones/<id>/crear-sesion-pago-anticipo — Crea una sesión Stripe por el 50%
     del gasto total. El webhook actualiza el estado a 'en_desarrollo' al completarse el pago."""
@@ -229,6 +237,7 @@ def crear_sesion_pago_anticipo(id):
 
 
 @automatizaciones_bp.route('/automatizaciones/<id>/crear-sesion-pago-final', methods=['POST'])
+@require_auth
 def crear_sesion_pago_final(id):
     """POST /api/automatizaciones/<id>/crear-sesion-pago-final — Crea una sesión Stripe por el 50%
     restante del gasto total. El webhook actualiza el estado a 'terminada' al completarse el pago."""
@@ -278,6 +287,7 @@ def crear_sesion_pago_final(id):
 
 
 @automatizaciones_bp.route('/automatizaciones/<id>/marcar-terminada', methods=['PATCH'])
+@require_admin
 def marcar_terminada(id):
     """PATCH /api/automatizaciones/<id>/marcar-terminada — El admin marca el desarrollo como terminado.
     Pasa el estado a 'pendiente_pago_final'."""
@@ -301,6 +311,7 @@ def marcar_terminada(id):
 
 
 @automatizaciones_bp.route('/automatizaciones/<id>/actualizar-desarrollo', methods=['PATCH'])
+@require_admin
 def actualizar_desarrollo(id):
     """PATCH /api/automatizaciones/<id>/actualizar-desarrollo — El admin publica un avance de desarrollo.
     El porcentaje debe ser mayor que el de la última actualización publicada."""
@@ -361,6 +372,7 @@ def actualizar_desarrollo(id):
 
 
 @automatizaciones_bp.route('/automatizaciones/<id>/valorar', methods=['POST'])
+@require_auth
 def valorar(id):
     """POST /api/automatizaciones/<id>/valorar — El cliente valora una automatización 'terminada'
     con puntuación del 1 al 5. Solo se puede valorar una vez."""
@@ -401,6 +413,7 @@ def valorar(id):
 
 
 @automatizaciones_bp.route('/automatizaciones/<id>/cancelar', methods=['PATCH'])
+@require_auth
 def cancelar_automatizacion(id):
     """PATCH /api/automatizaciones/<id>/cancelar — Cancela una automatización. Permitido en estados:
     'pendiente_revision', 'pendiente_pago_anticipo', 'en_desarrollo' y 'pendiente_pago_final'."""
