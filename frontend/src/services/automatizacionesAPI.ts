@@ -1,4 +1,5 @@
 import type { AutomatizacionPayload } from '../types';
+import { authFetch } from './apiClient';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -8,7 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL;
  * @returns Respuesta del servidor con `success` y `message`.
  */
 export async function crearAutomatizacion(payload: AutomatizacionPayload) {
-  const res = await fetch(`${API_URL}/automatizaciones`, {
+  const res = await authFetch(`${API_URL}/automatizaciones`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -23,7 +24,7 @@ export async function crearAutomatizacion(payload: AutomatizacionPayload) {
  * @returns Objeto con `success` y `data` (la automatización).
  */
 export async function getAutomatizacion(id: string) {
-  const res = await fetch(`${API_URL}/automatizaciones/${id}`);
+  const res = await authFetch(`${API_URL}/automatizaciones/${id}`);
   if (!res.ok) throw new Error('Error al obtener la automatización');
   return res.json();
 }
@@ -33,7 +34,7 @@ export async function getAutomatizacion(id: string) {
  * @returns Objeto con `success` y `data` (array de todas las automatizaciones).
  */
 export async function getAllAutomatizaciones() {
-  const res = await fetch(`${API_URL}/automatizaciones`);
+  const res = await authFetch(`${API_URL}/automatizaciones`);
   if (!res.ok) throw new Error('Error al obtener automatizaciones');
   return res.json();
 }
@@ -44,7 +45,7 @@ export async function getAllAutomatizaciones() {
  * @returns Objeto con `success` y `data` (array de automatizaciones del usuario).
  */
 export async function getMisAutomatizaciones(userId: string) {
-  const res = await fetch(`${API_URL}/automatizaciones/mis-automatizaciones?userId=${userId}`);
+  const res = await authFetch(`${API_URL}/automatizaciones/mis-automatizaciones?userId=${userId}`);
   if (!res.ok) throw new Error('Error al obtener tus automatizaciones');
   return res.json();
 }
@@ -59,7 +60,7 @@ export async function getMisAutomatizaciones(userId: string) {
  * @returns Respuesta del servidor con `success` y `message`.
  */
 export async function aceptarAdmin(id: string, gastoEstimado: number, identificadorAdmin: string, nombreAdmin: string) {
-  const res = await fetch(`${API_URL}/automatizaciones/${id}/aceptar-admin`, {
+  const res = await authFetch(`${API_URL}/automatizaciones/${id}/aceptar-admin`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -80,7 +81,7 @@ export async function aceptarAdmin(id: string, gastoEstimado: number, identifica
  * @returns Respuesta del servidor con `success` y `message`.
  */
 export async function rechazarAdmin(id: string, motivoRechazo: string) {
-  const res = await fetch(`${API_URL}/automatizaciones/${id}/rechazar`, {
+  const res = await authFetch(`${API_URL}/automatizaciones/${id}/rechazar`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ motivo_rechazo: motivoRechazo }),
@@ -96,7 +97,7 @@ export async function rechazarAdmin(id: string, motivoRechazo: string) {
  * @returns Respuesta del servidor con `success` y `message`.
  */
 export async function marcarTerminada(id: string) {
-  const res = await fetch(`${API_URL}/automatizaciones/${id}/marcar-terminada`, {
+  const res = await authFetch(`${API_URL}/automatizaciones/${id}/marcar-terminada`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({}),
@@ -112,7 +113,7 @@ export async function marcarTerminada(id: string) {
  * @returns Respuesta del servidor con `success` y `message`.
  */
 export async function cancelarAutomatizacion(id: string) {
-  const res = await fetch(`${API_URL}/automatizaciones/${id}/cancelar`, {
+  const res = await authFetch(`${API_URL}/automatizaciones/${id}/cancelar`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({}),
@@ -128,7 +129,7 @@ export async function cancelarAutomatizacion(id: string) {
  * @returns Objeto con `success` y `url` (URL de Stripe Checkout).
  */
 export async function crearSesionPagoAnticipo(id: string) {
-  const res = await fetch(`${API_URL}/automatizaciones/${id}/crear-sesion-pago-anticipo`, {
+  const res = await authFetch(`${API_URL}/automatizaciones/${id}/crear-sesion-pago-anticipo`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
   });
@@ -143,7 +144,7 @@ export async function crearSesionPagoAnticipo(id: string) {
  * @returns Objeto con `success` y `url` (URL de Stripe Checkout).
  */
 export async function crearSesionPagoFinal(id: string) {
-  const res = await fetch(`${API_URL}/automatizaciones/${id}/crear-sesion-pago-final`, {
+  const res = await authFetch(`${API_URL}/automatizaciones/${id}/crear-sesion-pago-final`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
   });
@@ -160,7 +161,7 @@ export async function crearSesionPagoFinal(id: string) {
  * @returns Respuesta del servidor con `success` y `message`.
  */
 export async function valorarAutomatizacion(id: string, puntuacion: number, comentario: string) {
-  const res = await fetch(`${API_URL}/automatizaciones/${id}/valorar`, {
+  const res = await authFetch(`${API_URL}/automatizaciones/${id}/valorar`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ puntuacion, comentario }),
@@ -178,7 +179,7 @@ export async function valorarAutomatizacion(id: string, puntuacion: number, come
  * @returns Respuesta del servidor con `success` y `message`.
  */
 export async function publicarActualizacion(id: string, mensaje: string, porcentaje: number) {
-  const res = await fetch(`${API_URL}/automatizaciones/${id}/actualizar-desarrollo`, {
+  const res = await authFetch(`${API_URL}/automatizaciones/${id}/actualizar-desarrollo`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ mensaje, porcentaje }),

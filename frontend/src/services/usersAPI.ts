@@ -8,7 +8,7 @@ export const usersAPI = {
    * @param payload - Objeto con `email` y `password` del usuario.
    * @returns Objeto con el `User` autenticado.
    */
-  async login(payload: LoginPayload): Promise<{ user: User }> {
+  async login(payload: LoginPayload): Promise<{ user: User; access_token: string; refresh_token: string }> {
     const response = await fetch(`${BASE_URL}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -21,7 +21,7 @@ export const usersAPI = {
       throw new Error(data.message || 'Credenciales incorrectas.');
     }
 
-    return { user: data.user };
+    return { user: data.user, access_token: data.access_token, refresh_token: data.refresh_token };
   },
 
   /**

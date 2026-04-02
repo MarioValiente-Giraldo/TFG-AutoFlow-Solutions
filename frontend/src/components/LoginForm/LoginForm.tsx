@@ -11,7 +11,9 @@ import { usersAPI } from '../../services/usersAPI';
 type FormState = {
   success: boolean;
   message: string;
-  user?: any; 
+  user?: any;
+  access_token?: string;
+  refresh_token?: string;
 };
 
 const LoginForm: React.FC = () => {
@@ -30,9 +32,9 @@ const LoginForm: React.FC = () => {
     }
 
     try {
-      const { user } = await usersAPI.login({ email, password });
+      const { user, access_token, refresh_token } = await usersAPI.login({ email, password });
       toast.success("¡Bienvenido de nuevo!");
-      return { success: true, message: '', user };
+      return { success: true, message: '', user, access_token, refresh_token };
     } catch (error) {
       const message = error instanceof Error ? error.message : "Error de conexión con el servidor.";
       toast.error(message);
@@ -49,9 +51,9 @@ const LoginForm: React.FC = () => {
  // 4. Efecto: Sincronizar Contexto y Redirigir a HOME
   useEffect(() => {
     if (state.success && state.user) {
-      
+
       // A) Actualizamos el contexto global
-      login(state.user);
+      login(state.user, state.access_token!, state.refresh_token!);
 
       // B) Redirigimos según el rol del usuario
       const destination = state.user.rol === 'admin' ? '/dashboard/admin' : '/dashboard/cliente';
