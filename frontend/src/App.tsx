@@ -10,12 +10,14 @@ import ProtectedRouteAuth from "./components/ProtectedRoutes/ProtectedRouteAuth"
 import ProtectedRouteAdmin from "./components/ProtectedRoutes/ProtectedRouteAdmin"
 import AutomatizacionDetalle from "./pages/AutomatizacionDetalle"
 import PagoCompletado from "./pages/PagoCompletado"
+import Servicios from "./pages/Servicios"
 
 const App = () => {
   return (
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/servicios" element={<Servicios />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route

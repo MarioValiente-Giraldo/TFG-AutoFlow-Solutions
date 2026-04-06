@@ -132,12 +132,12 @@ export const styles = {
     iconBlue: (theme: Theme) => `${theme === 'dark' ? 'bg-blue-500/10' : 'bg-blue-100'}`,
     iconTeal: (theme: Theme) => `${theme === 'dark' ? 'bg-teal-500/10' : 'bg-teal-100'}`,
 
-    // --- ICONOS DE CARACTERÍSTICAS (Imágenes) ---
+    // --- ICONOS DE CARACTERÍSTICAS (SVG) ---
     featureIcon: `
-        h-16 w-16 object-contain
+        h-12 w-12
     `,
     featureIconLarge: `
-        h-20 w-20 object-contain
+        h-12 w-12
     `,
 
     featureTitle: (theme: Theme) => `
