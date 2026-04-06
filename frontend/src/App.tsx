@@ -12,6 +12,7 @@ import AutomatizacionDetalle from "./pages/AutomatizacionDetalle"
 import PagoCompletado from "./pages/PagoCompletado"
 import Servicios from "./pages/Servicios"
 import Nosotros from "./pages/Nosotros"
+import Recursos from "./pages/Recursos"
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/servicios" element={<Servicios />} />
         <Route path="/nosotros" element={<Nosotros />} />
+        <Route path="/recursos" element={<Recursos />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
