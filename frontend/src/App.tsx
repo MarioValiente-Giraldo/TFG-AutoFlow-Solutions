@@ -11,6 +11,7 @@ import ProtectedRouteAdmin from "./components/ProtectedRoutes/ProtectedRouteAdmi
 import AutomatizacionDetalle from "./pages/AutomatizacionDetalle"
 import PagoCompletado from "./pages/PagoCompletado"
 import Servicios from "./pages/Servicios"
+import Nosotros from "./pages/Nosotros"
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/servicios" element={<Servicios />} />
+        <Route path="/nosotros" element={<Nosotros />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
