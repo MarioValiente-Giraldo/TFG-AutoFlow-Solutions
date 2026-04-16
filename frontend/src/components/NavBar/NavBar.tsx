@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { useChat } from '../../context/ChatContext';
 import { styles } from './NavbarStyles';
 
 const Navbar = () => {
@@ -10,6 +11,7 @@ const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { unreadCount } = useChat();
 
   const handleLogout = () => {
     logout();
@@ -82,6 +84,8 @@ const Navbar = () => {
             {isAuthenticated ? (
                 // === SI ESTÁ LOGUEADO ===
                 <>
+
+
                     {/* Botón Mi Espacio */}
                     <Link className={styles.ctaLoginBtn(theme)} to={user?.rol === 'admin' ? '/dashboard/admin' : '/dashboard/cliente'}>
                         <svg className="w-4 h-4 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

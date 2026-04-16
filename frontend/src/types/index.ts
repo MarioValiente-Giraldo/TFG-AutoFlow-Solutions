@@ -90,3 +90,20 @@ export interface Automatizacion {
   fecha_pago_anticipo?: string;
   fecha_pago_final?: string;
 }
+
+export interface Mensaje {
+  _id: string;
+  cliente_id: string;
+  remitente: 'cliente' | 'admin';
+  contenido: string;
+  timestamp: string; // ISO string UTC
+  leido: boolean;
+}
+
+export interface HiloResumen {
+  cliente_id: string;
+  nombre_cliente: string;
+  ultimo_mensaje: string;
+  ultimo_timestamp: string | null; // ISO string UTC
+  unread_count: number;
+}

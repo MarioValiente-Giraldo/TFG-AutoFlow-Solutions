@@ -1,13 +1,14 @@
 import React from 'react';
 import { useTheme } from '../../context/ThemeContext';
-import type { Automatizacion } from '../../types';
+import type { Automatizacion, Cita } from '../../types';
 import { styles } from './StatsCardsStyles';
 
 interface StatsCardsProps {
   automatizaciones: Automatizacion[];
+  citas: Cita[];
 }
 
-const StatsCards: React.FC<StatsCardsProps> = ({ automatizaciones }) => {
+const StatsCards: React.FC<StatsCardsProps> = ({ automatizaciones, citas }) => {
   const { theme } = useTheme();
 
   const total = automatizaciones.length;
@@ -18,12 +19,21 @@ const StatsCards: React.FC<StatsCardsProps> = ({ automatizaciones }) => {
     .filter(a => a.gasto_estimado !== null && ['aceptada_pendiente_cliente', 'pendiente_pago', 'en_desarrollo', 'terminada'].includes(a.estado))
     .reduce((sum, a) => sum + (a.gasto_estimado ?? 0), 0);
 
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  const citasProximas = citas.filter(c => {
+    if (c.estado !== 'pendiente') return false;
+    const fecha = new Date(c.fecha_preferida);
+    return fecha >= hoy;
+  }).length;
+
   const stats = [
-    { label: 'Total', value: total, color: 'text-cyan-400' },
+    { label: 'Total automatizaciones', value: total, color: 'text-cyan-400' },
     { label: 'Pendientes de revisión', value: pendientes, color: 'text-amber-400' },
     { label: 'En desarrollo', value: enDesarrollo, color: 'text-violet-400' },
     { label: 'Terminadas', value: terminadas, color: 'text-green-400' },
     { label: 'Ingresos estimados', value: `${ingresos.toLocaleString('es-ES')} €`, color: 'text-cyan-400' },
+    { label: 'Citas próximas', value: citasProximas, color: 'text-blue-400' },
   ];
 
   return (

@@ -47,7 +47,7 @@ def require_admin(f):
             return jsonify({"success": False, "message": "Token expirado"}), 401
         except jwt.InvalidTokenError:
             return jsonify({"success": False, "message": "Token inválido"}), 401
-        if payload.get('rol') != 'admin':
+        if payload.get('rol') not in ('admin', 'superadmin'):
             return jsonify({"success": False, "message": "Acceso denegado"}), 403
         request.token_payload = payload
         return f(*args, **kwargs)

@@ -16,11 +16,13 @@ def create_app():
     from blueprints.citas import citas_bp
     from blueprints.automatizaciones import automatizaciones_bp
     from blueprints.stripe_webhook import stripe_bp
+    from blueprints.chat import chat_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(citas_bp)
     app.register_blueprint(automatizaciones_bp)
     app.register_blueprint(stripe_bp)
+    app.register_blueprint(chat_bp)
 
     @app.route('/')
     def home():

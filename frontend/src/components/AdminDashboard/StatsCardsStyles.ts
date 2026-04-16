@@ -2,7 +2,7 @@ import type { Theme } from '../../context/ThemeContext';
 
 export const styles = {
   grid: `
-    grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8
+    grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8
   `,
   card: (theme: Theme) => `
     rounded-xl border p-5

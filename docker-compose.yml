@@ -7,7 +7,6 @@ services:
       - "5000:5000"
     volumes:
       - ./backend:/app
-    # CAMBIO: Leemos el archivo .env de la carpeta backend
     env_file:
       - ./backend/.env
     depends_on:
@@ -22,7 +21,6 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    # CAMBIO: Leemos el archivo .env de la carpeta frontend
     env_file:
       - ./frontend/.env
     depends_on:

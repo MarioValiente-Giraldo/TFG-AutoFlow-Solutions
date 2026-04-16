@@ -9,8 +9,10 @@ import AutomatizacionStatusCard from '../components/ClienteDashboard/Automatizac
 import CitaCard from '../components/ClienteDashboard/CitaCard';
 import type { Automatizacion, Cita } from '../types';
 import { styles } from '../components/ClienteDashboard/ClienteDashboardStyles';
+import ChatPanel from '../components/ChatPanel/ChatPanel';
+import { useChat } from '../context/ChatContext';
 
-type Tab = 'automatizaciones' | 'citas';
+type Tab = 'automatizaciones' | 'citas' | 'chat';
 
 const ClienteDashboard = () => {
   const { theme } = useTheme();
@@ -22,6 +24,7 @@ const ClienteDashboard = () => {
   const [busqueda, setBusqueda] = useState('');
   const [busquedaDebounced, setBusquedaDebounced] = useState('');
   const [orden, setOrden] = useState<'desc' | 'asc'>('desc');
+  const { unreadCount, refreshUnread } = useChat();
 
   const fetchData = async () => {
     if (!user) return;
@@ -74,6 +77,15 @@ const ClienteDashboard = () => {
               >
                 Citas
                 <span className={styles.tabCount}>({citas.length})</span>
+              </button>
+              <button
+                className={styles.tab(tabActivo === 'chat', theme)}
+                onClick={() => { setTabActivo('chat'); refreshUnread(); }}
+              >
+                Chat
+                {unreadCount > 0 && (
+                  <span className={styles.tabCount}>({unreadCount})</span>
+                )}
               </button>
             </div>
 
@@ -149,6 +161,11 @@ const ClienteDashboard = () => {
                   ))
                 )}
               </>
+            )}
+
+            {/* Tab: Chat */}
+            {tabActivo === 'chat' && (
+              <ChatPanel titulo="Chat con AutoFlow" />
             )}
           </>
         )}

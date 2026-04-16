@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
+import ChatPanel from '../components/ChatPanel/ChatPanel';
+import ChatHilosList from '../components/ChatHilosList/ChatHilosList';
+import { useChat } from '../context/ChatContext';
 import { getAllAutomatizaciones } from '../services/automatizacionesAPI';
 import { citasAPI } from '../services/citasAPI';
 import AutomatizacionCardAdmin from '../components/AdminDashboard/AutomatizacionCardAdmin';
@@ -10,11 +14,16 @@ import type { Automatizacion, Cita } from '../types';
 import { styles } from '../components/AdminDashboard/AdminDashboardStyles';
 import { TABS_ADMIN, type TabEstado } from '../utils/automatizacionesUtils';
 
-type SeccionActiva = 'automatizaciones' | 'citas';
+type SeccionActiva = 'automatizaciones' | 'citas' | 'chat';
 type TabCitas = 'pendiente' | 'atendida';
 
 const AdminDashboard = () => {
   const { theme } = useTheme();
+  const { user } = useAuth();
+  const { unreadCount, refreshUnread } = useChat();
+  const [clienteChat, setClienteChat] = useState<string | null>(null);
+  const [nombreClienteChat, setNombreClienteChat] = useState('');
+  const isSuperAdmin = user?.rol === 'superadmin';
   const [automatizaciones, setAutomatizaciones] = useState<Automatizacion[]>([]);
   const [citas, setCitas] = useState<Cita[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,14 +59,21 @@ const AdminDashboard = () => {
     return () => clearTimeout(timer);
   }, [busqueda]);
 
-  const filtradas = tabActivo === 'todos'
+  // Superadmin ve todo; admin solo ve sin asignar + las suyas
+  const automatizacionesVisibles = isSuperAdmin
     ? automatizaciones
-    : automatizaciones.filter(a => a.estado === tabActivo);
+    : automatizaciones.filter(a =>
+        !a.identificador_admin || a.identificador_admin === user?.id
+      );
+
+  const filtradas = tabActivo === 'todos'
+    ? automatizacionesVisibles
+    : automatizacionesVisibles.filter(a => a.estado === tabActivo);
 
   const countFor = (key: TabEstado) =>
     key === 'todos'
-      ? automatizaciones.length
-      : automatizaciones.filter(a => a.estado === key).length;
+      ? automatizacionesVisibles.length
+      : automatizacionesVisibles.filter(a => a.estado === key).length;
 
   const citasFiltradas = citas.filter(c => c.estado === tabCitas);
 
@@ -84,7 +100,7 @@ const AdminDashboard = () => {
 
         {!loading && (
           <>
-            <StatsCards automatizaciones={automatizaciones} />
+            <StatsCards automatizaciones={automatizacionesVisibles} citas={citas} />
 
             {/* Sección principal */}
             <div className={styles.tabsWrapper}>
@@ -93,7 +109,7 @@ const AdminDashboard = () => {
                 onClick={() => setSeccion('automatizaciones')}
               >
                 Automatizaciones
-                <span className={styles.tabCount}>({automatizaciones.length})</span>
+                <span className={styles.tabCount}>({automatizacionesVisibles.length})</span>
               </button>
               <button
                 className={styles.tab(seccion === 'citas', theme)}
@@ -101,6 +117,15 @@ const AdminDashboard = () => {
               >
                 Citas
                 <span className={styles.tabCount}>({citas.length})</span>
+              </button>
+              <button
+                className={styles.tab(seccion === 'chat', theme)}
+                onClick={() => { setSeccion('chat'); refreshUnread(); }}
+              >
+                Chat
+                {unreadCount > 0 && (
+                  <span className={styles.tabCount}>({unreadCount})</span>
+                )}
               </button>
             </div>
 
@@ -184,6 +209,30 @@ const AdminDashboard = () => {
                   />
                 ))}
               </>
+            )}
+            {/* Sección: Chat */}
+            {seccion === 'chat' && (
+              <div className="flex h-[500px] rounded-xl border overflow-hidden border-[#334155] mt-4">
+                <ChatHilosList
+                  clienteSeleccionado={clienteChat}
+                  onSeleccionar={(id, nombre) => {
+                    setClienteChat(id);
+                    setNombreClienteChat(nombre);
+                  }}
+                />
+                <div className="flex-1">
+                  {clienteChat ? (
+                    <ChatPanel
+                      clienteId={clienteChat}
+                      titulo={`Chat con ${nombreClienteChat}`}
+                    />
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-sm text-[#475569]">
+                      Selecciona una conversacion
+                    </div>
+                  )}
+                </div>
+              </div>
             )}
           </>
         )}
