@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { styles } from './FooterStyles';
 
@@ -20,10 +21,18 @@ const Footer = () => {
           <span className={styles.logoText(theme)}>AutoFlow Solutions</span>
         </div>
 
-        {/* Copyright */}
-        <p className={styles.copyright(theme)}>
-          © {new Date().getFullYear()} AutoFlow Solutions. Todos los derechos reservados.
-        </p>
+        {/* Copyright y términos */}
+        <div className="flex flex-col items-center gap-1 text-center md:text-left">
+          <p className={styles.copyright(theme)}>
+            © {new Date().getFullYear()} AutoFlow Solutions. Todos los derechos reservados.
+          </p>
+          <Link
+            to="/terminos"
+            className={`text-xs underline underline-offset-2 ${theme === 'dark' ? 'text-slate-500 hover:text-slate-300' : 'text-gray-400 hover:text-gray-600'} transition-colors duration-200`}
+          >
+            Términos y Condiciones
+          </Link>
+        </div>
 
         {/* Iconos sociales */}
         <div className={styles.socialWrapper}>

@@ -152,7 +152,7 @@ const RegisterForm: React.FC = () => {
         <div className={styles.termsWrapper}>
           <input className={styles.checkbox(theme)} id="terms" type="checkbox" name="acceptTerms" required disabled={isPending} />
           <label className={styles.termsLabel(theme)} htmlFor="terms">
-            Acepto los <a className={styles.termsLink} href="#">Términos y Condiciones</a>.
+            Acepto los <Link className={styles.termsLink} to="/terminos" target="_blank" rel="noopener noreferrer">Términos y Condiciones</Link>.
           </label>
         </div>
 
