@@ -110,21 +110,30 @@ VITE_API_URL=http://localhost:5000/api
 docker-compose up --build
 ```
 
-### 4. Crear usuario administrador
+### 4. Cargar datos de prueba
 
-Con los contenedores corriendo, acceder al shell de MongoDB y actualizar el rol:
+El repositorio incluye un script `backend/seed.py` que popula la base de datos con datos realistas para poder probar todas las funcionalidades de la aplicación.
 
 ```bash
-docker exec -it autoflow_mongo mongosh
+docker exec autoflow_backend python seed.py
 ```
 
-```javascript
-use n8n_consultoria_db
-db.Usuarios.updateOne(
-  { correo_electronico_acceso: "tu@email.com" },
-  { $set: { rol: "admin" } }
-)
-```
+El script **limpia las colecciones existentes** e inserta:
+
+| Colección | Registros | Detalle |
+|---|---|---|
+| `Usuarios` | 15 | 1 superadmin + 14 clientes |
+| `Citas` | 15 | 10 atendidas + 5 pendientes |
+| `Automatizaciones` | 15 | Repartidas en todos los estados del ciclo de vida |
+
+**Credenciales de acceso tras ejecutar el seed:**
+
+| Rol | Email | Contraseña |
+|---|---|---|
+| Superadmin | `admin@autoflow.com` | `Admin1234!` |
+| Cliente (todos) | `ana.garcia@empresa.com`, `carlos.lopez@empresa.com`, etc. | `Cliente1234!` |
+
+> El superadmin tiene visibilidad total sobre todas las automatizaciones. Los admins solo ven las no asignadas y las propias.
 
 ### 5. Acceder a la aplicación
 

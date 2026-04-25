@@ -6,7 +6,7 @@ const ProtectedRouteAdmin = ({ children }: { children: ReactNode }) => {
   const { user, isLoading } = useAuth();
 
   if (isLoading) return null;
-  if (!user || user.rol !== 'admin') return <Navigate to="/" replace />;
+  if (!user || (user.rol !== 'admin' && user.rol !== 'superadmin')) return <Navigate to="/" replace />;
 
   return <>{children}</>;
 };

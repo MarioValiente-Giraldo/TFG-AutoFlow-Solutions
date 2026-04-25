@@ -66,7 +66,7 @@ const AutomatizacionDetalle = () => {
     ? [...actualizaciones_desarrollo].reverse()
     : [];
 
-  const isAdmin = user?.rol === 'admin';
+  const isAdmin = user?.rol === 'admin' || user?.rol === 'superadmin';
   const anticipo = gasto_estimado !== null ? (gasto_estimado * 0.5).toFixed(2) : null;
 
   const handleAceptarAdmin = async () => {

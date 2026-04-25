@@ -10,6 +10,7 @@ import { citasAPI } from '../services/citasAPI';
 import AutomatizacionCardAdmin from '../components/AdminDashboard/AutomatizacionCardAdmin';
 import CitaCardAdmin from '../components/AdminDashboard/CitaCardAdmin';
 import StatsCards from '../components/AdminDashboard/StatsCards';
+import StatsCharts from '../components/AdminDashboard/StatsCharts';
 import type { Automatizacion, Cita } from '../types';
 import { styles } from '../components/AdminDashboard/AdminDashboardStyles';
 import { TABS_ADMIN, type TabEstado } from '../utils/automatizacionesUtils';
@@ -101,6 +102,7 @@ const AdminDashboard = () => {
         {!loading && (
           <>
             <StatsCards automatizaciones={automatizacionesVisibles} citas={citas} />
+            <StatsCharts automatizaciones={automatizacionesVisibles} />
 
             {/* Sección principal */}
             <div className={styles.tabsWrapper}>
