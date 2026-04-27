@@ -30,11 +30,11 @@ Almacena tanto clientes como administradores. El campo `rol` diferencia el tipo 
 | `_id` | ObjectId | Identificador interno de MongoDB |
 | `identificador_unico_usuario` | String (UUID) | Identificador público único del usuario |
 | `correo_electronico_acceso` | String | Email de acceso (único) |
-| `contrasena` | String | Hash Werkzeug (pbkdf2:sha256) |
+| `contrasena` | String | Hash Werkzeug (scrypt) |
 | `telefono` | String | Teléfono de contacto |
 | `datos_perfil_comercial.nombre` | String | Nombre completo |
 | `datos_perfil_comercial.empresa` | String | Empresa del cliente |
-| `rol` | String | `"cliente"` o `"admin"` |
+| `rol` | String | `"cliente"`, `"admin"` o `"superadmin"` |
 | `fecha_registro` | Date | Fecha de alta |
 | `aceptacion_terminos` | Boolean | Aceptación de términos de uso |
 
@@ -47,11 +47,15 @@ Registra las solicitudes de consultoría previas a una automatización.
 | Campo | Tipo | Descripción |
 |---|---|---|
 | `_id` | ObjectId | Identificador interno |
-| `userId` | String (UUID) | Referencia al usuario que agenda |
+| `identificador_unico_cita` | String (UUID) | Identificador público único de la cita |
+| `nombre` | String | Nombre del solicitante |
+| `email` | String | Email del solicitante |
+| `telefono` | String | Teléfono de contacto |
+| `empresa` | String | Empresa del solicitante |
 | `tipo_automatizacion` | String | Tipo de proceso a automatizar |
 | `descripcion` | String | Descripción detallada de la necesidad |
-| `fecha_preferida` | String | Fecha preferida para la reunión |
-| `franja_horaria` | String | `"manana"`, `"tarde"` o `"indiferente"` |
+| `fecha_preferida` | String | Fecha preferida para la reunión (YYYY-MM-DD) |
+| `franja_horaria` | String | `"mañana"` o `"tarde"` |
 | `estado` | String | `"pendiente"` o `"atendida"` |
 | `fecha_solicitud` | Date | Timestamp de creación |
 
@@ -64,24 +68,30 @@ Colección central del sistema. Representa el ciclo de vida completo de un proye
 | Campo | Tipo | Descripción |
 |---|---|---|
 | `_id` | ObjectId | Identificador interno |
-| `userId` | String (UUID) | Referencia al cliente propietario |
-| `nombre_proyecto` | String | Nombre descriptivo del proyecto |
+| `identificador_unico` | String (UUID) | Identificador público único del proyecto |
+| `identificador_propietario` | String (UUID) | Referencia al `identificador_unico_usuario` del cliente |
+| `email_propietario` | String | Email del cliente propietario |
+| `nombre_propietario` | String | Nombre del cliente propietario |
+| `titulo` | String | Título descriptivo del proyecto |
 | `descripcion` | String | Descripción detallada |
 | `tipo_automatizacion` | String | Categoría de la automatización |
 | `estado` | String | Estado actual del ciclo (ver diagrama) |
-| `fecha_solicitud` | Date | Timestamp de creación |
 | `gasto_estimado` | Number | Presupuesto total asignado por admin (€) |
 | `motivo_rechazo` | String | Razón del rechazo (si aplica) |
+| `identificador_admin` | String (UUID) | Referencia al admin asignado |
+| `nombre_admin` | String | Nombre del admin asignado |
+| `id_cita_origen` | String (UUID) | Cita de consultoría que originó el proyecto (opcional) |
+| `fecha_solicitud` | Date | Timestamp de creación |
+| `fecha_actualizacion` | Date | Timestamp de última modificación |
+| `fecha_pago_anticipo` | String (ISO) | Fecha en que se completó el anticipo |
 | `actualizaciones_desarrollo` | Array | Lista de hitos publicados por el admin |
-| `actualizaciones_desarrollo[].porcentaje` | Number | Porcentaje completado (0-100) |
 | `actualizaciones_desarrollo[].mensaje` | String | Descripción del avance |
-| `actualizaciones_desarrollo[].fecha` | Date | Timestamp del hito |
-| `pago_anticipo_completado` | Boolean | `true` tras confirmar el pago del 50% inicial |
-| `pago_final_completado` | Boolean | `true` tras confirmar el pago del 50% restante |
-| `stripe_session_id_anticipo` | String | ID de sesión Stripe para el anticipo |
-| `stripe_session_id_final` | String | ID de sesión Stripe para el pago final |
-| `valoracion` | Number | Puntuación del cliente (1-5) |
-| `comentario_valoracion` | String | Comentario de la valoración |
+| `actualizaciones_desarrollo[].porcentaje` | Number | Porcentaje completado (0-100) |
+| `actualizaciones_desarrollo[].fecha` | String (ISO) | Timestamp del hito |
+| `fecha_pago_final` | String (ISO) | Fecha en que se completó el pago final |
+| `valoracion.puntuacion` | Number | Puntuación del cliente (1-5) |
+| `valoracion.comentario` | String | Comentario de la valoración |
+| `valoracion.fecha` | String (ISO) | Fecha de la valoración |
 
 ---
 

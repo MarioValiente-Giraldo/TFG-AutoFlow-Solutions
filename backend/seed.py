@@ -12,9 +12,9 @@ if db is None:
     print("❌ No se pudo conectar a MongoDB")
     exit(1)
 
-db.Usuarios.delete_many({})
-db.Automatizaciones.delete_many({})
-db.Citas.delete_many({})
+db.Usuarios.drop()
+db.Automatizaciones.drop()
+db.Citas.drop()
 print("🗑️  Colecciones limpiadas")
 
 now = datetime.utcnow()

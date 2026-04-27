@@ -78,7 +78,7 @@ erDiagram
 ```
 
 ### Colecciones principales
-- **Usuarios:** Clientes y administradores con rol diferenciado en JWT.
+- **Usuarios:** Clientes y administradores con rol diferenciado en JWT (`cliente`, `admin`, `superadmin`).
 - **Citas:** Solicitudes de consultoría con estado `pendiente` / `atendida`.
 - **Automatizaciones:** Proyectos con ciclo de vida completo y pagos integrados.
 

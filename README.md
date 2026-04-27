@@ -110,15 +110,15 @@ VITE_API_URL=http://localhost:5000/api
 docker-compose up --build
 ```
 
-### 4. Cargar datos de prueba
+### 4. Datos de prueba
 
-El repositorio incluye un script `backend/seed.py` que popula la base de datos con datos realistas para poder probar todas las funcionalidades de la aplicación.
+El script `backend/seed.py` se ejecuta **automáticamente** al arrancar el contenedor backend. También puedes ejecutarlo manualmente en cualquier momento para resetear la base de datos:
 
 ```bash
 docker exec autoflow_backend python seed.py
 ```
 
-El script **limpia las colecciones existentes** e inserta:
+El script **elimina y recrea las colecciones** e inserta:
 
 | Colección | Registros | Detalle |
 |---|---|---|
