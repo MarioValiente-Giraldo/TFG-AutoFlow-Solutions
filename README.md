@@ -8,6 +8,20 @@
 
 Plataforma web para la gestión integral de proyectos de automatización empresarial. Desarrollada como **Trabajo de Fin de Grado (DAW)**, simula el flujo real de una consultora de automatización: desde la solicitud de consultoría inicial hasta el pago fraccionado con Stripe y la valoración final del servicio.
 
+## 📚 Índice
+
+- [Documentación del Proyecto](#-documentación-del-proyecto)
+- [Resumen y Propósito](#-resumen-y-propósito)
+- [Tecnologías Utilizadas](#-tecnologías-utilizadas)
+- [Roles y Casos de Uso](#-roles-y-casos-de-uso)
+- [Ciclo de Vida de una Automatización](#-ciclo-de-vida-de-una-automatización)
+- [Instalación y Configuración](#-instalación-y-configuración)
+- [Stripe — Datos de prueba](#-stripe---datos-de-prueba)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Despliegue (Estado Actual)](#-despliegue-estado-actual)
+- [Capturas de Pantalla](#-capturas-de-pantalla)
+- [Información Académica](#-información-académica)
+
 ---
 
 ## 📖 Documentación del Proyecto
@@ -72,6 +86,8 @@ stateDiagram-v2
 ---
 
 ## 📦 Instalación y Configuración
+
+Esta sección incluye la configuración necesaria para ejecutar el proyecto localmente y también explica cómo cargar los datos de prueba.
 
 ### Requisitos Previos
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado y en ejecución
