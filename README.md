@@ -128,7 +128,7 @@ docker-compose up --build
 
 ### 4. Datos de prueba
 
-El script `backend/seed.py` se ejecuta **automáticamente** al arrancar el contenedor backend. También puedes ejecutarlo manualmente en cualquier momento para resetear la base de datos:
+El script `backend/seed.py` se ejecuta **automáticamente la primera vez** que arranca el contenedor backend, solo si la base de datos está vacía. Para resetear los datos manualmente:
 
 ```bash
 docker exec autoflow_backend python seed.py

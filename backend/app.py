@@ -10,7 +10,7 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'super_secret_key_dev')
 
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, resources={r"/api/*": {"origins": os.getenv('FRONTEND_URL', '*')}})
 
     from blueprints.auth import auth_bp
     from blueprints.citas import citas_bp
@@ -34,4 +34,4 @@ def create_app():
 if __name__ == '__main__':
     app = create_app()
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port, debug=os.getenv('DEBUG', 'False').lower() == 'true')

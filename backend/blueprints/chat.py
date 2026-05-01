@@ -177,9 +177,10 @@ def get_hilos():
     ]
     mensajes_por_cliente = {h["_id"]: h for h in db.mensajes.aggregate(pipeline)}
 
-    # Todos los clientes
+    # Solo clientes que tienen al menos una automatización
+    ids_con_automatizacion = db.Automatizaciones.distinct("identificador_propietario")
     clientes = list(db.Usuarios.find(
-        {"rol": {"$in": ["cliente"]}},
+        {"rol": {"$in": ["cliente"]}, "identificador_unico_usuario": {"$in": ids_con_automatizacion}},
         {"identificador_unico_usuario": 1, "datos_perfil_comercial.nombre": 1, "_id": 0}
     ))
 

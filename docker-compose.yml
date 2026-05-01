@@ -1,7 +1,9 @@
 services:
   # BACKEND
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: autoflow_backend
     ports:
       - "5000:5000"
@@ -14,19 +16,16 @@ services:
 
   # FRONTEND
   frontend:
-    build: ./frontend
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_API_URL: http://localhost:5000/api
     container_name: autoflow_frontend
     ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    env_file:
-      - ./frontend/.env
+      - "5173:80"
     depends_on:
       - backend
-    stdin_open: true
-    tty: true
 
   # MONGO DB
   mongo_db:
