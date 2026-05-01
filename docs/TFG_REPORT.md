@@ -15,7 +15,7 @@ El objetivo principal es digitalizar el ciclo completo de contratación de servi
 ## 2. 🛠️ Tecnologías Utilizadas
 
 ### Backend
-- **Framework:** Flask (Python 3.9)
+- **Framework:** Flask (Python 3.11)
 - **Autenticación:** PyJWT (doble token: access 15 min + refresh 7 días)
 - **Base de Datos:** MongoDB 7 con PyMongo
 - **Pagos:** Stripe (Checkout Sessions + Webhooks)
@@ -200,12 +200,13 @@ TFG-MARIOVALIENTE/
 ## 10. 🚀 Estado del Despliegue
 
 > [!IMPORTANT]
-> **Estado actual:** El proyecto se ejecuta localmente mediante Docker para desarrollo y pruebas.
+> **El proyecto está desplegado en producción en Railway.**
 >
-> **Plan de despliegue:**
-> - **Frontend:** Vercel / Netlify
-> - **Backend:** Render / Railway
-> - **Base de Datos:** MongoDB Atlas
+> | Servicio | Plataforma | URL |
+> |---|---|---|
+> | **Frontend** | Railway (Docker + Nginx) | https://frontend-production-30ae.up.railway.app |
+> | **Backend** | Railway (Docker + Flask) | https://backend-production-c0780.up.railway.app/api |
+> | **Base de Datos** | MongoDB Atlas (M0 free tier) | — |
 
 ---
 

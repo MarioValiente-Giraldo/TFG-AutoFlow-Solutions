@@ -1,7 +1,7 @@
 # ⚡ AutoFlow Solutions (TFG)
 
 [![License: All Rights Reserved](https://img.shields.io/badge/License-All_Rights_Reserved-red.svg)](LICENSE)
-[![Python Version](https://img.shields.io/badge/python-3.9-blue)](https://www.python.org/)
+[![Python Version](https://img.shields.io/badge/python-3.11-blue)](https://www.python.org/)
 [![React Version](https://img.shields.io/badge/react-19.0.0-61dafb)](https://reactjs.org/)
 [![MongoDB](https://img.shields.io/badge/database-MongoDB-47A248)](https://www.mongodb.com/)
 [![Docker](https://img.shields.io/badge/infra-Docker-2496ED)](https://www.docker.com/)
@@ -46,7 +46,7 @@ El sistema incluye un panel de administración completo para gestionar clientes,
 | Capa | Tecnología |
 |---|---|
 | **Frontend** | React 19 + TypeScript + Vite + TailwindCSS v4 |
-| **Backend** | Flask (Python 3.9) + PyJWT + Stripe |
+| **Backend** | Flask (Python 3.11) + PyJWT + Stripe |
 | **Base de datos** | MongoDB 7 |
 | **Infraestructura** | Docker + Docker Compose |
 
@@ -218,12 +218,13 @@ TFG-MARIOVALIENTE/
 ## 🚀 Despliegue (Estado Actual)
 
 > [!IMPORTANT]
-> **Pendiente de despliegue:** El proyecto se ejecuta localmente mediante Docker.
+> **El proyecto está desplegado en Railway.**
 >
-> **Plan de despliegue:**
-> - **Frontend:** Vercel / Netlify
-> - **Backend:** Render / Railway
-> - **Base de datos:** MongoDB Atlas
+> | Servicio | URL |
+> |---|---|
+> | **Frontend** | https://frontend-production-30ae.up.railway.app |
+> | **Backend API** | https://backend-production-c0780.up.railway.app/api |
+> | **Base de datos** | MongoDB Atlas (M0 free tier) |
 
 ---
 

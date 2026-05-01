@@ -118,8 +118,8 @@ El proyecto se orquesta con Docker Compose. Tres servicios:
 
 | Servicio | Imagen base | Puerto host | Puerto interno |
 |---|---|---|---|
-| `frontend` | Node 20 Alpine + Nginx | `5173` | `5173` |
-| `backend` | Python 3.9 Slim | `5000` | `5000` |
+| `frontend` | Node 22 Alpine + Nginx | `5173` | `80` |
+| `backend` | Python 3.11 Slim | `5000` | `5000` |
 | `mongo_db` | MongoDB 7 | `27018` | `27017` |
 
 > MongoDB se expone en el puerto **27018** del host para evitar conflictos con instancias locales.
