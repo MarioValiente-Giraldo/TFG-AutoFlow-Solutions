@@ -7,14 +7,12 @@ def get_db():
 
     try:
         if mongo_uri.startswith('mongodb+srv://'):
-            # Atlas: TLS con OCSP desactivado (Railway bloquea las peticiones OCSP)
             client = MongoClient(
                 mongo_uri,
-                tlsCAFile=certifi.where(),
+                tlsAllowInvalidCertificates=True,
                 tlsDisableOCSPEndpointCheck=True
             )
         else:
-            # Local: sin TLS
             client = MongoClient(mongo_uri)
 
         client.admin.command('ping')
