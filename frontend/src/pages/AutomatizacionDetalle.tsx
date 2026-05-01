@@ -326,8 +326,8 @@ const AutomatizacionDetalle = () => {
                 <span key={n} className={`text-2xl ${n <= valoracion.puntuacion ? 'text-yellow-400' : 'text-gray-500'}`}>★</span>
               ))}
             </div>
-            {valoracion.comentario && <p className="text-sm mt-2 opacity-80">{valoracion.comentario}</p>}
-            <p className="text-xs mt-1 opacity-50">{new Date(valoracion.fecha).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+            {valoracion.comentario && <p className={`text-sm mt-2 opacity-80 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>{valoracion.comentario}</p>}
+            <p className={`text-xs mt-1 opacity-50 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{new Date(valoracion.fecha).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
           </div>
         )}
 

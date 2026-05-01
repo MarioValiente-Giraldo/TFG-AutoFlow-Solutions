@@ -297,7 +297,7 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
               <span key={n} className={`text-lg ${n <= valoracion.puntuacion ? 'text-yellow-400' : 'text-gray-600'}`}>★</span>
             ))}
           </div>
-          {valoracion.comentario && <p className="text-xs mt-1 opacity-70">{valoracion.comentario}</p>}
+          {valoracion.comentario && <p className={`text-xs mt-1 opacity-70 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>{valoracion.comentario}</p>}
         </div>
       )}
     </div>
