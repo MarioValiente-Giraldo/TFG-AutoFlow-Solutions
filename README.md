@@ -144,12 +144,27 @@ El script **elimina y recrea las colecciones** e inserta:
 
 **Credenciales de acceso tras ejecutar el seed:**
 
-| Rol | Email | Contraseña |
-|---|---|---|
-| Superadmin | `admin@autoflow.com` | `Admin1234!` |
-| Cliente (todos) | `ana.garcia@empresa.com`, `carlos.lopez@empresa.com`, etc. | `Cliente1234!` |
+Contraseña de todos los clientes: `Cliente1234!`
 
-> El superadmin tiene visibilidad total sobre todas las automatizaciones. Los admins solo ven las no asignadas y las propias.
+| Usuario | Email | Estado de su automatización | Qué se puede demostrar |
+|---|---|---|---|
+| **Mario Admin** | `admin@autoflow.com` | — (superadmin) | Gestión completa: aceptar/rechazar solicitudes, asignar presupuesto, publicar avances, ver todas las automatizaciones y chat |
+| **Ana García** | `ana.garcia@empresa.com` | `terminada` (×2) | Ciclo completo finalizado, valoración entregada, historial de pagos |
+| **Carlos López** | `carlos.lopez@empresa.com` | `terminada` | Proyecto finalizado con valoración |
+| **Laura Martínez** | `laura.martinez@empresa.com` | `terminada` | Proyecto finalizado con valoración |
+| **Pedro Sánchez** | `pedro.sanchez@empresa.com` | `pendiente_pago_final` | **Pago final con Stripe** (tarjeta `4242 4242 4242 4242`) |
+| **Marta Ruiz** | `marta.ruiz@empresa.com` | `en_desarrollo` | Ver avances de desarrollo con porcentaje de progreso |
+| **Javier Moreno** | `javier.moreno@empresa.com` | `en_desarrollo` | Ver avances de desarrollo con porcentaje de progreso |
+| **Sofía Torres** | `sofia.torres@empresa.com` | `pendiente_pago_anticipo` | **Pago de anticipo con Stripe** (tarjeta `4242 4242 4242 4242`) |
+| **Alejandro Díaz** | `alejandro.diaz@empresa.com` | `pendiente_pago_anticipo` | **Pago de anticipo con Stripe** (tarjeta `4242 4242 4242 4242`) |
+| **Elena Fernández** | `elena.fernandez@empresa.com` | `pendiente_revision` | Solicitud enviada, esperando respuesta del admin |
+| **David Jiménez** | `david.jimenez@empresa.com` | `pendiente_revision` | Solicitud enviada, esperando respuesta del admin |
+| **Isabel Romero** | `isabel.romero@empresa.com` | `pendiente_revision` | Solicitud enviada, esperando respuesta del admin |
+| **Miguel Herrera** | `miguel.herrera@empresa.com` | `rechazada` | Ver motivo de rechazo de la solicitud |
+| **Carmen Navarro** | `carmen.navarro@empresa.com` | `rechazada` | Ver motivo de rechazo de la solicitud |
+| **Roberto Gil** | `roberto.gil@empresa.com` | `cancelada` | Proyecto cancelado |
+
+> Para demostrar el flujo completo de Stripe usar **Sofía Torres** o **Alejandro Díaz** (anticipo) y **Pedro Sánchez** (pago final).
 
 ### 5. Acceder a la aplicación
 
