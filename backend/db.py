@@ -9,8 +9,7 @@ def get_db():
         if mongo_uri.startswith('mongodb+srv://'):
             client = MongoClient(
                 mongo_uri,
-                tlsAllowInvalidCertificates=True,
-                tlsDisableOCSPEndpointCheck=True
+                tlsAllowInvalidCertificates=True
             )
         else:
             client = MongoClient(mongo_uri)
