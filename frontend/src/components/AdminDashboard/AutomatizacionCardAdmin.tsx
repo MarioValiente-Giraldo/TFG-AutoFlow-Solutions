@@ -29,7 +29,7 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
 
   const { identificador_unico, titulo, nombre_propietario, email_propietario,
     tipo_automatizacion, descripcion, estado, gasto_estimado, motivo_rechazo,
-    fecha_solicitud, actualizaciones_desarrollo } = automatizacion;
+    fecha_solicitud, actualizaciones_desarrollo, valoracion } = automatizacion;
 
   const fecha = new Date(fecha_solicitud).toLocaleDateString('es-ES', {
     day: '2-digit', month: 'short', year: 'numeric',
@@ -287,6 +287,17 @@ const AutomatizacionCardAdmin = ({ automatizacion, onRefresh }: Props) => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+      {estado === 'terminada' && valoracion && (
+        <div className="mt-3 pt-3 border-t border-gray-700">
+          <p className={`text-xs font-medium mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Valoración del cliente</p>
+          <div className="flex gap-1">
+            {[1, 2, 3, 4, 5].map(n => (
+              <span key={n} className={`text-lg ${n <= valoracion.puntuacion ? 'text-yellow-400' : 'text-gray-600'}`}>★</span>
+            ))}
+          </div>
+          {valoracion.comentario && <p className="text-xs mt-1 opacity-70">{valoracion.comentario}</p>}
         </div>
       )}
     </div>

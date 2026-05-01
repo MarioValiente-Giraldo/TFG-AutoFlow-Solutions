@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useTheme } from '../../context/ThemeContext';
 import { valorarAutomatizacion } from '../../services/automatizacionesAPI';
@@ -17,12 +17,16 @@ const StarRating = ({ idAutomatizacion, valoracion, onRefresh }: Props) => {
   const [seleccionada, setSeleccionada] = useState(0);
   const [comentario, setComentario] = useState('');
   const [loading, setLoading] = useState(false);
+  const [valoracionLocal, setValoracionLocal] = useState<Valoracion | undefined>(valoracion);
+
+  useEffect(() => { setValoracionLocal(valoracion); }, [valoracion]);
 
   const handleEnviar = async () => {
     if (seleccionada === 0) return;
     setLoading(true);
     try {
       await valorarAutomatizacion(idAutomatizacion, seleccionada, comentario);
+      setValoracionLocal({ puntuacion: seleccionada, comentario, fecha: new Date().toISOString() });
       toast.success('Valoración enviada');
       onRefresh();
     } catch {
@@ -32,22 +36,22 @@ const StarRating = ({ idAutomatizacion, valoracion, onRefresh }: Props) => {
     }
   };
 
-  if (valoracion) {
+  if (valoracionLocal) {
     return (
       <div className={`${styles.wrapper} ${styles.wrapperBorder(theme)}`}>
         <p className={styles.label(theme)}>Tu valoración</p>
         <div className={styles.starsRow}>
           {[1, 2, 3, 4, 5].map(n => (
-            <span key={n} className={`text-2xl ${n <= valoracion.puntuacion ? 'text-yellow-400' : 'text-gray-500'}`}>
+            <span key={n} className={`text-2xl ${n <= valoracionLocal.puntuacion ? 'text-yellow-400' : 'text-gray-500'}`}>
               ★
             </span>
           ))}
         </div>
-        {valoracion.comentario && (
-          <p className={styles.readonlyComment(theme)}>{valoracion.comentario}</p>
+        {valoracionLocal.comentario && (
+          <p className={styles.readonlyComment(theme)}>{valoracionLocal.comentario}</p>
         )}
         <p className={styles.readonlyDate(theme)}>
-          {new Date(valoracion.fecha).toLocaleDateString('es-ES', {
+          {new Date(valoracionLocal.fecha).toLocaleDateString('es-ES', {
             day: '2-digit', month: 'short', year: 'numeric',
           })}
         </p>

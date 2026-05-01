@@ -7,7 +7,7 @@ import {
   getAutomatizacion,
   aceptarAdmin, rechazarAdmin, marcarTerminada,
   publicarActualizacion, cancelarAutomatizacion,
-  valorarAutomatizacion, crearSesionPagoAnticipo, crearSesionPagoFinal,
+  crearSesionPagoAnticipo, crearSesionPagoFinal,
 } from '../services/automatizacionesAPI';
 import type { Automatizacion } from '../types';
 import EstadoTimeline from '../components/ClienteDashboard/EstadoTimeline';
@@ -189,7 +189,7 @@ const AutomatizacionDetalle = () => {
         </div>
 
         {/* Acciones admin */}
-        {isAdmin && (
+        {isAdmin && (estado === 'pendiente_revision' || estado === 'pendiente_pago_anticipo' || estado === 'en_desarrollo' || estado === 'pendiente_pago_final') && (
           <div className={ds.section(theme)}>
             <p className={ds.sectionLabelMb3(theme)}>Acciones</p>
 
@@ -208,9 +208,6 @@ const AutomatizacionDetalle = () => {
                 )}
                 {(estado === 'pendiente_revision' || estado === 'pendiente_pago_anticipo' || estado === 'en_desarrollo' || estado === 'pendiente_pago_final') && (
                   <button className={styles.btnReject} onClick={handleCancelar} disabled={actionLoading}>Cancelar</button>
-                )}
-                {(estado === 'rechazada' || estado === 'cancelada' || estado === 'terminada') && (
-                  <p className={styles.cardMeta(theme)}>No hay acciones disponibles</p>
                 )}
               </div>
             )}
@@ -317,6 +314,20 @@ const AutomatizacionDetalle = () => {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Valoración del cliente — visible para admin */}
+        {isAdmin && estado === 'terminada' && valoracion && (
+          <div className={ds.section(theme)}>
+            <p className={ds.sectionLabel(theme)}>Valoración del cliente</p>
+            <div className="flex gap-1 mt-2">
+              {[1, 2, 3, 4, 5].map(n => (
+                <span key={n} className={`text-2xl ${n <= valoracion.puntuacion ? 'text-yellow-400' : 'text-gray-500'}`}>★</span>
+              ))}
+            </div>
+            {valoracion.comentario && <p className="text-sm mt-2 opacity-80">{valoracion.comentario}</p>}
+            <p className="text-xs mt-1 opacity-50">{new Date(valoracion.fecha).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
           </div>
         )}
 
